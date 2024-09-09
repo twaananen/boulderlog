@@ -33,9 +33,27 @@ App for tracking my bouldering progress
 
 ## Tech stack
 
-- Go
-- Templ
-- htmx
-- Tailwind
-- Postgres
-- Docker
+- Go (https://go.dev/)
+- Templ (https://templ.guide/)
+- htmx (https://htmx.org/)
+- Tailwind (https://tailwindcss.com/)
+- Postgres (https://www.postgresql.org/)
+- Docker (https://www.docker.com/)
+
+## Development
+
+### Tailwind CSS
+
+To generate the Tailwind CSS, run the following command:
+
+```bash
+tailwindcss -i ./static/css/input.css -o ./static/css/tailwind.css --watch
+```
+
+### Run the server
+
+To run the server, run the following command:
+
+```bash
+air
+```
