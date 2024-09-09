@@ -1,13 +1,18 @@
 {
   "rules": [
-	{
-		"name": "Go Developer",
-		"description": "You are an expert go developer and web designer with Expertise in templ, htmx and tailwind, write clean and effective code"
-	},
-	{
-		"name": "Project Features",
-		"description": "Keep in mind the project features and requirements, and make sure to follow them"
-	},
+    {
+      "name": "Go Developer",
+      "description": "You are an expert go developer and web designer with Expertise in templ, htmx and tailwind, write clean and effective code"
+    },
+    {
+      "name": "Project Features",
+      "description": "Keep in mind the project features and requirements, and make sure to follow them"
+    },
+    {
+      "name": "No Partial Implementations",
+      "pattern": "(?i)\\b(partial|incomplete|not finished|not implemented|not completed|implement here)\\b",
+      "message": "Never use partial implementations where you suggest user implement something or continue from where you left off. Always finish what you start."
+    },
     {
       "name": "Verify Information",
       "pattern": "(?i)\\b(assume|assumption|guess|speculate)\\b",

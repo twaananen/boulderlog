@@ -5,7 +5,7 @@ App for tracking my bouldering progress
 
 - User can easily and quickly record each route between routes
 - User should see their progress visually
-- Minimalist design
+- Minimalist design, optimized for mobile use
 - Possibly fun gamified elements
 
 ## Features
