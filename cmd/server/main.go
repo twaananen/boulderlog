@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/joho/godotenv"
-	"github.com/twaananen/boulderlog/internal/handlers"
+	"github.com/twaananen/boulderlog/handlers"
 )
 
 func init() {
@@ -25,10 +25,10 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.HandleFunc("/", handlers.Home)
 	http.HandleFunc("/login", handlers.LoginPage)
-	http.HandleFunc("/profile", handlers.ProfilePage) // Add this line
+	http.HandleFunc("/profile", handlers.ProfilePage)
 	http.HandleFunc("/auth/status", handlers.AuthStatus)
 	http.HandleFunc("/auth/login", handlers.Login)
-	http.HandleFunc("/auth/logout", handlers.Logout) // Change this to GET request
+	http.HandleFunc("/auth/logout", handlers.Logout)
 
 	log.Println("Server starting on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
