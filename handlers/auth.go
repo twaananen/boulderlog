@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	userFile    = "users.csv"
+	userFile    = "data/users.csv"
 	tokenExpiry = 24 * time.Hour
 )
 
@@ -152,8 +152,16 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func findUser(username string) (*User, error) {
+	// Ensure the data directory exists
+	if err := os.MkdirAll("data", os.ModePerm); err != nil {
+		return nil, err
+	}
+
 	file, err := os.Open(userFile)
 	if err != nil {
+		if os.IsNotExist(err) {
+			return nil, fmt.Errorf("user not found")
+		}
 		return nil, err
 	}
 	defer file.Close()
@@ -176,6 +184,11 @@ func findUser(username string) (*User, error) {
 func createUser(username, password string) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
+		return err
+	}
+
+	// Ensure the data directory exists
+	if err := os.MkdirAll("data", os.ModePerm); err != nil {
 		return err
 	}
 

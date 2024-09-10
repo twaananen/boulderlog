@@ -1,10 +1,11 @@
 package components
 
-templ Home(isLoggedIn bool) {
+
+templ Home(isLoggedIn bool, gradeCounts map[string]int, toppedCounts map[string]int, showCongrats bool) {
 	@Layout("Home") {
 		if isLoggedIn {
 			<div id="main-content" class="container mx-auto px-4 py-8">
-				@BoulderGradeSelection()
+				@LogSummary(gradeCounts, toppedCounts, showCongrats, -1)
 			</div>
 		} else {
 			<div class="text-center">

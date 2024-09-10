@@ -59,7 +59,7 @@ func (h *LogHandler) SubmitLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	components.LogSummary(gradeCounts, toppedCounts).Render(r.Context(), w)
+	components.LogSummary(gradeCounts, toppedCounts, true, difficulty).Render(r.Context(), w)
 }
 
 func saveLogToCSV(username, grade string, difficulty int) error {
