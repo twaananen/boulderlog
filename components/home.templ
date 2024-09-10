@@ -1,13 +1,19 @@
 package components
 
-templ Home() {
+templ Home(isLoggedIn bool) {
 	@Layout("Home") {
-		<h2 class="text-4xl font-bold text-center mb-4">Elevate Your Climbing Game</h2>
-		<p class="text-xl text-center mb-8">Track, Analyze, Conquer!</p>
-		<div class="text-center">
-			<a href="/login" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-				Get Started
-			</a>
-		</div>
+		if isLoggedIn {
+			<div id="main-content" class="container mx-auto px-4 py-8">
+				@BoulderGradeSelection()
+			</div>
+		} else {
+			<div class="text-center">
+				<h2 class="text-4xl font-bold mb-4">Elevate Your Climbing Game</h2>
+				<p class="text-xl mb-8">Track, Analyze, Conquer!</p>
+				<a href="/login" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+					Get Started
+				</a>
+			</div>
+		}
 	}
 }

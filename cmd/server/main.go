@@ -22,7 +22,10 @@ func main() {
 		log.Fatalf("Failed to initialize JWT secret: %v", err)
 	}
 
+	// Static files
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+
+	// Routes
 	http.HandleFunc("/", handlers.Home)
 	http.HandleFunc("/login", handlers.LoginPage)
 	http.HandleFunc("/profile", handlers.ProfilePage)
@@ -30,6 +33,13 @@ func main() {
 	http.HandleFunc("/auth/login", handlers.Login)
 	http.HandleFunc("/auth/logout", handlers.Logout)
 
+	// New logging routes
+	http.HandleFunc("/log/grade", handlers.NewLogHandler().GetGradeSelection)
+	http.HandleFunc("/log/difficulty/", handlers.NewLogHandler().GetPerceivedDifficulty)
+	http.HandleFunc("/log/submit/", handlers.NewLogHandler().SubmitLog)
+
 	log.Println("Server starting on http://localhost:8080")
+
+	// Start server
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

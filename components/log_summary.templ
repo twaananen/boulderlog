@@ -1,0 +1,42 @@
+package components
+
+import (
+	"fmt"
+	"sort"
+)
+
+templ LogSummary(gradeCounts map[string]int, toppedCounts map[string]int) {
+	<div class="text-center">
+		<h2 class="text-3xl font-bold mb-4">Congratulations!</h2>
+		<p class="text-xl mb-6">You've logged another boulder. Keep crushing it!</p>
+		<h3 class="text-2xl font-bold mb-4">Today's Progress</h3>
+		<div class="grid grid-cols-2 gap-4 mb-6">
+			if len(gradeCounts) > 0 {
+				for _, grade := range sortedGrades(gradeCounts) {
+					<div class="bg-gray-100 p-4 rounded">
+						<span class="font-bold">{ grade }:</span> { templ.EscapeString(fmt.Sprint(gradeCounts[grade])) }
+						<span class="text-green-600 ml-2">({ templ.EscapeString(fmt.Sprint(toppedCounts[grade])) })</span>
+					</div>
+				}
+			} else {
+				<div class="col-span-2 text-gray-500">No boulders logged today</div>
+			}
+		</div>
+		<button
+			hx-get="/log/grade"
+			hx-target="#main-content"
+			class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded"
+		>
+			Log New Boulder
+		</button>
+	</div>
+}
+
+func sortedGrades(gradeCounts map[string]int) []string {
+	grades := make([]string, 0, len(gradeCounts))
+	for grade := range gradeCounts {
+		grades = append(grades, grade)
+	}
+	sort.Strings(grades)
+	return grades
+}

@@ -35,7 +35,7 @@ type User struct {
 }
 
 func AuthStatus(w http.ResponseWriter, r *http.Request) {
-	isLoggedIn := isUserLoggedIn(r)
+	isLoggedIn := IsUserLoggedIn(r)
 
 	if isLoggedIn {
 		components.AuthStatusLoggedIn().Render(r.Context(), w)
@@ -44,7 +44,7 @@ func AuthStatus(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func isUserLoggedIn(r *http.Request) bool {
+func IsUserLoggedIn(r *http.Request) bool {
 	cookie, err := r.Cookie("token")
 	if err != nil {
 		return false
@@ -67,6 +67,26 @@ func isUserLoggedIn(r *http.Request) bool {
 	}
 
 	return false
+}
+
+func GetUsernameFromSession(r *http.Request) (string, error) {
+	cookie, err := r.Cookie("token")
+	if err != nil {
+		return "", err
+	}
+
+	token, err := jwt.Parse(cookie.Value, func(token *jwt.Token) (interface{}, error) {
+		return jwtSecret, nil
+	})
+	if err != nil {
+		return "", err
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return claims["username"].(string), nil
+	}
+
+	return "", fmt.Errorf("invalid token")
 }
 
 func LoginModal(w http.ResponseWriter, r *http.Request) {
@@ -182,7 +202,7 @@ func generateToken(username string) (string, error) {
 
 func ProfilePage(w http.ResponseWriter, r *http.Request) {
 	// Check if user is logged in
-	if !isUserLoggedIn(r) {
+	if !IsUserLoggedIn(r) {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return
 	}

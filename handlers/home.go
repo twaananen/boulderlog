@@ -7,5 +7,6 @@ import (
 )
 
 func Home(w http.ResponseWriter, r *http.Request) {
-	components.Home().Render(r.Context(), w)
+	isLoggedIn := IsUserLoggedIn(r)
+	components.Home(isLoggedIn).Render(r.Context(), w)
 }
