@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/twaananen/boulderlog/components"
+	"github.com/twaananen/boulderlog/utils"
 )
 
 type LogHandler struct {
@@ -48,13 +49,16 @@ func (h *LogHandler) SubmitLog(w http.ResponseWriter, r *http.Request) {
 
 	// Save the log to CSV file
 	if err := saveLogToCSV(username, grade, difficulty); err != nil {
+		utils.LogError("Failed to save log", err)
 		http.Error(w, "Failed to save log", http.StatusInternalServerError)
 		return
 	}
+	utils.LogInfo(fmt.Sprintf("Log saved successfully for user: %s, grade: %s, difficulty: %d", username, grade, difficulty))
 
 	// Get today's grade counts and topped counts
 	gradeCounts, toppedCounts, err := getTodayGradeCounts(username)
 	if err != nil {
+		utils.LogError("Failed to get grade counts", err)
 		http.Error(w, "Failed to get grade counts", http.StatusInternalServerError)
 		return
 	}
@@ -68,11 +72,13 @@ func saveLogToCSV(username, grade string, difficulty int) error {
 
 	// Ensure the logs directory exists
 	if err := os.MkdirAll("data", os.ModePerm); err != nil {
+		utils.LogError("Failed to create data directory", err)
 		return err
 	}
 
 	file, err := os.OpenFile(filepath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
+		utils.LogError("Failed to open log file", err)
 		return err
 	}
 	defer file.Close()

@@ -9,6 +9,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/twaananen/boulderlog/components"
+	"github.com/twaananen/boulderlog/utils"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -105,6 +106,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		// User not found, create a new one
 		if err := createUser(username, password); err != nil {
+			utils.LogError("Error creating user", err)
 			http.Error(w, "Error creating user", http.StatusInternalServerError)
 			return
 		}
@@ -119,6 +121,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	// Generate JWT token
 	token, err := generateToken(username)
 	if err != nil {
+		utils.LogError("Error generating token", err)
 		http.Error(w, "Error generating token", http.StatusInternalServerError)
 		return
 	}
@@ -132,6 +135,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		Path:     "/",
 	})
 
+	utils.LogInfo(fmt.Sprintf("User %s logged in", username))
 	// Redirect to home page
 	w.Header().Set("HX-Redirect", "/")
 }
@@ -154,12 +158,14 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 func findUser(username string) (*User, error) {
 	// Ensure the data directory exists
 	if err := os.MkdirAll("data", os.ModePerm); err != nil {
+		utils.LogError("Failed to create data directory", err)
 		return nil, err
 	}
 
 	file, err := os.Open(userFile)
 	if err != nil {
 		if os.IsNotExist(err) {
+			utils.LogError("User file not found", err)
 			return nil, fmt.Errorf("user not found")
 		}
 		return nil, err
@@ -169,31 +175,36 @@ func findUser(username string) (*User, error) {
 	reader := csv.NewReader(file)
 	records, err := reader.ReadAll()
 	if err != nil {
+		utils.LogError("Failed to read user file", err)
 		return nil, err
 	}
-
 	for _, record := range records {
 		if record[0] == username {
+			utils.LogInfo(fmt.Sprintf("User %s found", username))
 			return &User{Username: record[0], Password: record[1]}, nil
 		}
 	}
 
+	utils.LogInfo(fmt.Sprintf("User %s not found", username))
 	return nil, fmt.Errorf("user not found")
 }
 
 func createUser(username, password string) error {
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
+		utils.LogError("Failed to hash password", err)
 		return err
 	}
 
 	// Ensure the data directory exists
 	if err := os.MkdirAll("data", os.ModePerm); err != nil {
+		utils.LogError("Failed to create data directory", err)
 		return err
 	}
 
 	file, err := os.OpenFile(userFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
+		utils.LogError("Failed to open user file", err)
 		return err
 	}
 	defer file.Close()
@@ -201,6 +212,7 @@ func createUser(username, password string) error {
 	writer := csv.NewWriter(file)
 	defer writer.Flush()
 
+	utils.LogInfo(fmt.Sprintf("User %s created", username))
 	return writer.Write([]string{username, string(hashedPassword)})
 }
 
