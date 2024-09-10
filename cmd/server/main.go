@@ -25,9 +25,10 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.HandleFunc("/", handlers.Home)
 	http.HandleFunc("/login", handlers.LoginPage)
+	http.HandleFunc("/profile", handlers.ProfilePage) // Add this line
 	http.HandleFunc("/auth/status", handlers.AuthStatus)
 	http.HandleFunc("/auth/login", handlers.Login)
-	http.HandleFunc("/auth/logout", handlers.Logout)
+	http.HandleFunc("/auth/logout", handlers.Logout) // Change this to GET request
 
 	log.Println("Server starting on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))

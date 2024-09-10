@@ -29,7 +29,25 @@ func Home() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>BoulderLog - Track Your Climbing Progress</title><link href=\"/static/css/tailwind.css\" rel=\"stylesheet\"><script src=\"/static/js/htmx.min.js\"></script></head><body class=\"bg-gray-100\"><header class=\"bg-blue-600 text-white p-4 fixed top-0 left-0 right-0 z-10\"><div class=\"container mx-auto flex justify-between items-center\"><h1 class=\"text-2xl font-bold\">BoulderLog</h1><div hx-get=\"/auth/status\" hx-trigger=\"load, every 5m\" hx-swap=\"outerHTML\"></div></div></header><div class=\"container mx-auto px-4 py-8 mt-16\"><h2 class=\"text-4xl font-bold text-center mb-4\">Elevate Your Climbing Game</h2><p class=\"text-xl text-center mb-8\">Track, Analyze, Conquer!</p><div class=\"text-center\"><a href=\"/login\" class=\"bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded\">Get Started</a></div></div></body></html>")
+		templ_7745c5c3_Var2 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+			if !templ_7745c5c3_IsBuffer {
+				defer func() {
+					templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+					if templ_7745c5c3_Err == nil {
+						templ_7745c5c3_Err = templ_7745c5c3_BufErr
+					}
+				}()
+			}
+			ctx = templ.InitializeContext(ctx)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h2 class=\"text-4xl font-bold text-center mb-4\">Elevate Your Climbing Game</h2><p class=\"text-xl text-center mb-8\">Track, Analyze, Conquer!</p><div class=\"text-center\"><a href=\"/login\" class=\"bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded\">Get Started</a></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			return templ_7745c5c3_Err
+		})
+		templ_7745c5c3_Err = Layout("Home").Render(templ.WithChildren(ctx, templ_7745c5c3_Var2), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
