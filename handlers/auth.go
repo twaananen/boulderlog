@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/twaananen/boulderlog/internal/templates"
+	"github.com/twaananen/boulderlog/components"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -38,9 +38,9 @@ func AuthStatus(w http.ResponseWriter, r *http.Request) {
 	isLoggedIn := isUserLoggedIn(r)
 
 	if isLoggedIn {
-		templates.AuthStatusLoggedIn().Render(r.Context(), w)
+		components.AuthStatusLoggedIn().Render(r.Context(), w)
 	} else {
-		templates.AuthStatusLoggedOut().Render(r.Context(), w)
+		components.AuthStatusLoggedOut().Render(r.Context(), w)
 	}
 }
 
@@ -70,11 +70,11 @@ func isUserLoggedIn(r *http.Request) bool {
 }
 
 func LoginModal(w http.ResponseWriter, r *http.Request) {
-	templates.LoginModal().Render(r.Context(), w)
+	components.LoginModal().Render(r.Context(), w)
 }
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
-	templates.Login("", "").Render(r.Context(), w)
+	components.Login("", "").Render(r.Context(), w)
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -91,7 +91,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	} else {
 		// User found, check password
 		if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
-			templates.LoginForm("Username and password do not match", username).Render(r.Context(), w)
+			components.LoginForm("Username and password do not match", username).Render(r.Context(), w)
 			return
 		}
 	}
@@ -188,5 +188,5 @@ func ProfilePage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Render the profile page
-	templates.Profile().Render(r.Context(), w)
+	components.Profile().Render(r.Context(), w)
 }

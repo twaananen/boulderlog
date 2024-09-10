@@ -3,9 +3,9 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/twaananen/boulderlog/internal/templates"
+	"github.com/twaananen/boulderlog/components"
 )
 
 func Home(w http.ResponseWriter, r *http.Request) {
-	templates.Home().Render(r.Context(), w)
+	components.Home().Render(r.Context(), w)
 }
