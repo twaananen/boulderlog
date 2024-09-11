@@ -37,14 +37,14 @@ func LogSummary(gradeCounts map[string]int, toppedCounts map[string]int, showCon
 		ctx = templ.ClearChildren(ctx)
 		if showCongrats {
 			if lastAttemptDifficulty <= 4 {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h2 class=\"text-3xl font-bold mb-4\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h2 class=\"text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var2 string
 				templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(getRandomHypeText())
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 12, Col: 60}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 12, Col: 93}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 				if templ_7745c5c3_Err != nil {
@@ -55,14 +55,14 @@ func LogSummary(gradeCounts map[string]int, toppedCounts map[string]int, showCon
 					return templ_7745c5c3_Err
 				}
 			} else {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h2 class=\"text-3xl font-bold mb-4\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h2 class=\"text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(getRandomPepText())
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 14, Col: 59}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 14, Col: 92}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -74,68 +74,68 @@ func LogSummary(gradeCounts map[string]int, toppedCounts map[string]int, showCon
 				}
 			}
 		} else if len(gradeCounts) == 0 {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h2 class=\"text-3xl font-bold mb-4\">Let's Get Started!</h2><p class=\"text-xl mb-6\">Ready to crush some boulders? Log your first attempt of the day!</p>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h2 class=\"text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100\">Let's Get Started!</h2><p class=\"text-xl mb-6 text-gray-700 dark:text-gray-300\">Ready to crush some boulders? Log your first attempt of the day!</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h3 class=\"text-2xl font-bold mb-4\">Today's Progress</h3><div class=\"grid grid-cols-3 gap-2 mb-6\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h3 class=\"text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100\">Today's Progress</h3><div class=\"grid grid-cols-3 gap-2 mb-6\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if len(gradeCounts) > 0 {
 			for _, grade := range sortedGrades(gradeCounts) {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"bg-gray-100 p-4 rounded flex items-center\"><span class=\"font-bold\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"bg-gray-100 dark:bg-gray-900 p-4 rounded flex items-center\"><span class=\"font-bold text-gray-800 dark:text-gray-200\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(grade)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 25, Col: 36}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 25, Col: 69}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(":</span> <span class=\"text-green-600\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(":</span> <span class=\"text-green-600 dark:text-green-400\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(templ.EscapeString(fmt.Sprintf("%d", toppedCounts[grade])))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 25, Col: 136}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 25, Col: 189}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span>/")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span>/<span class=\"text-gray-800 dark:text-gray-200\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var6 string
 				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(templ.EscapeString(fmt.Sprintf("%d", gradeCounts[grade])))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 25, Col: 205}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 25, Col: 305}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
 		} else {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"col-span-2 text-gray-500\">No boulders logged today</div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"col-span-2 text-gray-500 dark:text-gray-400\">No boulders logged today</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><button hx-get=\"/log/grade\" hx-target=\"#main-content\" class=\"bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded\">Log New Boulder</button>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><button hx-get=\"/log/grade\" hx-target=\"#main-content\" class=\"bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-bold py-3 px-6 rounded\">Log New Boulder</button>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
