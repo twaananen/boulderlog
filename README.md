@@ -1,5 +1,6 @@
-# boulderlog
-App for tracking my bouldering progress
+# BoulderLog
+
+BoulderLog is a web application for climbers to log and track their bouldering sessions.
 
 ## Goals
 
@@ -10,50 +11,51 @@ App for tracking my bouldering progress
 
 ## Features
 
-- Login with username and password
-- Route logging
-- Route history
-- Graphs for grades topped
-- Graphs for perceived difficulty of a grade
+- User authentication
+- Log boulder attempts with grade, difficulty, and additional details
+- View daily progress and statistics with visualizations
+- Dark mode support
 
-### Route logging
+## Application Architecture
 
-- Record each route, with date, location, topped (true/false), difficulty, and perceived difficulty
-- Date should be automatically set to today
-- Location should be set once per session
-- Perceived difficulty should be set for each route
-	- 1 - (Topped) flash very easily
-	- 2 - (Topped) flash with some difficulty
-	- 3 - (Topped) flash with a lot of difficulty
-	- 4 - (Topped) topped with a lot of difficulty and multiple attempts
-	- 5 - (Not topped) very close to topping, maybe next time
-	- 6 - (Not topped) could do all moves separately but not together
-	- 7 - (Not topped) some moves just could not be done
-	- 8 - (Not topped) couldn't do any moves
+BoulderLog follows a layered architecture pattern:
 
-## Tech stack
+1. **Presentation Layer**: 
+   - Handlers (`handlers/`) handle HTTP requests and responses.
+   - Templates (`components/`) render the UI using the templ templating engine.
 
-- Go (https://go.dev/)
-- Templ (https://templ.guide/)
-- htmx (https://htmx.org/)
-- Tailwind (https://tailwindcss.com/)
-- Postgres (https://www.postgresql.org/)
-- Docker (https://www.docker.com/)
+2. **Service Layer** (`services/`):
+   - Contains business logic and coordinates between handlers and data access.
+   - Manages user authentication and boulder logging operations.
 
-## Development
+3. **Data Access Layer** (`db/`):
+   - Implements data persistence using CSV files (with plans for future database integration).
+   - Provides an interface for data operations, allowing for easy swapping of storage mechanisms.
 
-### Tailwind CSS
+4. **Model Layer** (`models/`):
+   - Defines data structures used throughout the application.
 
-To generate the Tailwind CSS, run the following command:
+5. **Utility Layer** (`utils/`):
+   - Contains shared utilities like logging and JWT management.
 
-```bash
-tailwindcss -i ./static/css/input.css -o ./static/css/tailwind.css --watch
-```
+## Technology Stack
 
-### Run the server
+- Go 1.22
+- templ for HTML templating
+- HTMX for dynamic content updates
+- Tailwind CSS for styling
+- CSV for data storage (with plans to integrate a database in the future)
+- Docker for development and deployment
 
-To run the server, run the following command:
+## Getting Started
 
-```bash
-air
-```
+1. Clone the repository
+2. Install dependencies: `go mod tidy`
+3. Set up environment variables (create a `.env` file based on `.env.example`)
+4. Generate Tailwind CSS: `tailwindcss -i ./static/css/input.css -o ./static/css/tailwind.css --watch`
+5. Run the application in development mode: `air`
+
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

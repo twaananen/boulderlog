@@ -4,13 +4,26 @@ import (
 	"net/http"
 
 	"github.com/twaananen/boulderlog/components"
+	"github.com/twaananen/boulderlog/services"
 )
 
-func Home(w http.ResponseWriter, r *http.Request) {
-	isLoggedIn := IsUserLoggedIn(r)
+type HomeHandler struct {
+	userService *services.UserService
+	logService  *services.LogService
+}
+
+func NewHomeHandler(userService *services.UserService, logService *services.LogService) *HomeHandler {
+	return &HomeHandler{
+		userService: userService,
+		logService:  logService,
+	}
+}
+
+func (h *HomeHandler) Home(w http.ResponseWriter, r *http.Request) {
+	isLoggedIn := h.userService.IsUserLoggedIn(r)
 	if isLoggedIn {
-		username, _ := GetUsernameFromSession(r)
-		gradeCounts, toppedCounts, err := getTodayGradeCounts(username)
+		username, _ := h.userService.GetUsernameFromToken(r)
+		gradeCounts, toppedCounts, err := h.logService.GetTodayGradeCounts(username)
 		if err != nil {
 			http.Error(w, "Failed to get grade counts", http.StatusInternalServerError)
 			return
