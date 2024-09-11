@@ -90,10 +90,6 @@ func GetUsernameFromSession(r *http.Request) (string, error) {
 	return "", fmt.Errorf("invalid token")
 }
 
-func LoginModal(w http.ResponseWriter, r *http.Request) {
-	components.LoginModal().Render(r.Context(), w)
-}
-
 func LoginPage(w http.ResponseWriter, r *http.Request) {
 	components.Login("", "").Render(r.Context(), w)
 }
@@ -101,6 +97,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 func Login(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
+	utils.LogInfo(fmt.Sprintf("login request for user %s", username))
 
 	user, err := findUser(username)
 	if err != nil {
@@ -112,10 +109,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		// User found, check password
+		utils.LogInfo(fmt.Sprintf("checking password for user %s", username))
 		if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
 			components.LoginForm("Username and password do not match", username).Render(r.Context(), w)
+			utils.LogInfo(fmt.Sprintf("password does not match for user %s", username))
 			return
 		}
+		utils.LogInfo(fmt.Sprintf("password matches for user %s", username))
 	}
 
 	// Generate JWT token

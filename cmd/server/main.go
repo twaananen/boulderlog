@@ -6,6 +6,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/twaananen/boulderlog/handlers"
+	"github.com/twaananen/boulderlog/utils"
 )
 
 func init() {
@@ -21,6 +22,8 @@ func main() {
 	if err := handlers.InitJWTSecret(); err != nil {
 		log.Fatalf("Failed to initialize JWT secret: %v", err)
 	}
+
+	utils.InitLogger()
 
 	// Static files
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
@@ -38,7 +41,7 @@ func main() {
 	http.HandleFunc("/log/difficulty/", handlers.NewLogHandler().GetPerceivedDifficulty)
 	http.HandleFunc("/log/submit/", handlers.NewLogHandler().SubmitLog)
 
-	log.Println("Server starting on http://localhost:8080")
+	utils.LogInfo("Server starting on http://localhost:8080")
 
 	// Start server
 	log.Fatal(http.ListenAndServe(":8080", nil))

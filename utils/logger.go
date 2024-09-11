@@ -20,14 +20,19 @@ func InitLogger() {
 	}
 
 	Logger = log.New(logFile, "", log.LstdFlags)
+	LogInfo("Logger initialized")
 }
 
 func LogInfo(message string) {
-	log.Println(message)
-	Logger.Println("INFO:", message)
+	if Logger != nil {
+		Logger.Println("INFO:", message)
+	}
+	log.Println("INFO:", message)
 }
 
 func LogError(message string, err error) {
-	log.Printf("%s: %v", message, err)
-	Logger.Printf("ERROR: %s: %v", message, err)
+	if Logger != nil {
+		Logger.Printf("ERROR: %s: %v", message, err)
+	}
+	log.Printf("ERROR: %s: %v", message, err)
 }
