@@ -25,24 +25,26 @@ func main() {
 
 	utils.InitLogger()
 
+	router := http.NewServeMux()
+
 	// Static files
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	router.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	// Routes
-	http.HandleFunc("/", handlers.Home)
-	http.HandleFunc("/login", handlers.LoginPage)
-	http.HandleFunc("/profile", handlers.ProfilePage)
-	http.HandleFunc("/auth/status", handlers.AuthStatus)
-	http.HandleFunc("/auth/login", handlers.Login)
-	http.HandleFunc("/auth/logout", handlers.Logout)
+	router.HandleFunc("GET /", handlers.Home)
+	router.HandleFunc("GET /login", handlers.LoginPage)
+	router.HandleFunc("GET /profile", handlers.ProfilePage)
+	router.HandleFunc("GET /auth/status", handlers.AuthStatus)
+	router.HandleFunc("POST /auth/login", handlers.Login)
+	router.HandleFunc("GET /auth/logout", handlers.Logout)
 
 	// New logging routes
-	http.HandleFunc("/log/grade", handlers.NewLogHandler().GetGradeSelection)
-	http.HandleFunc("/log/difficulty/", handlers.NewLogHandler().GetPerceivedDifficulty)
-	http.HandleFunc("/log/submit/", handlers.NewLogHandler().SubmitLog)
+	router.HandleFunc("GET /log/grade", handlers.NewLogHandler().GetGradeSelection)
+	router.HandleFunc("POST /log/difficulty/", handlers.NewLogHandler().GetPerceivedDifficulty)
+	router.HandleFunc("POST /log/submit/", handlers.NewLogHandler().SubmitLog)
 
 	utils.LogInfo("Server starting on http://localhost:8080")
 
 	// Start server
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", router))
 }
