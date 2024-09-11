@@ -14,25 +14,38 @@ templ PerceivedDifficulty(grade string) {
 			<i class="fas fa-arrow-left mr-2"></i> Back
 		</button>
 		<h2 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Boulder Grade: { grade }</h2>
+		<div class="mb-6 w-full max-w-md">
+			<div class="flex justify-between items-center mb-2">
+				<label class="text-gray-700 dark:text-gray-200 font-bold">
+					<input type="checkbox" name="flash" id="flash" class="mr-2"/>
+					Flash
+				</label>
+				<label class="text-gray-700 dark:text-gray-200 font-bold">
+					<input type="checkbox" name="new" id="new" class="mr-2"/>
+					New Route
+				</label>
+			</div>
+		</div>
 		<div class="space-y-4 w-full max-w-md">
 			for i := 1; i <= 8; i++ {
-					<button
-						hx-post={ fmt.Sprintf("/log/submit/%s/%d", grade, i) }
-						hx-target="#main-content"
-						class={
-							"w-full py-3 px-6 rounded font-bold text-white",
-							templ.KV("bg-green-600 dark:bg-green-700", i == 1),
-							templ.KV("bg-green-500 dark:bg-green-600", i == 2),
-							templ.KV("bg-green-400 dark:bg-green-500", i == 3),
-							templ.KV("bg-green-300 dark:bg-green-400", i == 4),
-							templ.KV("bg-yellow-400 dark:bg-yellow-500", i == 5),
-							templ.KV("bg-yellow-500 dark:bg-yellow-600", i == 6),
-							templ.KV("bg-orange-500 dark:bg-orange-600", i == 7),
-							templ.KV("bg-red-500 dark:bg-red-600", i == 8),
-						}
-					>
-						Difficulty { fmt.Sprint(i) }
-					</button>
+				<button
+					hx-post={ fmt.Sprintf("/log/submit/%s/%d", grade, i) }
+					hx-target="#main-content"
+					hx-include="[name='flash'],[name='new']"
+					class={
+						"w-full py-3 px-6 rounded font-bold text-white",
+						templ.KV("bg-green-600 dark:bg-green-700", i == 1),
+						templ.KV("bg-green-500 dark:bg-green-600", i == 2),
+						templ.KV("bg-green-400 dark:bg-green-500", i == 3),
+						templ.KV("bg-green-300 dark:bg-green-400", i == 4),
+						templ.KV("bg-yellow-400 dark:bg-yellow-500", i == 5),
+						templ.KV("bg-yellow-500 dark:bg-yellow-600", i == 6),
+						templ.KV("bg-orange-500 dark:bg-orange-600", i == 7),
+						templ.KV("bg-red-500 dark:bg-red-600", i == 8),
+					}
+				>
+					Difficulty { fmt.Sprint(i) }
+				</button>
 			}
 		</div>
 		<button
@@ -40,15 +53,15 @@ templ PerceivedDifficulty(grade string) {
 			onclick="toggleInfoPopup()"
 		>
 			<i class="fas fa-info"></i>
-		</button>
+			</button>
 		<div id="infoPopupOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden" onclick="toggleInfoPopup()"></div>
 		<div id="infoPopup" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 p-4 rounded shadow-lg w-3/4 max-w-xs z-10">
 			<h3 class="font-bold mb-2 text-gray-900 dark:text-gray-100">Perceived Difficulty Scale</h3>
 			<ul class="list-disc pl-5 text-gray-700 dark:text-gray-300">
-				<li>1 - (Topped) flash very easily</li>
-				<li>2 - (Topped) flash with some difficulty</li>
-				<li>3 - (Topped) flash with a lot of difficulty</li>
-				<li>4 - (Topped) topped with a lot of difficulty and multiple attempts</li>
+				<li>1 - (Topped) very easily</li>
+				<li>2 - (Topped) with some difficulty</li>
+				<li>3 - (Topped) with a lot of difficulty</li>
+				<li>4 - (Topped) with a lot of difficulty and multiple attempts</li>
 				<li>5 - (Not topped) very close to topping, maybe next time</li>
 				<li>6 - (Not topped) could do all moves separately but not together</li>
 				<li>7 - (Not topped) some moves just could not be done</li>
