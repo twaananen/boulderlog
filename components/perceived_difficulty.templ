@@ -9,6 +9,8 @@ templ PerceivedDifficulty(grade string) {
 		<button
 			hx-get="/log/grade"
 			hx-target="#main-content"
+			hx-swap="innerHTML"
+			hx-push-url="true"
 			class="mb-4 bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-bold py-2 px-4 rounded inline-flex items-center"
 		>
 			<i class="fas fa-arrow-left mr-2"></i> Back
@@ -32,6 +34,7 @@ templ PerceivedDifficulty(grade string) {
 					hx-post={ fmt.Sprintf("/log/submit/%s/%d", grade, i) }
 					hx-target="#main-content"
 					hx-swap="innerHTML"
+					hx-push-url="/"
 					hx-include="[name='flash'],[name='new']"
 					class={
 						"w-full py-3 px-6 rounded font-bold text-white",

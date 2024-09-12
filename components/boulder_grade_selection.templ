@@ -13,6 +13,7 @@ templ BoulderGradeSelection() {
 					hx-get={ fmt.Sprintf("/log/difficulty/%s", grade) }
 					hx-target="#main-content"
 					hx-swap="innerHTML"
+					hx-push-url="true"
 					class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded text-sm"
 				>
 					{ grade }

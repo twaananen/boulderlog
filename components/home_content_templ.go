@@ -29,7 +29,7 @@ func HomeContent() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"text-center\"><h2 class=\"text-4xl font-bold mb-4 text-gray-900 dark:text-gray-100\">Elevate Your Climbing Game</h2><p class=\"text-xl mb-8 text-gray-700 dark:text-gray-300\">Track, Analyze, Conquer!</p><a href=\"/login\" hx-get=\"/login\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" class=\"bg-blue-500 dark:bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 dark:hover:bg-blue-700\">Get Started</a></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"text-center\"><h2 class=\"text-4xl font-bold mb-4 text-gray-900 dark:text-gray-100\">Elevate Your Climbing Game</h2><p class=\"text-xl mb-8 text-gray-700 dark:text-gray-300\">Track, Analyze, Conquer!</p><a href=\"/login\" hx-get=\"/login\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\" class=\"bg-blue-500 dark:bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 dark:hover:bg-blue-700\">Get Started</a></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

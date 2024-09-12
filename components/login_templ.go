@@ -29,7 +29,7 @@ func Login(errorMessage string, username string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900\"><div class=\"bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md w-full max-w-md\"><h2 class=\"text-2xl font-bold mb-6 text-center text-gray-900 dark:text-gray-100\">Login to BoulderLog</h2><form hx-post=\"/auth/login\" hx-target=\"#main-content\" hx-swap=\"innerHTML\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900\"><div class=\"bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md w-full max-w-md\"><h2 class=\"text-2xl font-bold mb-6 text-center text-gray-900 dark:text-gray-100\">Login to BoulderLog</h2><form hx-post=\"/auth/login\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"/\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -37,7 +37,7 @@ func Login(errorMessage string, username string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</form><div class=\"mt-4 text-center\"><a href=\"/\" hx-get=\"/\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" class=\"text-blue-500 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400\">Back to Home</a></div></div></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</form><div class=\"mt-4 text-center\"><a href=\"/\" hx-get=\"/\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\" class=\"text-blue-500 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400\">Back to Home</a></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

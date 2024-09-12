@@ -38,7 +38,7 @@ templ Layout(title string, content templ.Component) {
 templ Header() {
 	<header class="bg-blue-600 dark:bg-blue-800 text-white p-4 fixed top-0 left-0 right-0 z-10">
 		<div class="container mx-auto flex justify-between items-center">
-			<a href="/" class="text-2xl font-bold hover:text-blue-200" hx-get="/" hx-target="#main-content" hx-swap="innerHTML">BoulderLog</a>
+			<a href="/" class="text-2xl font-bold hover:text-blue-200" hx-get="/" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="true">BoulderLog</a>
 			<div class="flex items-center space-x-4">
 				<button onclick="toggleDarkMode()" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 p-2 rounded-full">
 					<i class="fas fa-moon"></i>
@@ -56,10 +56,10 @@ templ Header() {
 
 templ AuthStatusLoggedIn() {
 	<div id="auth-status" class="flex space-x-4">
-		<a href="/profile" class="bg-blue-500 hover:bg-blue-600 p-3 rounded-full" hx-get="/profile" hx-target="#main-content" hx-swap="innerHTML">
+		<a href="/profile" class="bg-blue-500 hover:bg-blue-600 p-3 rounded-full" hx-get="/profile" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="true">
 			<i class="fas fa-user text-white text-xl"></i>
 		</a>
-		<button class="bg-red-500 hover:bg-red-600 p-3 rounded-full" hx-post="/auth/logout" hx-target="#main-content" hx-swap="innerHTML">
+		<button class="bg-red-500 hover:bg-red-600 p-3 rounded-full" hx-post="/auth/logout" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="/">
 			<i class="fas fa-sign-out-alt text-white text-xl"></i>
 		</button>
 	</div>
@@ -67,7 +67,7 @@ templ AuthStatusLoggedIn() {
 
 templ AuthStatusLoggedOut() {
 	<div id="auth-status">
-		<a href="/login" class="bg-blue-500 hover:bg-blue-600 p-3 rounded-full" hx-get="/login" hx-target="#main-content" hx-swap="innerHTML">
+		<a href="/login" class="bg-blue-500 hover:bg-blue-600 p-3 rounded-full" hx-get="/login" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="true">
 			<i class="fas fa-sign-in-alt text-white text-xl"></i>
 		</a>
 	</div>

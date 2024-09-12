@@ -87,7 +87,7 @@ func Header() templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<header class=\"bg-blue-600 dark:bg-blue-800 text-white p-4 fixed top-0 left-0 right-0 z-10\"><div class=\"container mx-auto flex justify-between items-center\"><a href=\"/\" class=\"text-2xl font-bold hover:text-blue-200\" hx-get=\"/\" hx-target=\"#main-content\" hx-swap=\"innerHTML\">BoulderLog</a><div class=\"flex items-center space-x-4\"><button onclick=\"toggleDarkMode()\" class=\"bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 p-2 rounded-full\"><i class=\"fas fa-moon\"></i></button><div id=\"auth-status\" hx-get=\"/auth/status\" hx-trigger=\"load\" hx-swap=\"outerHTML\"></div></div></div></header>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<header class=\"bg-blue-600 dark:bg-blue-800 text-white p-4 fixed top-0 left-0 right-0 z-10\"><div class=\"container mx-auto flex justify-between items-center\"><a href=\"/\" class=\"text-2xl font-bold hover:text-blue-200\" hx-get=\"/\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\">BoulderLog</a><div class=\"flex items-center space-x-4\"><button onclick=\"toggleDarkMode()\" class=\"bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 p-2 rounded-full\"><i class=\"fas fa-moon\"></i></button><div id=\"auth-status\" hx-get=\"/auth/status\" hx-trigger=\"load\" hx-swap=\"outerHTML\"></div></div></div></header>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -116,7 +116,7 @@ func AuthStatusLoggedIn() templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"auth-status\" class=\"flex space-x-4\"><a href=\"/profile\" class=\"bg-blue-500 hover:bg-blue-600 p-3 rounded-full\" hx-get=\"/profile\" hx-target=\"#main-content\" hx-swap=\"innerHTML\"><i class=\"fas fa-user text-white text-xl\"></i></a> <button class=\"bg-red-500 hover:bg-red-600 p-3 rounded-full\" hx-post=\"/auth/logout\" hx-target=\"#main-content\" hx-swap=\"innerHTML\"><i class=\"fas fa-sign-out-alt text-white text-xl\"></i></button></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"auth-status\" class=\"flex space-x-4\"><a href=\"/profile\" class=\"bg-blue-500 hover:bg-blue-600 p-3 rounded-full\" hx-get=\"/profile\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\"><i class=\"fas fa-user text-white text-xl\"></i></a> <button class=\"bg-red-500 hover:bg-red-600 p-3 rounded-full\" hx-post=\"/auth/logout\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"/\"><i class=\"fas fa-sign-out-alt text-white text-xl\"></i></button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -145,7 +145,7 @@ func AuthStatusLoggedOut() templ.Component {
 			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"auth-status\"><a href=\"/login\" class=\"bg-blue-500 hover:bg-blue-600 p-3 rounded-full\" hx-get=\"/login\" hx-target=\"#main-content\" hx-swap=\"innerHTML\"><i class=\"fas fa-sign-in-alt text-white text-xl\"></i></a></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"auth-status\"><a href=\"/login\" class=\"bg-blue-500 hover:bg-blue-600 p-3 rounded-full\" hx-get=\"/login\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"true\"><i class=\"fas fa-sign-in-alt text-white text-xl\"></i></a></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
