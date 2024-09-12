@@ -65,9 +65,14 @@ templ Header() {
 
 templ AuthStatusLoggedIn() {
 	<div id="auth-status" class="relative">
-		<button id="menu-button" onclick="toggleMenu()" class="bg-blue-500 hover:bg-blue-600 p-3 rounded-full">
-			<i class="fas fa-bars text-white text-xl"></i>
-		</button>
+		<div class="flex space-x-2">
+			<button href="/stats" hx-get="/stats" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="true" class="bg-blue-500 hover:bg-blue-600 p-3 rounded-full">
+				<i class="fas fa-chart-bar"></i>
+			</button>
+			<button id="menu-button" onclick="toggleMenu()" class="bg-blue-500 hover:bg-blue-600 p-3 rounded-full">
+				<i class="fas fa-bars"></i>
+			</button>
+		</div>
 		<div id="menu-popup" class="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 hidden">
 			<button onclick="toggleDarkMode()" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 w-full text-left">
 				<i class="fas fa-moon mr-2"></i>Toggle Dark Mode
@@ -84,11 +89,11 @@ templ AuthStatusLoggedIn() {
 
 templ AuthStatusLoggedOut() {
 	<div id="auth-status" class="flex items-center space-x-4">
-		<button onclick="toggleDarkMode()" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 p-2 rounded-full">
+		<button onclick="toggleDarkMode()" class="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 p-3 rounded-full">
 			<i class="fas fa-moon"></i>
 		</button>
 		<a href="/login" class="bg-blue-500 hover:bg-blue-600 p-3 rounded-full" hx-get="/login" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="true">
-			<i class="fas fa-sign-in-alt text-white text-xl"></i>
+			<i class="fas fa-sign-in-alt"></i>
 		</a>
 	</div>
 }

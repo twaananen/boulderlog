@@ -95,3 +95,12 @@ func (h *AuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
 	// Render the home content for logged out users
 	components.Home(false, nil, nil, false, -1).Render(r.Context(), w)
 }
+
+func (h *AuthHandler) StatsPage(w http.ResponseWriter, r *http.Request) {
+	isHtmxRequest := r.Header.Get("HX-Request") == "true"
+	if isHtmxRequest {
+		components.Stats().Render(r.Context(), w)
+	} else {
+		components.Layout("Stats", components.Stats()).Render(r.Context(), w)
+	}
+}

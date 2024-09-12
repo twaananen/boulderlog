@@ -21,4 +21,6 @@ func SetupRoutes(router *http.ServeMux, userService *services.UserService, logSe
 	router.HandleFunc("GET /log/grade", logHandler.GetGradeSelection)
 	router.HandleFunc("GET /log/difficulty/", logHandler.GetPerceivedDifficulty)
 	router.HandleFunc("POST /log/submit/", logHandler.SubmitLog)
+
+	router.HandleFunc("GET /stats", authHandler.StatsPage)
 }
