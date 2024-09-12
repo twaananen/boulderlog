@@ -31,6 +31,7 @@ templ PerceivedDifficulty(grade string) {
 				<button
 					hx-post={ fmt.Sprintf("/log/submit/%s/%d", grade, i) }
 					hx-target="#main-content"
+					hx-swap="innerHTML"
 					hx-include="[name='flash'],[name='new']"
 					class={
 						"w-full py-3 px-6 rounded font-bold text-white",

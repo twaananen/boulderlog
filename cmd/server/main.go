@@ -34,7 +34,7 @@ func main() {
 
 	router := http.NewServeMux()
 
-	router.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	router.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	handlers.SetupRoutes(router, userService, logService)
 

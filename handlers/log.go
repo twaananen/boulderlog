@@ -20,15 +20,42 @@ func NewLogHandler(logService *services.LogService) *LogHandler {
 }
 
 func (h *LogHandler) GetGradeSelection(w http.ResponseWriter, r *http.Request) {
-	components.BoulderGradeSelection().Render(r.Context(), w)
+	isHtmxRequest := r.Header.Get("HX-Request") == "true"
+	content := components.BoulderGradeSelection()
+
+	var err error
+	if isHtmxRequest {
+		err = content.Render(r.Context(), w)
+	} else {
+		err = components.Layout("Grade Selection", content).Render(r.Context(), w)
+	}
+
+	if err != nil {
+		utils.LogError("Failed to render grade selection", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
 }
 
 func (h *LogHandler) GetPerceivedDifficulty(w http.ResponseWriter, r *http.Request) {
 	grade := r.URL.Path[len("/log/difficulty/"):]
-	components.PerceivedDifficulty(grade).Render(r.Context(), w)
+	isHtmxRequest := r.Header.Get("HX-Request") == "true"
+	content := components.PerceivedDifficulty(grade)
+
+	var err error
+	if isHtmxRequest {
+		err = content.Render(r.Context(), w)
+	} else {
+		err = components.Layout("Perceived Difficulty", content).Render(r.Context(), w)
+	}
+
+	if err != nil {
+		utils.LogError("Failed to render perceived difficulty", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
 }
 
 func (h *LogHandler) SubmitLog(w http.ResponseWriter, r *http.Request) {
+
 	parts := strings.Split(r.URL.Path, "/")
 	if len(parts) != 5 {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
@@ -36,7 +63,11 @@ func (h *LogHandler) SubmitLog(w http.ResponseWriter, r *http.Request) {
 	}
 	grade := parts[3]
 	difficultyStr := parts[4]
-	difficulty, _ := strconv.Atoi(difficultyStr)
+	difficulty, err := strconv.Atoi(difficultyStr)
+	if err != nil {
+		http.Error(w, "Invalid difficulty", http.StatusBadRequest)
+		return
+	}
 
 	username, err := h.logService.GetUsernameFromToken(r)
 	if err != nil {
@@ -68,5 +99,17 @@ func (h *LogHandler) SubmitLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	components.LogSummary(gradeCounts, toppedCounts, true, difficulty).Render(r.Context(), w)
+	isHtmxRequest := r.Header.Get("HX-Request") == "true"
+	content := components.LogSummary(gradeCounts, toppedCounts, true, difficulty)
+
+	if isHtmxRequest {
+		err = content.Render(r.Context(), w)
+	} else {
+		err = components.Layout("Log Summary", content).Render(r.Context(), w)
+	}
+
+	if err != nil {
+		utils.LogError("Failed to render log summary", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
 }

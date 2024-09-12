@@ -8,7 +8,7 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func Layout(title string) templ.Component {
+func Layout(title string, content templ.Component) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -29,7 +29,7 @@ func Layout(title string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\" class=\"bg-gray-100 dark:bg-gray-900\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\" class=\"bg-gray-100 dark:bg-gray-900 h-full\" hx-boost=\"true\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -42,7 +42,7 @@ func Layout(title string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" - BoulderLog</title><link href=\"/static/css/tailwind.css\" rel=\"stylesheet\"><link href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css\" rel=\"stylesheet\"><script src=\"/static/js/htmx.min.js\"></script><script>\n\t\t\t\tfunction toggleDarkMode() {\n\t\t\t\t\tdocument.documentElement.classList.toggle('dark');\n\t\t\t\t\tlocalStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';\n\t\t\t\t}\n\n\t\t\t\tdocument.addEventListener('DOMContentLoaded', () => {\n\t\t\t\t\tif (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {\n\t\t\t\t\t\tdocument.documentElement.classList.add('dark')\n\t\t\t\t\t} else {\n\t\t\t\t\t\tdocument.documentElement.classList.remove('dark')\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t</script></head><body class=\"bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" - BoulderLog</title><link href=\"/static/css/tailwind.css\" rel=\"stylesheet\"><link href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css\" rel=\"stylesheet\"><script src=\"/static/js/htmx.min.js\"></script><script>\n\t\t\t\tfunction toggleDarkMode() {\n\t\t\t\t\tdocument.documentElement.classList.toggle('dark');\n\t\t\t\t\tlocalStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';\n\t\t\t\t}\n\n\t\t\t\tdocument.addEventListener('DOMContentLoaded', () => {\n\t\t\t\t\tif (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {\n\t\t\t\t\t\tdocument.documentElement.classList.add('dark')\n\t\t\t\t\t} else {\n\t\t\t\t\t\tdocument.documentElement.classList.remove('dark')\n\t\t\t\t\t}\n\t\t\t\t});\n\t\t\t</script></head><body class=\"bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col min-h-screen\" hx-trigger=\"authStatusChanged from:body\" hx-get=\"/auth/status\" hx-target=\"#auth-status\" hx-swap=\"outerHTML\"><a href=\"#main-content\" class=\"sr-only focus:not-sr-only\">Skip to main content</a>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -50,15 +50,15 @@ func Layout(title string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"container mx-auto px-4 py-8 mt-16\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<main id=\"main-content\" class=\"flex-grow container mx-auto px-4 py-8 mt-16\" hx-target=\"this\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templ_7745c5c3_Var1.Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = content.Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></body></html>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</main></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -87,7 +87,7 @@ func Header() templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<header class=\"bg-blue-600 dark:bg-blue-800 text-white p-4 fixed top-0 left-0 right-0 z-10\"><div class=\"container mx-auto flex justify-between items-center\"><a href=\"/\" class=\"text-2xl font-bold hover:text-blue-200\">BoulderLog</a><div class=\"flex items-center space-x-4\"><button onclick=\"toggleDarkMode()\" class=\"bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 p-2 rounded-full\"><i class=\"fas fa-moon\"></i></button><div hx-get=\"/auth/status\" hx-trigger=\"load, every 5m\" hx-swap=\"outerHTML\"></div></div></div></header>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<header class=\"bg-blue-600 dark:bg-blue-800 text-white p-4 fixed top-0 left-0 right-0 z-10\"><div class=\"container mx-auto flex justify-between items-center\"><a href=\"/\" class=\"text-2xl font-bold hover:text-blue-200\" hx-get=\"/\" hx-target=\"#main-content\" hx-swap=\"innerHTML\">BoulderLog</a><div class=\"flex items-center space-x-4\"><button onclick=\"toggleDarkMode()\" class=\"bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 p-2 rounded-full\"><i class=\"fas fa-moon\"></i></button><div id=\"auth-status\" hx-get=\"/auth/status\" hx-trigger=\"load\" hx-swap=\"outerHTML\"></div></div></div></header>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -116,7 +116,7 @@ func AuthStatusLoggedIn() templ.Component {
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex space-x-4\"><a href=\"/profile\" class=\"bg-blue-500 hover:bg-blue-600 p-3 rounded-full\"><i class=\"fas fa-user text-white text-xl\"></i></a> <a href=\"/auth/logout\" class=\"bg-red-500 hover:bg-red-600 p-3 rounded-full\"><i class=\"fas fa-sign-out-alt text-white text-xl\"></i></a></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"auth-status\" class=\"flex space-x-4\"><a href=\"/profile\" class=\"bg-blue-500 hover:bg-blue-600 p-3 rounded-full\" hx-get=\"/profile\" hx-target=\"#main-content\" hx-swap=\"innerHTML\"><i class=\"fas fa-user text-white text-xl\"></i></a> <button class=\"bg-red-500 hover:bg-red-600 p-3 rounded-full\" hx-post=\"/auth/logout\" hx-target=\"#main-content\" hx-swap=\"innerHTML\"><i class=\"fas fa-sign-out-alt text-white text-xl\"></i></button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -145,7 +145,7 @@ func AuthStatusLoggedOut() templ.Component {
 			templ_7745c5c3_Var5 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<a href=\"/login\" class=\"bg-blue-500 hover:bg-blue-600 p-3 rounded-full\"><i class=\"fas fa-sign-in-alt text-white text-xl\"></i></a>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"auth-status\"><a href=\"/login\" class=\"bg-blue-500 hover:bg-blue-600 p-3 rounded-full\" hx-get=\"/login\" hx-target=\"#main-content\" hx-swap=\"innerHTML\"><i class=\"fas fa-sign-in-alt text-white text-xl\"></i></a></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -8,7 +8,7 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func Login(errorMessage string, username string) templ.Component {
+func HomeContent() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -29,15 +29,7 @@ func Login(errorMessage string, username string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900\"><div class=\"bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md w-full max-w-md\"><h2 class=\"text-2xl font-bold mb-6 text-center text-gray-900 dark:text-gray-100\">Login to BoulderLog</h2><form hx-post=\"/auth/login\" hx-target=\"#main-content\" hx-swap=\"innerHTML\">")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = LoginForm(errorMessage, username).Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</form><div class=\"mt-4 text-center\"><a href=\"/\" hx-get=\"/\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" class=\"text-blue-500 dark:text-blue-300 hover:text-blue-600 dark:hover:text-blue-400\">Back to Home</a></div></div></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"text-center\"><h2 class=\"text-4xl font-bold mb-4 text-gray-900 dark:text-gray-100\">Elevate Your Climbing Game</h2><p class=\"text-xl mb-8 text-gray-700 dark:text-gray-300\">Track, Analyze, Conquer!</p><a href=\"/login\" hx-get=\"/login\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" class=\"bg-blue-500 dark:bg-blue-600 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 dark:hover:bg-blue-700\">Get Started</a></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
