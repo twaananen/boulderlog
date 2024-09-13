@@ -20,12 +20,12 @@ services:
     ports:
       - "8082:8080"
     environment:
-      - DB_HOST=db
-      - DB_USER=boulderlog
-      - DB_PASSWORD=boulderlog_password
-      - DB_NAME=boulderlog
-      - DB_PORT=5432
-      - GOFLAGS=-buildvcs=false
+      DB_HOST: db
+      DB_USER: boulderlog
+      DB_PASSWORD: boulderlog_password
+      DB_NAME: boulderlog
+      DB_PORT: 5432
+      GOFLAGS: -buildvcs=false
     depends_on:
       - db
 
