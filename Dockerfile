@@ -28,7 +28,7 @@ RUN tailwindcss -i ./static/css/input.css -o ./static/css/tailwind.css --minify
 RUN templ generate
 
 # Build the application
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./cmd/server
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
 # Final stage
 FROM alpine:latest

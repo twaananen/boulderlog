@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 
 	"github.com/joho/godotenv"
 	"github.com/twaananen/boulderlog/db"
@@ -24,9 +26,21 @@ func main() {
 
 	utils.InitLogger()
 
-	database, err := db.NewCSVDatabase("data")
+	// Get database connection details from environment variables
+	dbHost := os.Getenv("DB_HOST")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+	dbPortStr := os.Getenv("DB_PORT")
+	dbPort, err := strconv.Atoi(dbPortStr)
 	if err != nil {
-		log.Fatalf("Failed to initialize database: %v", err)
+		log.Fatalf("Invalid DB_PORT: %v", err)
+	}
+
+	// Create a new PostgreSQL database instance
+	database, err := db.NewPostgresDatabase(dbHost, dbUser, dbPassword, dbName, dbPort)
+	if err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
 	userService := services.NewUserService(database)
