@@ -27,18 +27,24 @@ func main() {
 	utils.InitLogger()
 
 	// Get database connection details from environment variables
-	dbHost := os.Getenv("DB_HOST")
-	dbUser := os.Getenv("DB_USER")
-	dbPassword := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
-	dbPortStr := os.Getenv("DB_PORT")
-	dbPort, err := strconv.Atoi(dbPortStr)
+	requiredEnvVars := []string{"DB_HOST", "DB_USER", "DB_PASSWORD", "DB_NAME", "DB_PORT"}
+	envVars := make(map[string]string)
+
+	for _, envVar := range requiredEnvVars {
+		value := os.Getenv(envVar)
+		if value == "" {
+			log.Fatalf("Missing required environment variable: %s", envVar)
+		}
+		envVars[envVar] = value
+	}
+
+	dbPort, err := strconv.Atoi(envVars["DB_PORT"])
 	if err != nil {
 		log.Fatalf("Invalid DB_PORT: %v", err)
 	}
 
 	// Create a new PostgreSQL database instance
-	database, err := db.NewPostgresDatabase(dbHost, dbUser, dbPassword, dbName, dbPort)
+	database, err := db.NewPostgresDatabase(envVars["DB_HOST"], envVars["DB_USER"], envVars["DB_PASSWORD"], envVars["DB_NAME"], dbPort)
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}

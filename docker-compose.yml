@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: boulderlog
+      POSTGRES_USER: boulderlog
+      POSTGRES_PASSWORD: boulderlog_password
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "8082:8080"
+    environment:
+      - DB_HOST=db
+      - DB_USER=boulderlog
+      - DB_PASSWORD=boulderlog_password
+      - DB_NAME=boulderlog
+      - DB_PORT=5432
+      - GOFLAGS=-buildvcs=false
+    depends_on:
+      - db
+
+  tailwind:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./components:/app/components
+      - ./handlers:/app/handlers
+      - ./static:/app/static
+      - ./tailwind.config.js:/app/tailwind.config.js
+    command: sh -c "npm install tailwindcss && npx tailwindcss -i ./static/css/input.css -o ./static/css/tailwind.css --watch"
+    tty: true
+    stdin_open: true

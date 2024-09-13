@@ -26,3 +26,6 @@ go.work.sum
 tmp/*
 data/*
 *.csv
+node_modules/*
+package.json
+package-lock.json

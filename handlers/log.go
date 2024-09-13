@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/twaananen/boulderlog/components"
 	"github.com/twaananen/boulderlog/models"
@@ -79,6 +80,7 @@ func (h *LogHandler) SubmitLog(w http.ResponseWriter, r *http.Request) {
 	newRoute := r.FormValue("new") == "on"
 
 	log := &models.BoulderLog{
+		Date:       time.Now().UTC(),
 		Username:   username,
 		Grade:      grade,
 		Difficulty: difficulty,

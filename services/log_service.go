@@ -1,12 +1,14 @@
 package services
 
 import (
+	"fmt"
 	"net/http"
 	"sort"
 	"time"
 
 	"github.com/twaananen/boulderlog/db"
 	"github.com/twaananen/boulderlog/models"
+	"github.com/twaananen/boulderlog/utils"
 )
 
 type LogService struct {
@@ -54,6 +56,8 @@ func (s *LogService) GetGradeCounts(username string) ([]string, []int, error) {
 	for i, grade := range grades {
 		counts[i] = gradeCounts[grade]
 	}
+
+	utils.LogInfo(fmt.Sprintf("Grade counts: %v", gradeCounts))
 
 	return grades, counts, nil
 }
