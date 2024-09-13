@@ -1,8 +1,8 @@
 package components
 
-templ Profile() {
+templ Profile(username string) {
 	<div class="container mx-auto px-4 py-8">
-		<h2 class="text-3xl font-bold mb-4">Your Profile</h2>
+		<h2 class="text-3xl font-bold mb-4">{username}</h2>
 		<p class="mb-4">Welcome to your profile page. Here you can view and edit your information.</p>
 		// Add more profile content here
 	</div>

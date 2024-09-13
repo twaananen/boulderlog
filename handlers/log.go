@@ -13,11 +13,12 @@ import (
 )
 
 type LogHandler struct {
-	logService *services.LogService
+	logService  *services.LogService
+	userService *services.UserService
 }
 
-func NewLogHandler(logService *services.LogService) *LogHandler {
-	return &LogHandler{logService: logService}
+func NewLogHandler(logService *services.LogService, userService *services.UserService) *LogHandler {
+	return &LogHandler{logService: logService, userService: userService}
 }
 
 func (h *LogHandler) GetGradeSelection(w http.ResponseWriter, r *http.Request) {
@@ -70,7 +71,7 @@ func (h *LogHandler) SubmitLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	username, err := h.logService.GetUsernameFromToken(r)
+	username, err := h.userService.GetUsernameFromToken(r)
 	if err != nil {
 		http.Error(w, "User not authenticated", http.StatusUnauthorized)
 		return

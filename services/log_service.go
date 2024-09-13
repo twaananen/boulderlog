@@ -2,7 +2,6 @@ package services
 
 import (
 	"fmt"
-	"net/http"
 	"sort"
 	"time"
 
@@ -29,10 +28,6 @@ func (s *LogService) SaveLog(log *models.BoulderLog) error {
 
 func (s *LogService) GetTodayGradeCounts(username string) (map[string]int, map[string]int, error) {
 	return s.db.GetTodayGradeCounts(username)
-}
-
-func (s *LogService) GetUsernameFromToken(r *http.Request) (string, error) {
-	return s.userService.GetUsernameFromToken(r)
 }
 
 func (s *LogService) GetGradeCounts(username string) ([]string, []int, error) {

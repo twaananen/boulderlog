@@ -28,15 +28,6 @@ func (h *AuthHandler) LoginPage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *AuthHandler) ProfilePage(w http.ResponseWriter, r *http.Request) {
-	isHtmxRequest := r.Header.Get("HX-Request") == "true"
-	if isHtmxRequest {
-		components.Profile().Render(r.Context(), w)
-	} else {
-		components.Layout("Profile", components.Profile()).Render(r.Context(), w)
-	}
-}
-
 func (h *AuthHandler) AuthStatus(w http.ResponseWriter, r *http.Request) {
 	isLoggedIn := h.userService.IsUserLoggedIn(r)
 
@@ -94,29 +85,4 @@ func (h *AuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("HX-Trigger", "authStatusChanged")
 	// Render the home content for logged out users
 	components.Home(false, nil, nil, false, -1).Render(r.Context(), w)
-}
-
-func (h *AuthHandler) StatsPage(w http.ResponseWriter, r *http.Request) {
-	username, err := h.userService.GetUsernameFromToken(r)
-	if err != nil {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
-	// Fetch grade counts
-	gradeLabels, gradeCounts, err := h.logService.GetGradeCounts(username)
-	if err != nil {
-		utils.LogError("Failed to get grade counts", err)
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-
-	isHtmxRequest := r.Header.Get("HX-Request") == "true"
-	content := components.Stats(gradeLabels, gradeCounts)
-
-	if isHtmxRequest {
-		content.Render(r.Context(), w)
-	} else {
-		components.Layout("Stats", content).Render(r.Context(), w)
-	}
 }
