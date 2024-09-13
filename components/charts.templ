@@ -1,0 +1,56 @@
+package components
+
+templ GradeCountsChart(gradeLabels []string, gradeCounts []int) {
+    <div class="w-full h-64">
+        <canvas id="gradeCountsChart" chart-labels={ templ.JSONString(gradeLabels) } chart-data={ templ.JSONString(gradeCounts) }></canvas>
+    </div>
+    <script>
+        (function() {
+            const dataSource = document.getElementById('gradeCountsChart');
+            const ctx = dataSource.getContext('2d');
+            const gradeLabels = JSON.parse(dataSource.getAttribute('chart-labels'));
+            const gradeCounts = JSON.parse(dataSource.getAttribute('chart-data'));
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: gradeLabels,
+                    datasets: [{
+                        label: 'Boulder Counts by Grade',
+                        data: gradeCounts,
+                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                        borderColor: 'rgb(54, 162, 235)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Count'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Grade'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Boulder Counts by Grade'
+                        }
+                    }
+                }
+            });
+        })();
+    </script>
+}

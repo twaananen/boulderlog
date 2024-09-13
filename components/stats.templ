@@ -1,15 +1,12 @@
 package components
 
-templ Stats() {
+templ Stats(gradeLabels []string, gradeCounts []int) {
 	<div class="container mx-auto px-4 py-8">
 		<h2 class="text-3xl font-bold mb-4">Your Bouldering Stats</h2>
-		<div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4" role="alert">
-			<p class="font-bold">Under Construction</p>
-			<p>We're working hard to bring you awesome stats and visualizations of your bouldering progress. Check back soon!</p>
-		</div>
-		<div class="text-center">
-			<i class="fas fa-hard-hat text-6xl text-yellow-500 mb-4"></i>
-			<p class="text-xl">Our data wizards are crunching numbers and crafting beautiful charts just for you.</p>
+		
+		<h3 class="text-2xl font-bold mt-8 mb-4">Boulder Counts by Grade</h3>
+		<div class="mb-8">
+			@GradeCountsChart(gradeLabels, gradeCounts)
 		</div>
 	</div>
 }

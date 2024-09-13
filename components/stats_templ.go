@@ -8,7 +8,7 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func Stats() templ.Component {
+func Stats(gradeLabels []string, gradeCounts []int) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -29,7 +29,15 @@ func Stats() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"container mx-auto px-4 py-8\"><h2 class=\"text-3xl font-bold mb-4\">Your Bouldering Stats</h2><div class=\"bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4\" role=\"alert\"><p class=\"font-bold\">Under Construction</p><p>We're working hard to bring you awesome stats and visualizations of your bouldering progress. Check back soon!</p></div><div class=\"text-center\"><i class=\"fas fa-hard-hat text-6xl text-yellow-500 mb-4\"></i><p class=\"text-xl\">Our data wizards are crunching numbers and crafting beautiful charts just for you.</p></div></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"container mx-auto px-4 py-8\"><h2 class=\"text-3xl font-bold mb-4\">Your Bouldering Stats</h2><h3 class=\"text-2xl font-bold mt-8 mb-4\">Boulder Counts by Grade</h3><div class=\"mb-8\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = GradeCountsChart(gradeLabels, gradeCounts).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -144,3 +144,63 @@ func (db *CSVDatabase) GetTodayGradeCounts(username string) (map[string]int, map
 
 	return gradeCounts, toppedCounts, nil
 }
+
+func (db *CSVDatabase) GetBoulderLogs(username string) ([]models.BoulderLog, error) {
+	filename := fmt.Sprintf("%s-log.csv", username)
+	filepath := filepath.Join(db.dataDir, filename)
+
+	file, err := os.Open(filepath)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	reader := csv.NewReader(file)
+	records, err := reader.ReadAll()
+	if err != nil {
+		return nil, err
+	}
+
+	var logs []models.BoulderLog
+	for i, record := range records {
+		if i == 0 && record[0] == "Timestamp" {
+			// Skip the header row
+			continue
+		}
+		if len(record) != 5 {
+			utils.LogError("Invalid record format", fmt.Errorf("expected 5 fields, got %d", len(record)))
+			continue
+		}
+		date, err := time.Parse(time.RFC3339, record[0])
+		if err != nil {
+			utils.LogError("Invalid date format", err)
+			continue
+		}
+		difficulty, err := strconv.Atoi(record[2])
+		if err != nil {
+			utils.LogError("Invalid difficulty format", err)
+			continue
+		}
+		flash, err := strconv.ParseBool(record[3])
+		if err != nil {
+			utils.LogError("Invalid flash format", err)
+			continue
+		}
+		newRoute, err := strconv.ParseBool(record[4])
+		if err != nil {
+			utils.LogError("Invalid newRoute format", err)
+			continue
+		}
+		log := models.BoulderLog{
+			Username:   username,
+			Date:       date,
+			Grade:      record[1],
+			Difficulty: difficulty,
+			Flash:      flash,
+			NewRoute:   newRoute,
+		}
+		logs = append(logs, log)
+	}
+
+	return logs, nil
+}
