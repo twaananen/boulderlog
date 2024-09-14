@@ -9,11 +9,11 @@ import (
 )
 
 type MigrationService struct {
-	postgresDB *db.PostgresDatabase
-	csvDB      *db.CSVDatabase
+	postgresDB db.Database
+	csvDB      db.CSV_Database
 }
 
-func NewMigrationService(postgresDB *db.PostgresDatabase, csvDB *db.CSVDatabase) *MigrationService {
+func NewMigrationService(postgresDB db.Database, csvDB db.CSV_Database) *MigrationService {
 	return &MigrationService{
 		postgresDB: postgresDB,
 		csvDB:      csvDB,
@@ -35,7 +35,7 @@ func (s *MigrationService) MigrateUserData(username string) (int, error) {
 		}
 		if existingLog != nil {
 			// Log already exists, skip
-			utils.LogInfo(fmt.Sprintf("Skipping log for user %s at date %s : grade %s, difficulty %i, flash %t, new route %t", username, csvLog.Date, csvLog.Grade, csvLog.Difficulty, csvLog.Flash, csvLog.NewRoute))
+			utils.LogInfo(fmt.Sprintf("Skipping log for user %s at date %s : grade %s, difficulty %v, flash %t, new route %t", username, csvLog.Date, csvLog.Grade, csvLog.Difficulty, csvLog.Flash, csvLog.NewRoute))
 			continue
 		}
 
@@ -53,7 +53,7 @@ func (s *MigrationService) MigrateUserData(username string) (int, error) {
 			continue
 		}
 
-		utils.LogInfo(fmt.Sprintf("Migrated log for user %s at date %s : grade %s, difficulty %i, flash %t, new route %t", username, newLog.CreatedAt, newLog.Grade, newLog.Difficulty, newLog.Flash, newLog.NewRoute))
+		utils.LogInfo(fmt.Sprintf("Migrated log for user %s at date %s : grade %s, difficulty %v, flash %t, new route %t", username, newLog.CreatedAt, newLog.Grade, newLog.Difficulty, newLog.Flash, newLog.NewRoute))
 
 		migratedCount++
 	}

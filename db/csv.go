@@ -12,6 +12,7 @@ import (
 	"github.com/twaananen/boulderlog/utils" // Assuming this is where utils.LogError is defined
 )
 
+// implements CSV_Database interface
 type CSVDatabase struct {
 	dataDir string
 }

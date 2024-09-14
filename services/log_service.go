@@ -26,8 +26,15 @@ func (s *LogService) SaveLog(log *models.BoulderLog) error {
 	return s.db.SaveBoulderLog(log)
 }
 
-func (s *LogService) GetTodayGradeCounts(username string) (map[string]int, map[string]int, error) {
-	return s.db.GetTodayGradeCounts(username)
+func (s *LogService) GetTodayGradeCounts(userID string) (map[string]int, map[string]int, error) {
+	counts, toppedCounts, err := s.db.GetTodayGradeCounts(userID)
+	if err != nil {
+		return nil, nil, err
+	}
+	if counts == nil {
+		return map[string]int{}, map[string]int{}, nil
+	}
+	return counts, toppedCounts, nil
 }
 
 func (s *LogService) GetGradeCounts(username string) ([]string, []int, error) {

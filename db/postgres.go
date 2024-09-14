@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// implements Database interface
 type PostgresDatabase struct {
 	db *gorm.DB
 }
