@@ -23,6 +23,7 @@ func SetupRoutes(router *http.ServeMux, userService *services.UserService, logSe
 
 	router.HandleFunc("GET /profile", authMiddleware(profileHandler.ProfilePage))
 	router.HandleFunc("POST /profile/migrate", authMiddleware(profileHandler.MigrateData))
+	router.HandleFunc("GET /profile/download-log", authMiddleware(profileHandler.DownloadLog)) // Ensure this line is present
 
 	router.HandleFunc("GET /stats", authMiddleware(statsHandler.StatsPage))
 	router.HandleFunc("GET /log/grade", authMiddleware(logHandler.GetGradeSelection))

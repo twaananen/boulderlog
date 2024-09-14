@@ -1,7 +1,10 @@
 package services
 
 import (
+	"bytes"
+	"encoding/csv"
 	"fmt"
+	"strconv"
 
 	"github.com/twaananen/boulderlog/db"
 	"github.com/twaananen/boulderlog/models"
@@ -59,4 +62,40 @@ func (s *MigrationService) MigrateUserData(username string) (int, error) {
 	}
 
 	return migratedCount, nil
+}
+
+func (s *MigrationService) GetBoulderLogCSV(username string) (string, error) {
+	logs, err := s.postgresDB.GetBoulderLogs(username)
+	if err != nil {
+		return "", err
+	}
+
+	var buf bytes.Buffer
+	writer := csv.NewWriter(&buf)
+
+	// Write header
+	if err := writer.Write([]string{"Date", "Grade", "Difficulty", "Flash", "New Route"}); err != nil {
+		return "", err
+	}
+
+	// Write log entries
+	for _, log := range logs {
+		record := []string{
+			log.CreatedAt.Format("2006-01-02 15:04:05"),
+			log.Grade,
+			strconv.Itoa(log.Difficulty),
+			strconv.FormatBool(log.Flash),
+			strconv.FormatBool(log.NewRoute),
+		}
+		if err := writer.Write(record); err != nil {
+			return "", err
+		}
+	}
+
+	writer.Flush()
+	if err := writer.Error(); err != nil {
+		return "", err
+	}
+
+	return buf.String(), nil
 }

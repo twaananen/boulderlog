@@ -56,3 +56,29 @@ func (h *ProfileHandler) MigrateData(w http.ResponseWriter, r *http.Request) {
 }
 
 // Add more profile-related methods here as needed
+
+func (h *ProfileHandler) DownloadLog(w http.ResponseWriter, r *http.Request) {
+	username, err := h.userService.GetUsernameFromToken(r)
+	if err != nil {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	csvData, err := h.migrationService.GetBoulderLogCSV(username)
+	if err != nil {
+		utils.LogError("Failed to fetch boulder log data", err)
+		http.Error(w, "Failed to generate CSV", http.StatusInternalServerError)
+		return
+	}
+
+	// Set headers for file download
+	w.Header().Set("Content-Type", "text/csv")
+	w.Header().Set("Content-Disposition", "attachment; filename=boulder_log.csv")
+	w.Header().Set("Content-Length", fmt.Sprintf("%d", len(csvData)))
+
+	// Write the CSV data to the response
+	_, err = w.Write([]byte(csvData))
+	if err != nil {
+		utils.LogError("Failed to write CSV data to response", err)
+	}
+}
