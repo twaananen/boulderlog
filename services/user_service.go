@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -94,15 +95,21 @@ func (s *UserService) GetUsernameFromToken(r *http.Request) (string, error) {
 		return utils.JWTSecret, nil
 	})
 
-	if err != nil {
+	if err != nil || !token.Valid {
 		return "", err
 	}
 
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		return claims["username"].(string), nil
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return "", fmt.Errorf("invalid token claims")
 	}
 
-	return "", models.ErrInvalidToken
+	username, ok := claims["username"].(string)
+	if !ok {
+		return "", fmt.Errorf("username not found in token")
+	}
+
+	return username, nil
 }
 
 func (s *UserService) CreateUser(username, password string) error {

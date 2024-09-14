@@ -1,5 +1,6 @@
 package components
 
+
 templ GradeCountsChart(gradeLabels []string, gradeCounts []int) {
     <div class="w-full h-64">
         <canvas id="gradeCountsChart" chart-labels={ templ.JSONString(gradeLabels) } chart-data={ templ.JSONString(gradeCounts) }></canvas>
@@ -10,9 +11,8 @@ templ GradeCountsChart(gradeLabels []string, gradeCounts []int) {
             const ctx = dataSource.getContext('2d');
             const gradeLabels = JSON.parse(dataSource.getAttribute('chart-labels'));
             const gradeCounts = JSON.parse(dataSource.getAttribute('chart-data'));
-            
             new Chart(ctx, {
-                type: 'bar',
+                type: 'bar',	
                 data: {
                     labels: gradeLabels,
                     datasets: [{

@@ -1,12 +1,13 @@
 package services
 
 import (
-	"net/http"
+	"fmt"
 	"sort"
 	"time"
 
 	"github.com/twaananen/boulderlog/db"
 	"github.com/twaananen/boulderlog/models"
+	"github.com/twaananen/boulderlog/utils"
 )
 
 type LogService struct {
@@ -25,12 +26,15 @@ func (s *LogService) SaveLog(log *models.BoulderLog) error {
 	return s.db.SaveBoulderLog(log)
 }
 
-func (s *LogService) GetTodayGradeCounts(username string) (map[string]int, map[string]int, error) {
-	return s.db.GetTodayGradeCounts(username)
-}
-
-func (s *LogService) GetUsernameFromToken(r *http.Request) (string, error) {
-	return s.userService.GetUsernameFromToken(r)
+func (s *LogService) GetTodayGradeCounts(userID string) (map[string]int, map[string]int, error) {
+	counts, toppedCounts, err := s.db.GetTodayGradeCounts(userID)
+	if err != nil {
+		return nil, nil, err
+	}
+	if counts == nil {
+		return map[string]int{}, map[string]int{}, nil
+	}
+	return counts, toppedCounts, nil
 }
 
 func (s *LogService) GetGradeCounts(username string) ([]string, []int, error) {
@@ -55,6 +59,8 @@ func (s *LogService) GetGradeCounts(username string) ([]string, []int, error) {
 		counts[i] = gradeCounts[grade]
 	}
 
+	utils.LogInfo(fmt.Sprintf("Grade counts: %v", gradeCounts))
+
 	return grades, counts, nil
 }
 
@@ -66,7 +72,7 @@ func (s *LogService) GetProgressData(username string) ([]string, map[string][]in
 
 	weeklyData := make(map[string]map[string]int)
 	for _, log := range logs {
-		weekLabel := log.Date.Truncate(7 * 24 * time.Hour).Format("2006-01-02")
+		weekLabel := log.CreatedAt.Truncate(7 * 24 * time.Hour).Format("2006-01-02")
 		if _, exists := weeklyData[weekLabel]; !exists {
 			weeklyData[weekLabel] = make(map[string]int)
 		}
