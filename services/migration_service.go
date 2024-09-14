@@ -13,15 +13,11 @@ type MigrationService struct {
 	csvDB      *db.CSVDatabase
 }
 
-func NewMigrationService(postgresDB *db.PostgresDatabase, dataDir string) (*MigrationService, error) {
-	csvDB, err := db.NewCSVDatabase(dataDir)
-	if err != nil {
-		return nil, err
-	}
+func NewMigrationService(postgresDB *db.PostgresDatabase, csvDB *db.CSVDatabase) *MigrationService {
 	return &MigrationService{
 		postgresDB: postgresDB,
 		csvDB:      csvDB,
-	}, nil
+	}
 }
 
 func (s *MigrationService) MigrateUserData(username string) (int, error) {

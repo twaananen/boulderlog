@@ -49,12 +49,21 @@ func main() {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
-	userService := services.NewUserService(database)
-	logService := services.NewLogService(database)
-	migrationService, err := services.NewMigrationService(database, "data")
-	if err != nil {
-		log.Fatal(err)
+	dataDir := os.Getenv("DATA_DIR")
+	if dataDir == "" {
+		dataDir = "data"
 	}
+
+	// Create CSV database
+	csvDB, err := db.NewCSVDatabase(dataDir)
+	if err != nil {
+		log.Fatalf("Failed to create CSV database: %v", err)
+	}
+
+	// Create services
+	userService := services.NewUserService(database)
+	migrationService := services.NewMigrationService(database, csvDB)
+	logService := services.NewLogService(database)
 
 	router := http.NewServeMux()
 
