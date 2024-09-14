@@ -21,21 +21,22 @@ templ Layout(title string, content templ.Component) {
 					const menu = document.getElementById('menu-popup');
 					menu.classList.toggle('hidden');
 				}
+
 				document.addEventListener('DOMContentLoaded', () => {
 					if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
 						document.documentElement.classList.add('dark')
 					} else {
 						document.documentElement.classList.remove('dark')
 					}	
-
-					// Close menu when clicking outside
-					document.addEventListener('click', (event) => {
-						const menu = document.getElementById('menu-popup');
-						const menuButton = document.getElementById('menu-button');
-						if (menu && menuButton && !menu.contains(event.target) && !menuButton.contains(event.target)) {
-							menu.classList.add('hidden');
-						}
-					});
+				});
+				
+				// Close menu when clicking outside
+				document.addEventListener('click', (event) => {
+					const menu = document.getElementById('menu-popup');
+					const menuButton = document.getElementById('menu-button');
+					if (menu && menuButton && !menu.contains(event.target) && !menuButton.contains(event.target)) {
+						menu.classList.add('hidden');
+					}
 				});
 			</script>
 		</head>
