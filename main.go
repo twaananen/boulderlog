@@ -51,12 +51,16 @@ func main() {
 
 	userService := services.NewUserService(database)
 	logService := services.NewLogService(database)
+	migrationService, err := services.NewMigrationService(database, "data")
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	router := http.NewServeMux()
 
 	router.Handle("GET /static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-	handlers.SetupRoutes(router, userService, logService)
+	handlers.SetupRoutes(router, userService, logService, migrationService)
 
 	utils.LogInfo("Server starting on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", router))

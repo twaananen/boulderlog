@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"gorm.io/gorm"
 )
 
@@ -14,8 +12,7 @@ type User struct {
 
 type BoulderLog struct {
 	gorm.Model
-	Username   string
-	Date       time.Time
+	Username   string `gorm:"index"`
 	Grade      string
 	Difficulty int
 	Flash      bool

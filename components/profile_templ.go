@@ -42,7 +42,7 @@ func Profile(username string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2><p class=\"mb-4\">Welcome to your profile page. Here you can view and edit your information.</p></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2><p class=\"mb-4\">Welcome to your profile page. Here you can view and edit your information.</p><button hx-post=\"/profile/migrate\" hx-target=\"#migration-status\" class=\"bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded\">Migrate CSV Data</button><div id=\"migration-status\" class=\"mt-4\"></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

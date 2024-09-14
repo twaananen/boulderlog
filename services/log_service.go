@@ -65,7 +65,7 @@ func (s *LogService) GetProgressData(username string) ([]string, map[string][]in
 
 	weeklyData := make(map[string]map[string]int)
 	for _, log := range logs {
-		weekLabel := log.Date.Truncate(7 * 24 * time.Hour).Format("2006-01-02")
+		weekLabel := log.CreatedAt.Truncate(7 * 24 * time.Hour).Format("2006-01-02")
 		if _, exists := weeklyData[weekLabel]; !exists {
 			weeklyData[weekLabel] = make(map[string]int)
 		}

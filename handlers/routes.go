@@ -7,10 +7,10 @@ import (
 	"github.com/twaananen/boulderlog/services"
 )
 
-func SetupRoutes(router *http.ServeMux, userService *services.UserService, logService *services.LogService) {
+func SetupRoutes(router *http.ServeMux, userService *services.UserService, logService *services.LogService, migrationService *services.MigrationService) {
 	homeHandler := NewHomeHandler(userService, logService)
 	authHandler := NewAuthHandler(userService, logService)
-	profileHandler := NewProfileHandler(userService)
+	profileHandler := NewProfileHandler(userService, migrationService)
 	logHandler := NewLogHandler(logService, userService)
 	statsHandler := NewStatsHandler(userService, logService)
 	authMiddleware := middleware.AuthMiddleware(userService)
@@ -22,6 +22,7 @@ func SetupRoutes(router *http.ServeMux, userService *services.UserService, logSe
 	router.HandleFunc("POST /auth/logout", authHandler.Logout)
 
 	router.HandleFunc("GET /profile", authMiddleware(profileHandler.ProfilePage))
+	router.HandleFunc("POST /profile/migrate", authMiddleware(profileHandler.MigrateData))
 
 	router.HandleFunc("GET /stats", authMiddleware(statsHandler.StatsPage))
 	router.HandleFunc("GET /log/grade", authMiddleware(logHandler.GetGradeSelection))

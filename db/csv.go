@@ -23,7 +23,7 @@ func NewCSVDatabase(dataDir string) (*CSVDatabase, error) {
 	return &CSVDatabase{dataDir: dataDir}, nil
 }
 
-func (db *CSVDatabase) GetUserByUsername(username string) (*models.User, error) {
+func (db *CSVDatabase) GetUserByUsername(username string) (*models.CsvUser, error) {
 	filename := filepath.Join(db.dataDir, "users.csv")
 	file, err := os.Open(filename)
 	if err != nil {
@@ -45,7 +45,7 @@ func (db *CSVDatabase) GetUserByUsername(username string) (*models.User, error) 
 			continue
 		}
 		if record[0] == username {
-			return &models.User{
+			return &models.CsvUser{
 				Username: record[0],
 				Password: record[1],
 			}, nil
@@ -55,7 +55,7 @@ func (db *CSVDatabase) GetUserByUsername(username string) (*models.User, error) 
 	return nil, nil // User not found
 }
 
-func (db *CSVDatabase) CreateUser(user *models.User) error {
+func (db *CSVDatabase) CreateUser(user *models.CsvUser) error {
 	filename := filepath.Join(db.dataDir, "users.csv")
 	file, err := os.OpenFile(filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
@@ -74,7 +74,7 @@ func (db *CSVDatabase) CreateUser(user *models.User) error {
 	return writer.Write(record)
 }
 
-func (db *CSVDatabase) SaveBoulderLog(log *models.BoulderLog) error {
+func (db *CSVDatabase) SaveBoulderLog(log *models.CsvBoulderLog) error {
 	filename := fmt.Sprintf("%s-log.csv", log.Username)
 	filepath := filepath.Join(db.dataDir, filename)
 
@@ -145,7 +145,7 @@ func (db *CSVDatabase) GetTodayGradeCounts(username string) (map[string]int, map
 	return gradeCounts, toppedCounts, nil
 }
 
-func (db *CSVDatabase) GetBoulderLogs(username string) ([]models.BoulderLog, error) {
+func (db *CSVDatabase) GetBoulderLogs(username string) ([]models.CsvBoulderLog, error) {
 	filename := fmt.Sprintf("%s-log.csv", username)
 	filepath := filepath.Join(db.dataDir, filename)
 
@@ -161,7 +161,7 @@ func (db *CSVDatabase) GetBoulderLogs(username string) ([]models.BoulderLog, err
 		return nil, err
 	}
 
-	var logs []models.BoulderLog
+	var logs []models.CsvBoulderLog
 	for i, record := range records {
 		if i == 0 && record[0] == "Timestamp" {
 			// Skip the header row
@@ -191,7 +191,7 @@ func (db *CSVDatabase) GetBoulderLogs(username string) ([]models.BoulderLog, err
 			utils.LogError("Invalid newRoute format", err)
 			continue
 		}
-		log := models.BoulderLog{
+		log := models.CsvBoulderLog{
 			Username:   username,
 			Date:       date,
 			Grade:      record[1],

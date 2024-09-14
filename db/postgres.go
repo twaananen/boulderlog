@@ -115,7 +115,7 @@ func (pdb *PostgresDatabase) GetProgressData(username string) ([]string, map[str
 	var weeks []time.Time
 
 	for _, log := range logs {
-		weekStart := log.Date.Truncate(7 * 24 * time.Hour)
+		weekStart := log.CreatedAt.Truncate(7 * 24 * time.Hour)
 		if _, exists := weeklyData[weekStart]; !exists {
 			weeklyData[weekStart] = make(map[string]int)
 			weeks = append(weeks, weekStart)
@@ -144,4 +144,16 @@ func (pdb *PostgresDatabase) GetProgressData(username string) ([]string, map[str
 	}
 
 	return labels, gradeDatasets, nil
+}
+
+func (pdb *PostgresDatabase) GetBoulderLogByUsernameAndDate(username string, date time.Time) (*models.BoulderLog, error) {
+	var log models.BoulderLog
+	result := pdb.db.Where("username = ? AND created_at = ?", username, date).First(&log)
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, result.Error
+	}
+	return &log, nil
 }
