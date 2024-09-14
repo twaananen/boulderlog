@@ -52,7 +52,7 @@ func (pdb *PostgresDatabase) SaveBoulderLog(log *models.BoulderLog) error {
 func (pdb *PostgresDatabase) GetTodayGradeCounts(username string) (map[string]int, map[string]int, error) {
 	var logs []models.BoulderLog
 	today := time.Now().UTC().Truncate(24 * time.Hour)
-	result := pdb.db.Where("username = ? AND date >= ?", username, today).Find(&logs)
+	result := pdb.db.Where("username = ? AND created_at >= ?", username, today).Find(&logs)
 	if result.Error != nil {
 		return nil, nil, result.Error
 	}
@@ -72,7 +72,7 @@ func (pdb *PostgresDatabase) GetTodayGradeCounts(username string) (map[string]in
 
 func (pdb *PostgresDatabase) GetBoulderLogs(username string) ([]models.BoulderLog, error) {
 	var logs []models.BoulderLog
-	result := pdb.db.Where("username = ?", username).Order("date").Find(&logs)
+	result := pdb.db.Where("username = ?", username).Order("created_at").Find(&logs)
 	return logs, result.Error
 }
 
@@ -106,7 +106,7 @@ func (pdb *PostgresDatabase) GetGradeCounts(username string) ([]string, []int, e
 
 func (pdb *PostgresDatabase) GetProgressData(username string) ([]string, map[string][]int, error) {
 	var logs []models.BoulderLog
-	err := pdb.db.Where("username = ?", username).Order("date").Find(&logs).Error
+	err := pdb.db.Where("username = ?", username).Order("created_at").Find(&logs).Error
 	if err != nil {
 		return nil, nil, err
 	}
