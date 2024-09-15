@@ -9,19 +9,47 @@ templ BoulderGradeSelection() {
 	<div class="max-w-md mx-auto">
 		<div class="grid grid-cols-2 gap-4">
 			for _, grade := range []string{
-				"4", "5", "5+", "6A", "6A+", "6B", "6B+", "6C", "6C+", "7A",
+				"4","4+", "5", "5+", "6A", "6A+", "6B", "6B+", "6C", "6C+", "7A",
 				"7A+", "7B", "7B+", "7C", "7C+", "8A", "8A+", "8B", "8B+", "8C",
 			} {
-				<button
-					hx-get={ fmt.Sprintf("/log/difficulty/?grade=%s", url.QueryEscape(grade)) }
-					hx-target="#main-content"
-					hx-swap="innerHTML"
-					hx-push-url="true"
-					class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded text-sm"
-				>
-					{ grade }
-				</button>
+				@gradeButton(grade)
 			}
 		</div>
 	</div>
+}
+
+templ gradeButton(grade string) {
+	<button
+		hx-get={ fmt.Sprintf("/log/difficulty/?grade=%s", url.QueryEscape(grade)) }
+		hx-target="#main-content"
+		hx-swap="innerHTML"
+		hx-push-url="true"
+		class={ getButtonClass(grade) }
+	>
+		{ grade }
+	</button>
+}
+
+func getButtonClass(grade string) string {
+	baseClass := "text-white font-bold py-3 px-4 rounded text-sm "
+	switch grade {
+	case "4", "4+":
+		return baseClass + "bg-yellow-500 hover:bg-yellow-600"
+	case "5", "5+":
+		return baseClass + "bg-green-500 hover:bg-green-600"
+	case "6A", "6A+":
+		return baseClass + "bg-orange-500 hover:bg-orange-600"
+	case "6B", "6B+":
+		return baseClass + "bg-blue-500 hover:bg-blue-600"
+	case "6C", "6C+":
+		return baseClass + "bg-red-500 hover:bg-red-600"
+	case "7A", "7A+":
+		return baseClass + "bg-purple-500 hover:bg-purple-600"
+	case "7B", "7B+":
+		return baseClass + "bg-pink-500 hover:bg-pink-600"
+	case "7C", "7C+":
+		return baseClass + "bg-black hover:bg-gray-800"
+	default: // For all 8 grades
+		return baseClass + "bg-white hover:bg-gray-200 text-black"
+	}
 }
