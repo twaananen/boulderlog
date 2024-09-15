@@ -37,38 +37,38 @@ func LogSummary(gradeCounts map[string]int, toppedCounts map[string]int, showCon
 		ctx = templ.ClearChildren(ctx)
 		if showCongrats {
 			if lastAttemptDifficulty <= 4 {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h2 class=\"text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"bg-gradient-to-br from-yellow-400 to-pink-500 rounded-lg p-4\"><h2 class=\"text-3xl font-bold mb-4 text-gray-900 dark:text-white\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var2 string
 				templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(getRandomHypeText())
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 12, Col: 93}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 13, Col: 91}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<h2 class=\"text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"bg-gradient-to-br from-green-400 to-blue-500 rounded-lg p-4\"><h2 class=\"text-3xl font-bold mb-4 text-gray-900 dark:text-white\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(getRandomPepText())
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 14, Col: 92}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 17, Col: 90}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -92,7 +92,7 @@ func LogSummary(gradeCounts map[string]int, toppedCounts map[string]int, showCon
 				var templ_7745c5c3_Var4 string
 				templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(grade)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 25, Col: 69}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 29, Col: 69}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 				if templ_7745c5c3_Err != nil {
@@ -105,7 +105,7 @@ func LogSummary(gradeCounts map[string]int, toppedCounts map[string]int, showCon
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(templ.EscapeString(fmt.Sprintf("%d", toppedCounts[grade])))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 25, Col: 189}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 29, Col: 189}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {
@@ -118,7 +118,7 @@ func LogSummary(gradeCounts map[string]int, toppedCounts map[string]int, showCon
 				var templ_7745c5c3_Var6 string
 				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(templ.EscapeString(fmt.Sprintf("%d", gradeCounts[grade])))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 25, Col: 305}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/log_summary.templ`, Line: 29, Col: 305}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 				if templ_7745c5c3_Err != nil {
