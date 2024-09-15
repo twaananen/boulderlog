@@ -35,7 +35,7 @@ func (s *LogService) GetTodayGradeCounts(userID string) (map[string]int, map[str
 	return counts, toppedCounts, nil
 }
 
-func (s *LogService) GetGradeCounts(username string, startDate, endDate *time.Time) ([]string, []int, error) {
+func (s *LogService) GetGradeCounts(username string, startDate, endDate *time.Time) ([]string, map[string][]int, error) {
 	var logs []models.BoulderLog
 	var err error
 
@@ -49,23 +49,43 @@ func (s *LogService) GetGradeCounts(username string, startDate, endDate *time.Ti
 		return nil, nil, err
 	}
 
-	gradeCounts := make(map[string]int)
+	gradeCounts := make(map[string]map[string]int)
+	grades := make([]string, 0)
 	for _, log := range logs {
-		gradeCounts[log.Grade]++
+		if _, exists := gradeCounts[log.Grade]; !exists {
+			gradeCounts[log.Grade] = make(map[string]int)
+			grades = append(grades, log.Grade)
+		}
+		if log.Difficulty >= 1 && log.Difficulty <= 4 {
+			gradeCounts[log.Grade]["Topped"]++
+		} else {
+			gradeCounts[log.Grade]["Untopped"]++
+		}
+		if log.Flash {
+			gradeCounts[log.Grade]["Flashed"]++
+		}
+		if log.NewRoute {
+			gradeCounts[log.Grade]["New"]++
+		}
 	}
 
-	grades := make([]string, 0, len(gradeCounts))
-	for grade := range gradeCounts {
-		grades = append(grades, grade)
-	}
 	sort.Strings(grades)
 
-	counts := make([]int, len(grades))
-	for i, grade := range grades {
-		counts[i] = gradeCounts[grade]
+	datasets := map[string][]int{
+		"Topped":   make([]int, len(grades)),
+		"Untopped": make([]int, len(grades)),
+		"Flashed":  make([]int, len(grades)),
+		"New":      make([]int, len(grades)),
 	}
 
-	return grades, counts, nil
+	for i, grade := range grades {
+		datasets["Topped"][i] = gradeCounts[grade]["Topped"]
+		datasets["Untopped"][i] = gradeCounts[grade]["Untopped"]
+		datasets["Flashed"][i] = gradeCounts[grade]["Flashed"]
+		datasets["New"][i] = gradeCounts[grade]["New"]
+	}
+
+	return grades, datasets, nil
 }
 
 func (s *LogService) GetProgressData(username string) ([]string, map[string][]int, error) {

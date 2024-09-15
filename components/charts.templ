@@ -1,39 +1,50 @@
 package components
 
 import "time"
+import "fmt"
 
-templ GradeCountsChart(gradeLabels []string, gradeCounts []int, viewType string, dateStr string) {
-    <div id="grade-counts-chart" class="w-full h-64 mb-8">
-        <div class="mb-4">
-            <button
-                class="px-4 py-2 bg-blue-500 text-white rounded mr-2"
-                hx-get="/charts/grade-counts?view=all"
-                hx-target="#grade-counts-chart"
-                hx-swap="outerHTML"
-            >All Time</button>
-            <button
-                class="px-4 py-2 bg-blue-500 text-white rounded mr-2"
-                hx-get={ "/charts/grade-counts?view=weekly&date=" + dateStr }
-                hx-target="#grade-counts-chart"
-                hx-swap="outerHTML"
-            >Weekly</button>
-            if viewType == "weekly" {
+templ GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType string, dateStr string) {
+    <div id="grade-counts-chart" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
+        <div class="flex justify-between items-center mb-4">
+            <span class="text-gray-800 dark:text-white font-bold">Boulder Counts</span>
+            <div class="flex space-x-2">
                 <button
-                    class="px-4 py-2 bg-gray-300 text-gray-700 rounded mr-2"
+                    class="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                    hx-get={"/charts/grade-counts?view=all&date=" + dateStr}
+                    hx-target="#grade-counts-chart"
+                    hx-swap="outerHTML"
+                >All</button>
+                <button
+                    class="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
                     hx-get={ "/charts/grade-counts?view=weekly&date=" + getPreviousWeek(dateStr) }
                     hx-target="#grade-counts-chart"
                     hx-swap="outerHTML"
-                >Previous Week</button>
-                <span class="mx-2">{ formatWeekRange(dateStr) }</span>
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </button>
                 <button
-                    class="px-4 py-2 bg-gray-300 text-gray-700 rounded ml-2"
+                    class="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                    hx-get={ "/charts/grade-counts?view=weekly&date=" + dateStr }
+                    hx-target="#grade-counts-chart"
+                    hx-swap="outerHTML"
+                >Week { getWeekNumber(dateStr) }</button>
+                <button
+                    class="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
                     hx-get={ "/charts/grade-counts?view=weekly&date=" + getNextWeek(dateStr) }
                     hx-target="#grade-counts-chart"
                     hx-swap="outerHTML"
-                >Next Week</button>
-            }
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
         </div>
-        <canvas id="gradeCountsChartCanvas" data-labels={ templ.JSONString(gradeLabels) } data-counts={ templ.JSONString(gradeCounts) } data-view-type={ viewType } data-date={ dateStr }></canvas>
+        <div class="max-h-64">
+            <canvas id="gradeCountsChartCanvas" data-labels={ templ.JSONString(gradeLabels) } data-datasets={ templ.JSONString(datasets) } data-view-type={ viewType } data-date={ dateStr }></canvas>
+        </div>
     </div>
     <script>
         (function() {
@@ -41,69 +52,106 @@ templ GradeCountsChart(gradeLabels []string, gradeCounts []int, viewType string,
             const ctx = canvas.getContext('2d');
             const viewType = canvas.dataset.viewType;
             const dateStr = canvas.dataset.date;
-			const labels = JSON.parse(canvas.dataset.labels);
-			const counts = JSON.parse(canvas.dataset.counts);
+            const labels = JSON.parse(canvas.dataset.labels);
+            const datasets = JSON.parse(canvas.dataset.datasets);
 
-                window.gradeCountsChart = new Chart(ctx, {
-                    type: 'bar',	
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Boulder Counts by Grade',
-                            data: counts,
-                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                            borderColor: 'rgb(54, 162, 235)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'Count'
-                                }
+            const isDarkMode = document.documentElement.classList.contains('dark');
+
+            const colors = {
+                Topped: { light: 'rgba(54, 162, 235, 0.8)', dark: 'rgba(54, 162, 235, 0.5)' },
+                Untopped: { light: 'rgba(255, 99, 132, 0.8)', dark: 'rgba(255, 99, 132, 0.5)' },
+                Flashed: { light: 'rgba(255, 165, 0, 0.8)', dark: 'rgba(255, 165, 0, 0.5)' },
+                New: { light: 'rgba(76, 175, 80, 0.8)', dark: 'rgba(76, 175, 80, 0.5)' }
+            };
+
+            const chartDatasets = Object.keys(datasets).map(key => ({
+                label: key,
+                data: datasets[key],
+                backgroundColor: isDarkMode ? colors[key].dark : colors[key].light,
+                borderColor: isDarkMode ? colors[key].dark.replace('0.5', '1') : colors[key].light.replace('0.8', '1'),
+                borderWidth: 1
+            }));
+
+            window.gradeCountsChart = new Chart(ctx, {
+                type: 'bar',    
+                data: {
+                    labels: labels,
+                    datasets: chartDatasets
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: false,
+                                text: 'Count',
+                                color: isDarkMode ? '#fff' : '#333'
                             },
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Grade'
-                                }
+                            ticks: {
+                                color: isDarkMode ? '#fff' : '#333'
+                            },
+                            grid: {
+                                color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
                             }
                         },
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
+                        x: {
                             title: {
-                                display: true,
-                                text: 'Boulder Counts by Grade'
+                                display: false,
+                                text: 'Grade',
+                                color: isDarkMode ? '#fff' : '#333'
+                            },
+                            ticks: {
+                                color: isDarkMode ? '#fff' : '#333'
+                            },
+                            grid: {
+                                display: false
                             }
                         }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+							labels: {
+								color: isDarkMode ? '#fff' : '#333'
+							},
+							position: 'bottom'
+                        },
+                        title: {
+                            display: false
+                        }
                     }
-                });
+                }
+            });
         })();
     </script>
 }
 
 func getPreviousWeek(dateStr string) string {
-	date, _ := time.Parse("2006-01-02", dateStr)
-	prevWeek := date.AddDate(0, 0, -7)
-	return prevWeek.Format("2006-01-02")
+    date, _ := time.Parse("2006-01-02", dateStr)
+    prevWeek := date.AddDate(0, 0, -7)
+    return prevWeek.Format("2006-01-02")
 }
 
 func getNextWeek(dateStr string) string {
-	date, _ := time.Parse("2006-01-02", dateStr)
-	nextWeek := date.AddDate(0, 0, 7)
-	return nextWeek.Format("2006-01-02")
+    date, _ := time.Parse("2006-01-02", dateStr)
+    nextWeek := date.AddDate(0, 0, 7)
+    return nextWeek.Format("2006-01-02")
 }
 
 func formatWeekRange(dateStr string) string {
-	date, _ := time.Parse("2006-01-02", dateStr)
-	weekStart := date.AddDate(0, 0, -int(date.Weekday()+6)%7) // Adjust to start on Monday
-	weekEnd := weekStart.AddDate(0, 0, 6)
-	// utils.LogInfo(fmt.Sprintf("Week range: %s - %s", weekStart, weekEnd))
-	return weekStart.Format("Jan 2") + " - " + weekEnd.Format("Jan 2, 2006")
+    date, _ := time.Parse("2006-01-02", dateStr)
+    weekStart := date.AddDate(0, 0, -int(date.Weekday()+6)%7) // Adjust to start on Monday
+    weekEnd := weekStart.AddDate(0, 0, 6)
+    // utils.LogInfo(fmt.Sprintf("Week range: %s - %s", weekStart, weekEnd))
+    return weekStart.Format("Jan 2") + " - " + weekEnd.Format("Jan 2, 2006")
+}
+
+func getWeekNumber(dateStr string) string {
+    if dateStr == "" {
+        dateStr = time.Now().Format("2006-01-02")
+    }
+    date, _ := time.Parse("2006-01-02", dateStr)
+    _, week := date.ISOWeek()
+    return fmt.Sprintf("%d", week)
 }

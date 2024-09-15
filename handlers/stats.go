@@ -26,7 +26,7 @@ func (h *StatsHandler) StatsPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	gradeLabels, gradeCounts, err := h.logService.GetGradeCounts(username, nil, nil)
+	gradeLabels, datasets, err := h.logService.GetGradeCounts(username, nil, nil)
 	if err != nil {
 		utils.LogError("Failed to get grade counts", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -34,7 +34,7 @@ func (h *StatsHandler) StatsPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	isHtmxRequest := r.Header.Get("HX-Request") == "true"
-	content := components.Stats(gradeLabels, gradeCounts, "all", time.Now().Format("2006-01-02"))
+	content := components.Stats(gradeLabels, datasets, "all", time.Now().Format("2006-01-02"))
 
 	if isHtmxRequest {
 		content.Render(r.Context(), w)
@@ -66,15 +66,15 @@ func (h *StatsHandler) GradeCountsChart(w http.ResponseWriter, r *http.Request) 
 	}
 
 	utils.LogInfo(fmt.Sprintf("Getting grade counts for user %s from %s to %s", username, startDate, endDate))
-	gradeLabels, gradeCounts, err := h.logService.GetGradeCounts(username, startDate, endDate)
-	utils.LogInfo(fmt.Sprintf("Grade counts: %v", gradeCounts))
+	gradeLabels, datasets, err := h.logService.GetGradeCounts(username, startDate, endDate)
+	utils.LogInfo(fmt.Sprintf("Grade counts: %v", datasets))
 	if err != nil {
 		utils.LogError("Failed to get grade counts", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
-	components.GradeCountsChart(gradeLabels, gradeCounts, viewType, dateStr).Render(r.Context(), w)
+	components.GradeCountsChart(gradeLabels, datasets, viewType, dateStr).Render(r.Context(), w)
 }
 
 // Add more stats-related methods here as needed
