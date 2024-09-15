@@ -15,4 +15,5 @@ type Database interface {
 	GetGradeCounts(username string) ([]string, []int, error)
 	GetProgressData(username string) ([]string, map[string][]int, error)
 	GetBoulderLogByUsernameAndDate(username string, date time.Time) (*models.BoulderLog, error)
+	GetBoulderLogsBetweenDates(username string, startDate, endDate time.Time) ([]models.BoulderLog, error)
 }

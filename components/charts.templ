@@ -1,56 +1,109 @@
 package components
 
+import "time"
 
-templ GradeCountsChart(gradeLabels []string, gradeCounts []int) {
-    <div class="w-full h-64">
-        <canvas id="gradeCountsChart" chart-labels={ templ.JSONString(gradeLabels) } chart-data={ templ.JSONString(gradeCounts) }></canvas>
+templ GradeCountsChart(gradeLabels []string, gradeCounts []int, viewType string, dateStr string) {
+    <div id="grade-counts-chart" class="w-full h-64 mb-8">
+        <div class="mb-4">
+            <button
+                class="px-4 py-2 bg-blue-500 text-white rounded mr-2"
+                hx-get="/charts/grade-counts?view=all"
+                hx-target="#grade-counts-chart"
+                hx-swap="outerHTML"
+            >All Time</button>
+            <button
+                class="px-4 py-2 bg-blue-500 text-white rounded mr-2"
+                hx-get={ "/charts/grade-counts?view=weekly&date=" + dateStr }
+                hx-target="#grade-counts-chart"
+                hx-swap="outerHTML"
+            >Weekly</button>
+            if viewType == "weekly" {
+                <button
+                    class="px-4 py-2 bg-gray-300 text-gray-700 rounded mr-2"
+                    hx-get={ "/charts/grade-counts?view=weekly&date=" + getPreviousWeek(dateStr) }
+                    hx-target="#grade-counts-chart"
+                    hx-swap="outerHTML"
+                >Previous Week</button>
+                <span class="mx-2">{ formatWeekRange(dateStr) }</span>
+                <button
+                    class="px-4 py-2 bg-gray-300 text-gray-700 rounded ml-2"
+                    hx-get={ "/charts/grade-counts?view=weekly&date=" + getNextWeek(dateStr) }
+                    hx-target="#grade-counts-chart"
+                    hx-swap="outerHTML"
+                >Next Week</button>
+            }
+        </div>
+        <canvas id="gradeCountsChartCanvas" data-labels={ templ.JSONString(gradeLabels) } data-counts={ templ.JSONString(gradeCounts) } data-view-type={ viewType } data-date={ dateStr }></canvas>
     </div>
     <script>
         (function() {
-            const dataSource = document.getElementById('gradeCountsChart');
-            const ctx = dataSource.getContext('2d');
-            const gradeLabels = JSON.parse(dataSource.getAttribute('chart-labels'));
-            const gradeCounts = JSON.parse(dataSource.getAttribute('chart-data'));
-            new Chart(ctx, {
-                type: 'bar',	
-                data: {
-                    labels: gradeLabels,
-                    datasets: [{
-                        label: 'Boulder Counts by Grade',
-                        data: gradeCounts,
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderColor: 'rgb(54, 162, 235)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Count'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Grade'
-                            }
-                        }
+            const canvas = document.getElementById('gradeCountsChartCanvas');
+            const ctx = canvas.getContext('2d');
+            const viewType = canvas.dataset.viewType;
+            const dateStr = canvas.dataset.date;
+			const labels = JSON.parse(canvas.dataset.labels);
+			const counts = JSON.parse(canvas.dataset.counts);
+
+                window.gradeCountsChart = new Chart(ctx, {
+                    type: 'bar',	
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Boulder Counts by Grade',
+                            data: counts,
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                            borderColor: 'rgb(54, 162, 235)',
+                            borderWidth: 1
+                        }]
                     },
-                    plugins: {
-                        legend: {
-                            display: false
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Count'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Grade'
+                                }
+                            }
                         },
-                        title: {
-                            display: true,
-                            text: 'Boulder Counts by Grade'
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            title: {
+                                display: true,
+                                text: 'Boulder Counts by Grade'
+                            }
                         }
                     }
-                }
-            });
+                });
         })();
     </script>
+}
+
+func getPreviousWeek(dateStr string) string {
+	date, _ := time.Parse("2006-01-02", dateStr)
+	prevWeek := date.AddDate(0, 0, -7)
+	return prevWeek.Format("2006-01-02")
+}
+
+func getNextWeek(dateStr string) string {
+	date, _ := time.Parse("2006-01-02", dateStr)
+	nextWeek := date.AddDate(0, 0, 7)
+	return nextWeek.Format("2006-01-02")
+}
+
+func formatWeekRange(dateStr string) string {
+	date, _ := time.Parse("2006-01-02", dateStr)
+	weekStart := date.AddDate(0, 0, -int(date.Weekday()+6)%7) // Adjust to start on Monday
+	weekEnd := weekStart.AddDate(0, 0, 6)
+	// utils.LogInfo(fmt.Sprintf("Week range: %s - %s", weekStart, weekEnd))
+	return weekStart.Format("Jan 2") + " - " + weekEnd.Format("Jan 2, 2006")
 }

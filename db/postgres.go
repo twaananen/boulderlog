@@ -158,3 +158,16 @@ func (pdb *PostgresDatabase) GetBoulderLogByUsernameAndDate(username string, dat
 	}
 	return &log, nil
 }
+
+func (pdb *PostgresDatabase) GetBoulderLogsBetweenDates(username string, startDate, endDate time.Time) ([]models.BoulderLog, error) {
+	var logs []models.BoulderLog
+	result := pdb.db.Where("username = ? AND created_at BETWEEN ? AND ?", username, startDate, endDate).
+		Order("created_at").
+		Find(&logs)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return logs, nil
+}

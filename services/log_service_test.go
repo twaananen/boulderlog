@@ -80,7 +80,7 @@ func TestGetGradeCounts(t *testing.T) {
 	grades := []string{"V1", "V2", "V3"}
 	counts := []int{2, 1, 1} // V1: 2, V2: 1, V3: 1
 
-	g, c, err := logService.GetGradeCounts(username)
+	g, c, err := logService.GetGradeCounts(username, nil, nil)
 	assert.NoError(t, err)
 	assert.Equal(t, grades, g)
 	assert.Equal(t, counts, c)
@@ -88,7 +88,7 @@ func TestGetGradeCounts(t *testing.T) {
 	// Test case 2: Database error
 	mockDB.On("GetBoulderLogs", username).Return([]models.BoulderLog{}, assert.AnError).Once()
 
-	g, c, err = logService.GetGradeCounts(username)
+	g, c, err = logService.GetGradeCounts(username, nil, nil)
 	assert.Error(t, err)
 	assert.Nil(t, g)
 	assert.Nil(t, c)

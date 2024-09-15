@@ -26,6 +26,8 @@ func SetupRoutes(router *http.ServeMux, userService *services.UserService, logSe
 	router.HandleFunc("GET /profile/download-log", authMiddleware(profileHandler.DownloadLog)) // Ensure this line is present
 
 	router.HandleFunc("GET /stats", authMiddleware(statsHandler.StatsPage))
+	router.HandleFunc("GET /charts/grade-counts", authMiddleware(statsHandler.GradeCountsChart))
+
 	router.HandleFunc("GET /log/grade", authMiddleware(logHandler.GetGradeSelection))
 	router.HandleFunc("GET /log/difficulty/", authMiddleware(logHandler.GetPerceivedDifficulty))
 	router.HandleFunc("POST /log/submit/", authMiddleware(logHandler.SubmitLog))

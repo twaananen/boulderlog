@@ -8,7 +8,9 @@ package components
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func GradeCountsChart(gradeLabels []string, gradeCounts []int) templ.Component {
+import "time"
+
+func GradeCountsChart(gradeLabels []string, gradeCounts []int, viewType string, dateStr string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -29,38 +31,146 @@ func GradeCountsChart(gradeLabels []string, gradeCounts []int) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"w-full h-64\"><canvas id=\"gradeCountsChart\" chart-labels=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"grade-counts-chart\" class=\"w-full h-64 mb-8\"><div class=\"mb-4\"><button class=\"px-4 py-2 bg-blue-500 text-white rounded mr-2\" hx-get=\"/charts/grade-counts?view=all\" hx-target=\"#grade-counts-chart\" hx-swap=\"outerHTML\">All Time</button> <button class=\"px-4 py-2 bg-blue-500 text-white rounded mr-2\" hx-get=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(templ.JSONString(gradeLabels))
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs("/charts/grade-counts?view=weekly&date=" + dateStr)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 6, Col: 82}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 16, Col: 75}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" chart-data=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#grade-counts-chart\" hx-swap=\"outerHTML\">Weekly</button> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(templ.JSONString(gradeCounts))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 6, Col: 127}
+		if viewType == "weekly" {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"px-4 py-2 bg-gray-300 text-gray-700 rounded mr-2\" hx-get=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var3 string
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs("/charts/grade-counts?view=weekly&date=" + getPreviousWeek(dateStr))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 23, Col: 96}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#grade-counts-chart\" hx-swap=\"outerHTML\">Previous Week</button> <span class=\"mx-2\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var4 string
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(formatWeekRange(dateStr))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 27, Col: 61}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</span> <button class=\"px-4 py-2 bg-gray-300 text-gray-700 rounded ml-2\" hx-get=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var5 string
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs("/charts/grade-counts?view=weekly&date=" + getNextWeek(dateStr))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 30, Col: 92}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#grade-counts-chart\" hx-swap=\"outerHTML\">Next Week</button>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><canvas id=\"gradeCountsChartCanvas\" data-labels=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"></canvas></div><script>\n        (function() {\n            const dataSource = document.getElementById('gradeCountsChart');\n            const ctx = dataSource.getContext('2d');\n            const gradeLabels = JSON.parse(dataSource.getAttribute('chart-labels'));\n            const gradeCounts = JSON.parse(dataSource.getAttribute('chart-data'));\n            new Chart(ctx, {\n                type: 'bar',\t\n                data: {\n                    labels: gradeLabels,\n                    datasets: [{\n                        label: 'Boulder Counts by Grade',\n                        data: gradeCounts,\n                        backgroundColor: 'rgba(54, 162, 235, 0.5)',\n                        borderColor: 'rgb(54, 162, 235)',\n                        borderWidth: 1\n                    }]\n                },\n                options: {\n                    responsive: true,\n                    scales: {\n                        y: {\n                            beginAtZero: true,\n                            title: {\n                                display: true,\n                                text: 'Count'\n                            }\n                        },\n                        x: {\n                            title: {\n                                display: true,\n                                text: 'Grade'\n                            }\n                        }\n                    },\n                    plugins: {\n                        legend: {\n                            display: false\n                        },\n                        title: {\n                            display: true,\n                            text: 'Boulder Counts by Grade'\n                        }\n                    }\n                }\n            });\n        })();\n    </script>")
+		var templ_7745c5c3_Var6 string
+		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(templ.JSONString(gradeLabels))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 36, Col: 87}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" data-counts=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var7 string
+		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(templ.JSONString(gradeCounts))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 36, Col: 133}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" data-view-type=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var8 string
+		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(viewType)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 36, Col: 161}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" data-date=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var9 string
+		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(dateStr)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 36, Col: 183}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"></canvas></div><script>\n        (function() {\n            const canvas = document.getElementById('gradeCountsChartCanvas');\n            const ctx = canvas.getContext('2d');\n            const viewType = canvas.dataset.viewType;\n            const dateStr = canvas.dataset.date;\n\t\t\tconst labels = JSON.parse(canvas.dataset.labels);\n\t\t\tconst counts = JSON.parse(canvas.dataset.counts);\n\n                window.gradeCountsChart = new Chart(ctx, {\n                    type: 'bar',\t\n                    data: {\n                        labels: labels,\n                        datasets: [{\n                            label: 'Boulder Counts by Grade',\n                            data: counts,\n                            backgroundColor: 'rgba(54, 162, 235, 0.5)',\n                            borderColor: 'rgb(54, 162, 235)',\n                            borderWidth: 1\n                        }]\n                    },\n                    options: {\n                        responsive: true,\n                        scales: {\n                            y: {\n                                beginAtZero: true,\n                                title: {\n                                    display: true,\n                                    text: 'Count'\n                                }\n                            },\n                            x: {\n                                title: {\n                                    display: true,\n                                    text: 'Grade'\n                                }\n                            }\n                        },\n                        plugins: {\n                            legend: {\n                                display: false\n                            },\n                            title: {\n                                display: true,\n                                text: 'Boulder Counts by Grade'\n                            }\n                        }\n                    }\n                });\n        })();\n    </script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		return templ_7745c5c3_Err
 	})
+}
+
+func getPreviousWeek(dateStr string) string {
+	date, _ := time.Parse("2006-01-02", dateStr)
+	prevWeek := date.AddDate(0, 0, -7)
+	return prevWeek.Format("2006-01-02")
+}
+
+func getNextWeek(dateStr string) string {
+	date, _ := time.Parse("2006-01-02", dateStr)
+	nextWeek := date.AddDate(0, 0, 7)
+	return nextWeek.Format("2006-01-02")
+}
+
+func formatWeekRange(dateStr string) string {
+	date, _ := time.Parse("2006-01-02", dateStr)
+	weekStart := date.AddDate(0, 0, -int(date.Weekday()+6)%7) // Adjust to start on Monday
+	weekEnd := weekStart.AddDate(0, 0, 6)
+	// utils.LogInfo(fmt.Sprintf("Week range: %s - %s", weekStart, weekEnd))
+	return weekStart.Format("Jan 2") + " - " + weekEnd.Format("Jan 2, 2006")
 }
 
 var _ = templruntime.GeneratedTemplate

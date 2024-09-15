@@ -58,4 +58,9 @@ func (m *MockDatabase) GetProgressData(username string) ([]string, map[string][]
 	return args.Get(0).([]string), args.Get(1).(map[string][]int), args.Error(2)
 }
 
+func (m *MockDatabase) GetBoulderLogsBetweenDates(username string, startDate, endDate time.Time) ([]models.BoulderLog, error) {
+	args := m.Called(username, startDate, endDate)
+	return args.Get(0).([]models.BoulderLog), args.Error(1)
+}
+
 // Add any other methods from the db.Database interface that you need for testing

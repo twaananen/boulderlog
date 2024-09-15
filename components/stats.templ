@@ -1,12 +1,12 @@
 package components
 
-templ Stats(gradeLabels []string, gradeCounts []int) {
+templ Stats(gradeLabels []string, gradeCounts []int, viewType string, dateStr string) {
 	<div class="container mx-auto px-4 py-8">
 		<h2 class="text-3xl font-bold mb-4">Your Bouldering Stats</h2>
 		
 		<h3 class="text-2xl font-bold mt-8 mb-4">Boulder Counts by Grade</h3>
-		<div class="mb-8">
-			@GradeCountsChart(gradeLabels, gradeCounts)
-		</div>
+		@GradeCountsChart(gradeLabels, gradeCounts, viewType, dateStr)
+		
+		// Add more charts here in the future
 	</div>
 }
