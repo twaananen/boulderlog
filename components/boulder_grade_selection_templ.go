@@ -129,26 +129,26 @@ func gradeButton(grade string) templ.Component {
 }
 
 func getButtonClass(grade string) string {
-	baseClass := "text-white font-bold py-3 px-4 rounded text-sm "
+	baseClass := "font-bold py-3 px-4 rounded text-sm "
 	switch grade {
 	case "4", "4+":
-		return baseClass + "bg-yellow-500 hover:bg-yellow-600"
+		return baseClass + "bg-yellow-500 hover:bg-yellow-600 text-white "
 	case "5", "5+":
-		return baseClass + "bg-green-500 hover:bg-green-600"
+		return baseClass + "bg-green-500 hover:bg-green-600 text-white "
 	case "6A", "6A+":
-		return baseClass + "bg-orange-500 hover:bg-orange-600"
+		return baseClass + "bg-orange-500 hover:bg-orange-600 text-white "
 	case "6B", "6B+":
-		return baseClass + "bg-blue-500 hover:bg-blue-600"
+		return baseClass + "bg-blue-500 hover:bg-blue-600 text-white "
 	case "6C", "6C+":
-		return baseClass + "bg-red-500 hover:bg-red-600"
+		return baseClass + "bg-red-500 hover:bg-red-600 text-white "
 	case "7A", "7A+":
-		return baseClass + "bg-purple-500 hover:bg-purple-600"
+		return baseClass + "bg-purple-500 hover:bg-purple-600 text-white "
 	case "7B", "7B+":
-		return baseClass + "bg-pink-500 hover:bg-pink-600"
+		return baseClass + "bg-pink-500 hover:bg-pink-600 text-white "
 	case "7C", "7C+":
-		return baseClass + "bg-black hover:bg-gray-800"
+		return baseClass + "bg-black hover:bg-gray-800 text-white "
 	default: // For all 8 grades
-		return baseClass + "bg-white hover:bg-gray-200 text-black"
+		return baseClass + "border border-gray-300 bg-white hover:bg-gray-200 text-black"
 	}
 }
 

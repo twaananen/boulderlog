@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -61,13 +60,10 @@ func (h *StatsHandler) GradeCountsChart(w http.ResponseWriter, r *http.Request) 
 		}
 		date, _ := time.Parse("2006-01-02", dateStr)
 		start, end := h.logService.GetWeekBounds(date)
-		utils.LogInfo(fmt.Sprintf("Week bounds for %s: %s - %s", dateStr, start, end))
 		startDate, endDate = &start, &end
 	}
 
-	utils.LogInfo(fmt.Sprintf("Getting grade counts for user %s from %s to %s", username, startDate, endDate))
 	gradeLabels, datasets, err := h.logService.GetGradeCounts(username, startDate, endDate)
-	utils.LogInfo(fmt.Sprintf("Grade counts: %v", datasets))
 	if err != nil {
 		utils.LogError("Failed to get grade counts", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
