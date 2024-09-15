@@ -79,6 +79,15 @@ func (h *LogHandler) SubmitLog(w http.ResponseWriter, r *http.Request) {
 	flash := r.FormValue("flash") == "on"
 	newRoute := r.FormValue("new") == "on"
 
+	if difficulty > 4 {
+		flash = false
+		newRoute = false
+	}
+
+	if flash {
+		newRoute = true
+	}
+
 	log := &models.BoulderLog{
 		Username:   username,
 		Grade:      grade,

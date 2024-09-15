@@ -1,11 +1,13 @@
 package services
 
 import (
+	"fmt"
 	"sort"
 	"time"
 
 	"github.com/twaananen/boulderlog/db"
 	"github.com/twaananen/boulderlog/models"
+	"github.com/twaananen/boulderlog/utils"
 )
 
 type LogService struct {
@@ -21,6 +23,7 @@ func NewLogService(db db.Database) *LogService {
 }
 
 func (s *LogService) SaveLog(log *models.BoulderLog) error {
+	utils.LogInfo(fmt.Sprintf("Saving log: %+v", log))
 	return s.db.SaveBoulderLog(log)
 }
 
