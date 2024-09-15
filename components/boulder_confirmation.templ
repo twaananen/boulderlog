@@ -1,0 +1,71 @@
+package components
+
+import (
+	"fmt"
+	"net/url"
+	"strconv"
+)
+
+templ BoulderConfirmation(grade string, difficulty int) {
+	<div class="flex flex-col items-center relative bg-gray-50 dark:bg-gray-900">
+		<button
+			hx-get={ fmt.Sprintf("/log/difficulty/?grade=%s", url.QueryEscape(grade)) }
+			hx-target="#main-content"
+			hx-swap="innerHTML"
+			hx-push-url="true"
+			class="mb-4 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-200 font-bold py-2 px-4 rounded inline-flex items-center"
+		>
+			<i class="fas fa-arrow-left mr-2"></i> Back
+		</button>
+		<div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md w-full max-w-md">
+			<h2 class="text-2xl font-bold mb-4 text-center text-gray-900 dark:text-gray-100">Confirm Boulder Log</h2>
+			<p class="text-center mb-4 text-gray-800 dark:text-gray-300">Grade: { grade }</p>
+			<p class="text-center mb-6 text-gray-800 dark:text-gray-300">Difficulty: { strconv.Itoa(difficulty) }</p>
+			<p class="text-center mb-6 text-gray-800 dark:text-gray-300">Topped: { fmt.Sprintf("%v", difficulty >= 1 && difficulty <= 4) }</p>
+	
+			<div class="space-y-4 mt-6">
+				if difficulty >= 1 && difficulty <= 4 {
+					<div class="flex flex-col space-y-10">
+						<button
+							hx-post={ fmt.Sprintf("/log/submit/?grade=%s&difficulty=%d&flash=true", url.QueryEscape(grade), difficulty) }
+							hx-target="#main-content"
+							hx-swap="innerHTML"
+							hx-push-url="/"
+							class="bg-green-600 dark:bg-green-700 text-white py-2 px-4 rounded hover:bg-green-700 dark:hover:bg-green-600"
+						>
+							Flashed it
+						</button>
+						<button
+							hx-post={ fmt.Sprintf("/log/submit/?grade=%s&difficulty=%d&new_route=true", url.QueryEscape(grade), difficulty) }
+							hx-target="#main-content"
+							hx-swap="innerHTML"
+							hx-push-url="/"
+							class="bg-blue-600 dark:bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-700 dark:hover:bg-blue-600"
+						>
+							New route
+						</button>
+						<button
+							hx-post={ fmt.Sprintf("/log/submit/?grade=%s&difficulty=%d", url.QueryEscape(grade), difficulty) }
+							hx-target="#main-content"
+							hx-swap="innerHTML"
+							hx-push-url="/"
+							class="bg-gray-500 dark:bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-600 dark:hover:bg-gray-500"
+						>
+							Done it already
+						</button>
+					</div>
+				} else {
+					<button
+						hx-post={ fmt.Sprintf("/log/submit/?grade=%s&difficulty=%d", url.QueryEscape(grade), difficulty) }
+						hx-target="#main-content"
+						hx-swap="innerHTML"
+						hx-push-url="/"
+						class="w-full bg-blue-600 dark:bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-700 dark:hover:bg-blue-600"
+					>
+						Yep
+					</button>
+				}
+			</div>
+		</div>
+	</div>
+}

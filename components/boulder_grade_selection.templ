@@ -1,6 +1,9 @@
 package components
 
-import "fmt"
+import (
+	"fmt"
+	"net/url"
+)
 
 templ BoulderGradeSelection() {
 	<div class="max-w-md mx-auto">
@@ -10,7 +13,7 @@ templ BoulderGradeSelection() {
 				"7A+", "7B", "7B+", "7C", "7C+", "8A", "8A+", "8B", "8B+", "8C",
 			} {
 				<button
-					hx-get={ fmt.Sprintf("/log/difficulty/%s", grade) }
+					hx-get={ fmt.Sprintf("/log/difficulty/?grade=%s", url.QueryEscape(grade)) }
 					hx-target="#main-content"
 					hx-swap="innerHTML"
 					hx-push-url="true"

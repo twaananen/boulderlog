@@ -3,7 +3,6 @@ package handlers
 import (
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/twaananen/boulderlog/components"
 	"github.com/twaananen/boulderlog/models"
@@ -38,7 +37,7 @@ func (h *LogHandler) GetGradeSelection(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *LogHandler) GetPerceivedDifficulty(w http.ResponseWriter, r *http.Request) {
-	grade := r.URL.Path[len("/log/difficulty/"):]
+	grade := r.URL.Query().Get("grade")
 	isHtmxRequest := r.Header.Get("HX-Request") == "true"
 	content := components.PerceivedDifficulty(grade)
 
@@ -55,29 +54,43 @@ func (h *LogHandler) GetPerceivedDifficulty(w http.ResponseWriter, r *http.Reque
 	}
 }
 
-func (h *LogHandler) SubmitLog(w http.ResponseWriter, r *http.Request) {
+func (h *LogHandler) GetConfirmation(w http.ResponseWriter, r *http.Request) {
+	grade := r.URL.Query().Get("grade")
+	difficulty, _ := strconv.Atoi(r.URL.Query().Get("difficulty"))
+	isHtmxRequest := r.Header.Get("HX-Request") == "true"
 
-	parts := strings.Split(r.URL.Path, "/")
-	if len(parts) != 5 {
-		http.Error(w, "Invalid URL", http.StatusBadRequest)
-		return
+	content := components.BoulderConfirmation(grade, difficulty)
+
+	var err error
+	if isHtmxRequest {
+		err = content.Render(r.Context(), w)
+	} else {
+		err = components.Layout("Boulder Confirmation", content).Render(r.Context(), w)
 	}
-	grade := parts[3]
-	difficultyStr := parts[4]
-	difficulty, err := strconv.Atoi(difficultyStr)
+
 	if err != nil {
-		http.Error(w, "Invalid difficulty", http.StatusBadRequest)
-		return
+		utils.LogError("Failed to render boulder confirmation", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
 	}
+}
 
+func (h *LogHandler) SubmitLog(w http.ResponseWriter, r *http.Request) {
 	username, err := h.userService.GetUsernameFromToken(r)
 	if err != nil {
 		http.Error(w, "User not authenticated", http.StatusUnauthorized)
 		return
 	}
 
-	flash := r.FormValue("flash") == "on"
-	newRoute := r.FormValue("new") == "on"
+	grade := r.URL.Query().Get("grade")
+	difficultyStr := r.URL.Query().Get("difficulty")
+	difficulty, err := strconv.Atoi(difficultyStr)
+	if err != nil {
+		http.Error(w, "Invalid difficulty", http.StatusBadRequest)
+		return
+	}
+
+	flash := r.URL.Query().Get("flash") == "true"
+	newRoute := r.URL.Query().Get("new_route") == "true"
 
 	if difficulty > 4 {
 		flash = false

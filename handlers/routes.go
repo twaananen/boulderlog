@@ -30,6 +30,7 @@ func SetupRoutes(router *http.ServeMux, userService *services.UserService, logSe
 
 	router.HandleFunc("GET /log/grade", authMiddleware(logHandler.GetGradeSelection))
 	router.HandleFunc("GET /log/difficulty/", authMiddleware(logHandler.GetPerceivedDifficulty))
+	router.HandleFunc("GET /log/confirm/", authMiddleware(logHandler.GetConfirmation))
 	router.HandleFunc("POST /log/submit/", authMiddleware(logHandler.SubmitLog))
 
 }
