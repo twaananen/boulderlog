@@ -3,55 +3,55 @@ package components
 import "time"
 import "fmt"
 
-templ GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType string, dateStr string) {
+templ GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType string, dateStr string, showDateSelection bool) {
     <div id="grade-counts-chart" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
         <div class="flex justify-between items-center mb-4">
             <span class="text-gray-800 dark:text-white font-bold">Boulder Counts</span>
-            <div class="flex space-x-2">
-                <button
-                    class="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-                    hx-get={"/charts/grade-counts?view=all&date=" + dateStr}
-                    hx-target="#grade-counts-chart"
-                    hx-swap="outerHTML"
-                >All</button>
-                <button
-                    class="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-                    hx-get={ "/charts/grade-counts?view=weekly&date=" + getPreviousWeek(dateStr) }
-                    hx-target="#grade-counts-chart"
-                    hx-swap="outerHTML"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-                <button
-                    class="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-                    hx-get={ "/charts/grade-counts?view=weekly&date=" + dateStr }
-                    hx-target="#grade-counts-chart"
-                    hx-swap="outerHTML"
-                >Week { getWeekNumber(dateStr) }</button>
-                <button
-                    class="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-                    hx-get={ "/charts/grade-counts?view=weekly&date=" + getNextWeek(dateStr) }
-                    hx-target="#grade-counts-chart"
-                    hx-swap="outerHTML"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-            </div>
+			if showDateSelection {
+				<div class="flex space-x-2">
+					<button
+						class="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+						hx-get={"/charts/grade-counts?view=all&date=" + dateStr}
+						hx-target="#grade-counts-chart"
+						hx-swap="outerHTML"
+					>All</button>
+					<button
+						class="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+						hx-get={ "/charts/grade-counts?view=weekly&date=" + getPreviousWeek(dateStr) }
+						hx-target="#grade-counts-chart"
+						hx-swap="outerHTML"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+						</svg>
+					</button>
+					<button
+						class="px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+						hx-get={ "/charts/grade-counts?view=weekly&date=" + dateStr }
+						hx-target="#grade-counts-chart"
+						hx-swap="outerHTML"
+					>Week { getWeekNumber(dateStr) }</button>
+					<button
+						class="px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+						hx-get={ "/charts/grade-counts?view=weekly&date=" + getNextWeek(dateStr) }
+						hx-target="#grade-counts-chart"
+						hx-swap="outerHTML"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+							<path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+						</svg>
+					</button>
+				</div>
+			}
         </div>
-        <div class="max-h-64">
-            <canvas id="gradeCountsChartCanvas" data-labels={ templ.JSONString(gradeLabels) } data-datasets={ templ.JSONString(datasets) } data-view-type={ viewType } data-date={ dateStr }></canvas>
+        <div class="max-h-96 min-h-64">
+            <canvas id="gradeCountsChartCanvas" data-labels={ templ.JSONString(gradeLabels) } data-datasets={ templ.JSONString(datasets) }></canvas>
         </div>
     </div>
     <script>
         (function() {
             const canvas = document.getElementById('gradeCountsChartCanvas');
             const ctx = canvas.getContext('2d');
-            const viewType = canvas.dataset.viewType;
-            const dateStr = canvas.dataset.date;
             const labels = JSON.parse(canvas.dataset.labels);
             const datasets = JSON.parse(canvas.dataset.datasets);
 
@@ -72,7 +72,7 @@ templ GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType
                 borderWidth: 1
             }));
 
-            window.gradeCountsChart = new Chart(ctx, {
+            new Chart(ctx, {
                 type: 'bar',    
                 data: {
                     labels: labels,
@@ -80,6 +80,7 @@ templ GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             beginAtZero: true,

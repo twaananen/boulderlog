@@ -1,9 +1,9 @@
 package components
 
 templ Stats(gradeLabels []string, datasets map[string][]int, viewType string, dateStr string) {
-	<div class="container mx-auto px-4 py-8">
+	<div class="container mx-auto py-2">
 		<h2 class="text-3xl font-bold mb-4">Your Bouldering Stats</h2>
-		@GradeCountsChart(gradeLabels, datasets, viewType, dateStr)
+		@GradeCountsChart(gradeLabels, datasets, viewType, dateStr, true)
 		
 		// Add more charts here in the future
 	</div>

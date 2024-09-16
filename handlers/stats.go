@@ -70,7 +70,7 @@ func (h *StatsHandler) GradeCountsChart(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	components.GradeCountsChart(gradeLabels, datasets, viewType, dateStr).Render(r.Context(), w)
+	components.GradeCountsChart(gradeLabels, datasets, viewType, dateStr, true).Render(r.Context(), w)
 }
 
 // Add more stats-related methods here as needed

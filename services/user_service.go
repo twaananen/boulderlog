@@ -21,7 +21,7 @@ func NewUserService(db db.Database) *UserService {
 }
 
 func (s *UserService) AuthenticateUser(username, password string) (string, error) {
-	utils.LogInfo("Login request for user: " + username)
+	// utils.LogInfo("Login request for user: " + username)
 
 	user, err := s.db.GetUserByUsername(username)
 	if err != nil {
@@ -48,12 +48,12 @@ func (s *UserService) AuthenticateUser(username, password string) (string, error
 		utils.LogInfo("New user created: " + username)
 	} else {
 		// User found, check password
-		utils.LogInfo("Checking password for user: " + username)
+		// utils.LogInfo("Checking password for user: " + username)
 		if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
-			utils.LogInfo("Password does not match for user: " + username)
+			// utils.LogInfo("Password does not match for user: " + username)
 			return "", models.ErrInvalidCredentials
 		}
-		utils.LogInfo("Password matches for user: " + username)
+		// utils.LogInfo("Password matches for user: " + username)
 	}
 
 	// Generate JWT token

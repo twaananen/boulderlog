@@ -11,7 +11,7 @@ import templruntime "github.com/a-h/templ/runtime"
 import "time"
 import "fmt"
 
-func GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType string, dateStr string) templ.Component {
+func GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType string, dateStr string, showDateSelection bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -32,79 +32,89 @@ func GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType 
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"grade-counts-chart\" class=\"bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg\"><div class=\"flex justify-between items-center mb-4\"><span class=\"text-gray-800 dark:text-white font-bold\">Boulder Counts</span><div class=\"flex space-x-2\"><button class=\"px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors\" hx-get=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"grade-counts-chart\" class=\"bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg\"><div class=\"flex justify-between items-center mb-4\"><span class=\"text-gray-800 dark:text-white font-bold\">Boulder Counts</span> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs("/charts/grade-counts?view=all&date=" + dateStr)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 13, Col: 75}
+		if showDateSelection {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex space-x-2\"><button class=\"px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors\" hx-get=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var2 string
+			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs("/charts/grade-counts?view=all&date=" + dateStr)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 14, Col: 61}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#grade-counts-chart\" hx-swap=\"outerHTML\">All</button> <button class=\"px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors\" hx-get=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var3 string
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs("/charts/grade-counts?view=weekly&date=" + getPreviousWeek(dateStr))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 20, Col: 82}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#grade-counts-chart\" hx-swap=\"outerHTML\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5\" viewBox=\"0 0 20 20\" fill=\"currentColor\"><path fill-rule=\"evenodd\" d=\"M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z\" clip-rule=\"evenodd\"></path></svg></button> <button class=\"px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors\" hx-get=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var4 string
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs("/charts/grade-counts?view=weekly&date=" + dateStr)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 30, Col: 65}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#grade-counts-chart\" hx-swap=\"outerHTML\">Week ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var5 string
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(getWeekNumber(dateStr))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 33, Col: 35}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</button> <button class=\"px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors\" hx-get=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var6 string
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs("/charts/grade-counts?view=weekly&date=" + getNextWeek(dateStr))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 36, Col: 78}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#grade-counts-chart\" hx-swap=\"outerHTML\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5\" viewBox=\"0 0 20 20\" fill=\"currentColor\"><path fill-rule=\"evenodd\" d=\"M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z\" clip-rule=\"evenodd\"></path></svg></button></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#grade-counts-chart\" hx-swap=\"outerHTML\">All</button> <button class=\"px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors\" hx-get=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var3 string
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs("/charts/grade-counts?view=weekly&date=" + getPreviousWeek(dateStr))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 19, Col: 96}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#grade-counts-chart\" hx-swap=\"outerHTML\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5\" viewBox=\"0 0 20 20\" fill=\"currentColor\"><path fill-rule=\"evenodd\" d=\"M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z\" clip-rule=\"evenodd\"></path></svg></button> <button class=\"px-3 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors\" hx-get=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var4 string
-		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs("/charts/grade-counts?view=weekly&date=" + dateStr)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 29, Col: 79}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#grade-counts-chart\" hx-swap=\"outerHTML\">Week ")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var5 string
-		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(getWeekNumber(dateStr))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 32, Col: 46}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</button> <button class=\"px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors\" hx-get=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var6 string
-		templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs("/charts/grade-counts?view=weekly&date=" + getNextWeek(dateStr))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 35, Col: 92}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#grade-counts-chart\" hx-swap=\"outerHTML\"><svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-5 w-5\" viewBox=\"0 0 20 20\" fill=\"currentColor\"><path fill-rule=\"evenodd\" d=\"M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z\" clip-rule=\"evenodd\"></path></svg></button></div></div><div class=\"max-h-64\"><canvas id=\"gradeCountsChartCanvas\" data-labels=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><div class=\"max-h-96 min-h-64\"><canvas id=\"gradeCountsChartCanvas\" data-labels=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(templ.JSONString(gradeLabels))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 46, Col: 91}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 48, Col: 91}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -117,39 +127,13 @@ func GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType 
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(templ.JSONString(datasets))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 46, Col: 136}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 48, Col: 136}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" data-view-type=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var9 string
-		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(viewType)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 46, Col: 164}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" data-date=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var10 string
-		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(dateStr)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 46, Col: 186}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"></canvas></div></div><script>\n        (function() {\n            const canvas = document.getElementById('gradeCountsChartCanvas');\n            const ctx = canvas.getContext('2d');\n            const viewType = canvas.dataset.viewType;\n            const dateStr = canvas.dataset.date;\n            const labels = JSON.parse(canvas.dataset.labels);\n            const datasets = JSON.parse(canvas.dataset.datasets);\n\n            const isDarkMode = document.documentElement.classList.contains('dark');\n\n            const colors = {\n                Topped: { light: 'rgba(54, 162, 235, 0.8)', dark: 'rgba(54, 162, 235, 0.5)' },\n                Untopped: { light: 'rgba(255, 99, 132, 0.8)', dark: 'rgba(255, 99, 132, 0.5)' },\n                Flashed: { light: 'rgba(255, 165, 0, 0.8)', dark: 'rgba(255, 165, 0, 0.5)' },\n                New: { light: 'rgba(76, 175, 80, 0.8)', dark: 'rgba(76, 175, 80, 0.5)' }\n            };\n\n            const chartDatasets = Object.keys(datasets).map(key => ({\n                label: key,\n                data: datasets[key],\n                backgroundColor: isDarkMode ? colors[key].dark : colors[key].light,\n                borderColor: isDarkMode ? colors[key].dark.replace('0.5', '1') : colors[key].light.replace('0.8', '1'),\n                borderWidth: 1\n            }));\n\n            window.gradeCountsChart = new Chart(ctx, {\n                type: 'bar',    \n                data: {\n                    labels: labels,\n                    datasets: chartDatasets\n                },\n                options: {\n                    responsive: true,\n                    scales: {\n                        y: {\n                            beginAtZero: true,\n                            title: {\n                                display: false,\n                                text: 'Count',\n                                color: isDarkMode ? '#fff' : '#333'\n                            },\n                            ticks: {\n                                color: isDarkMode ? '#fff' : '#333'\n                            },\n                            grid: {\n                                color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'\n                            }\n                        },\n                        x: {\n                            title: {\n                                display: false,\n                                text: 'Grade',\n                                color: isDarkMode ? '#fff' : '#333'\n                            },\n                            ticks: {\n                                color: isDarkMode ? '#fff' : '#333'\n                            },\n                            grid: {\n                                display: false\n                            }\n                        }\n                    },\n                    plugins: {\n                        legend: {\n                            display: true,\n\t\t\t\t\t\t\tlabels: {\n\t\t\t\t\t\t\t\tcolor: isDarkMode ? '#fff' : '#333'\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\tposition: 'bottom'\n                        },\n                        title: {\n                            display: false\n                        }\n                    }\n                }\n            });\n        })();\n    </script>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"></canvas></div></div><script>\n        (function() {\n            const canvas = document.getElementById('gradeCountsChartCanvas');\n            const ctx = canvas.getContext('2d');\n            const labels = JSON.parse(canvas.dataset.labels);\n            const datasets = JSON.parse(canvas.dataset.datasets);\n\n            const isDarkMode = document.documentElement.classList.contains('dark');\n\n            const colors = {\n                Topped: { light: 'rgba(54, 162, 235, 0.8)', dark: 'rgba(54, 162, 235, 0.5)' },\n                Untopped: { light: 'rgba(255, 99, 132, 0.8)', dark: 'rgba(255, 99, 132, 0.5)' },\n                Flashed: { light: 'rgba(255, 165, 0, 0.8)', dark: 'rgba(255, 165, 0, 0.5)' },\n                New: { light: 'rgba(76, 175, 80, 0.8)', dark: 'rgba(76, 175, 80, 0.5)' }\n            };\n\n            const chartDatasets = Object.keys(datasets).map(key => ({\n                label: key,\n                data: datasets[key],\n                backgroundColor: isDarkMode ? colors[key].dark : colors[key].light,\n                borderColor: isDarkMode ? colors[key].dark.replace('0.5', '1') : colors[key].light.replace('0.8', '1'),\n                borderWidth: 1\n            }));\n\n            new Chart(ctx, {\n                type: 'bar',    \n                data: {\n                    labels: labels,\n                    datasets: chartDatasets\n                },\n                options: {\n                    responsive: true,\n                    maintainAspectRatio: false,\n                    scales: {\n                        y: {\n                            beginAtZero: true,\n                            title: {\n                                display: false,\n                                text: 'Count',\n                                color: isDarkMode ? '#fff' : '#333'\n                            },\n                            ticks: {\n                                color: isDarkMode ? '#fff' : '#333'\n                            },\n                            grid: {\n                                color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'\n                            }\n                        },\n                        x: {\n                            title: {\n                                display: false,\n                                text: 'Grade',\n                                color: isDarkMode ? '#fff' : '#333'\n                            },\n                            ticks: {\n                                color: isDarkMode ? '#fff' : '#333'\n                            },\n                            grid: {\n                                display: false\n                            }\n                        }\n                    },\n                    plugins: {\n                        legend: {\n                            display: true,\n\t\t\t\t\t\t\tlabels: {\n\t\t\t\t\t\t\t\tcolor: isDarkMode ? '#fff' : '#333'\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\tposition: 'bottom'\n                        },\n                        title: {\n                            display: false\n                        }\n                    }\n                }\n            });\n        })();\n    </script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

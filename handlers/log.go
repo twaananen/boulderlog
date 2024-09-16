@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/twaananen/boulderlog/components"
 	"github.com/twaananen/boulderlog/models"
@@ -115,15 +116,17 @@ func (h *LogHandler) SubmitLog(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	gradeCounts, toppedCounts, err := h.logService.GetTodayGradeCounts(username)
+	startOfDay := time.Now().Truncate(24 * time.Hour)
+	endOfDay := startOfDay.Add(24 * time.Hour)
+	grades, datasets, err := h.logService.GetGradeCounts(username, &startOfDay, &endOfDay)
 	if err != nil {
-		utils.LogError("Failed to get grade counts", err)
-		http.Error(w, "Failed to get grade counts", http.StatusInternalServerError)
+		utils.LogError("Failed to get grade counts for chart", err)
+		http.Error(w, "Failed to get grade counts for chart", http.StatusInternalServerError)
 		return
 	}
 
 	isHtmxRequest := r.Header.Get("HX-Request") == "true"
-	content := components.LogSummary(gradeCounts, toppedCounts, true, difficulty)
+	content := components.LogSummary(true, difficulty, grades, datasets)
 
 	if isHtmxRequest {
 		err = content.Render(r.Context(), w)

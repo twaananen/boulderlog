@@ -1,38 +1,37 @@
 package components
 
 import (
-	"fmt"
 	"sort"
 	"math/rand"
+	"time"
 )
 
-templ LogSummary(gradeCounts map[string]int, toppedCounts map[string]int, showCongrats bool, lastAttemptDifficulty int) {
+templ LogSummary(showCongrats bool, lastAttemptDifficulty int, grades []string, datasets map[string][]int) {
 	if showCongrats {
 		if lastAttemptDifficulty <= 4 {
-			<div class="bg-gradient-to-br from-yellow-400 to-pink-500 rounded-lg p-4">
+			<div class="bg-gradient-to-br from-yellow-400 to-pink-500 mb-4 rounded-lg p-4">
 				<h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">{ getRandomHypeText() }</h2>
 			</div>
 		} else {
-			<div class="bg-gradient-to-br from-green-400 to-blue-500 rounded-lg p-4">
+			<div class="bg-gradient-to-br from-green-400 to-blue-500 mb-4 rounded-lg p-4">
 				<h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">{ getRandomPepText() }</h2>
 			</div>
 		}
-	} else if len(gradeCounts) == 0 {
+	} 
+	if len(grades) == 0 {
 		<h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-gray-100">Let's Get Started!</h2>
 		<p class="text-xl mb-6 text-gray-700 dark:text-gray-300">Ready to crush some boulders? Log your first attempt of the day!</p>
-	}
-	<h3 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Today's Progress</h3>
-	<div class="grid grid-cols-3 gap-2 mb-6">
-		if len(gradeCounts) > 0 {
-			for _, grade := range sortedGrades(gradeCounts) {
-				<div class="bg-gray-100 dark:bg-gray-900 p-4 rounded flex items-center">
-					<span class="font-bold text-gray-800 dark:text-gray-200">{ grade }:</span> <span class="text-green-600 dark:text-green-400">{ templ.EscapeString(fmt.Sprintf("%d", toppedCounts[grade])) }</span>/<span class="text-gray-800 dark:text-gray-200">{ templ.EscapeString(fmt.Sprintf("%d", gradeCounts[grade])) }</span>
-				</div>
-			}
+	} else {
+		<h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Today's Progress</h3>
+		if len(grades) > 0 {
+			<div class="container mx-auto py-4">
+				@GradeCountsChart(grades, datasets, "today", time.Now().Format("2006-01-02"), false)
+			</div>
 		} else {
 			<div class="col-span-2 text-gray-500 dark:text-gray-400">No boulders logged today</div>
 		}
-	</div>
+	}
+
 	<button
 		hx-get="/log/grade"
 		hx-target="#main-content"

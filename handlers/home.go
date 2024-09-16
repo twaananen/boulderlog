@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/twaananen/boulderlog/components"
 	"github.com/twaananen/boulderlog/services"
@@ -21,28 +22,41 @@ func NewHomeHandler(userService *services.UserService, logService *services.LogS
 }
 
 func (h *HomeHandler) Home(w http.ResponseWriter, r *http.Request) {
-	isLoggedIn := h.userService.IsUserLoggedIn(r)
-	isHtmxRequest := r.Header.Get("HX-Request") == "true"
-
-	var gradeCounts, toppedCounts map[string]int
-	var err error
-
-	if isLoggedIn {
-		username, err := h.userService.GetUsernameFromToken(r)
-		if err != nil {
-			utils.LogError("Failed to get username from token", err)
-			http.Error(w, "Internal server error", http.StatusInternalServerError)
-			return
-		}
-		gradeCounts, toppedCounts, err = h.logService.GetTodayGradeCounts(username)
-		if err != nil {
-			utils.LogError("Failed to get grade counts", err)
-			http.Error(w, "Failed to get grade counts", http.StatusInternalServerError)
-			return
-		}
+	username, err := h.userService.GetUsernameFromToken(r)
+	if err != nil {
+		utils.LogError("Failed to get username from token", err)
+		username = ""
 	}
 
-	content := components.Home(isLoggedIn, gradeCounts, toppedCounts, false, -1)
+	h.HomeWithUserName(w, r, username)
+}
+
+func (h *HomeHandler) HomeWithUserName(w http.ResponseWriter, r *http.Request, username string) {
+	isHtmxRequest := r.Header.Get("HX-Request") == "true"
+
+	var err error
+	if username == "" {
+		if isHtmxRequest {
+			err = components.Home(false, false, -1, nil, nil).Render(r.Context(), w)
+		} else {
+			err = components.Layout("Home", components.Home(false, false, -1, nil, nil)).Render(r.Context(), w)
+		}
+		if err != nil {
+			utils.LogError("Failed to render home page", err)
+			http.Error(w, "Internal server error", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	startOfDay := time.Now().Truncate(24 * time.Hour)
+	endOfDay := startOfDay.Add(24 * time.Hour)
+	grades, datasets, err := h.logService.GetGradeCounts(username, &startOfDay, &endOfDay)
+	if err != nil {
+		utils.LogError("Failed to get grade counts for chart", err)
+		return
+	}
+
+	content := components.Home(true, false, -1, grades, datasets)
 	if isHtmxRequest {
 		err = content.Render(r.Context(), w)
 	} else {

@@ -9,7 +9,7 @@ import (
 
 func SetupRoutes(router *http.ServeMux, userService *services.UserService, logService *services.LogService, migrationService *services.MigrationService) {
 	homeHandler := NewHomeHandler(userService, logService)
-	authHandler := NewAuthHandler(userService, logService)
+	authHandler := NewAuthHandler(userService, logService, homeHandler)
 	profileHandler := NewProfileHandler(userService, migrationService)
 	logHandler := NewLogHandler(logService, userService)
 	statsHandler := NewStatsHandler(userService, logService)

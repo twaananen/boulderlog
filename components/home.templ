@@ -1,9 +1,9 @@
 package components
 
 
-templ Home(isLoggedIn bool, gradeCounts map[string]int, toppedCounts map[string]int, showCongrats bool, lastAttemptDifficulty int) {
+templ Home(isLoggedIn bool, showCongrats bool, lastAttemptDifficulty int, grades []string, datasets map[string][]int) {
 	if isLoggedIn {
-		@LogSummary(gradeCounts, toppedCounts, showCongrats, lastAttemptDifficulty)
+		@LogSummary(showCongrats, lastAttemptDifficulty, grades, datasets)
 	} else {
 		@HomeContent()
 	}

@@ -29,11 +29,11 @@ func Stats(gradeLabels []string, datasets map[string][]int, viewType string, dat
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"container mx-auto px-4 py-8\"><h2 class=\"text-3xl font-bold mb-4\">Your Bouldering Stats</h2>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"container mx-auto py-2\"><h2 class=\"text-3xl font-bold mb-4\">Your Bouldering Stats</h2>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = GradeCountsChart(gradeLabels, datasets, viewType, dateStr).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = GradeCountsChart(gradeLabels, datasets, viewType, dateStr, true).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
