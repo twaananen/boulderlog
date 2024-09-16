@@ -352,7 +352,7 @@ func EditLogRow(log models.BoulderLog) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</select></td><td class=\"px-1 py-2 text-center\"><input type=\"checkbox\" name=\"flash\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</select></td><td class=\"px-1 py-2\"><input type=\"checkbox\" name=\"flash\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -362,7 +362,7 @@ func EditLogRow(log models.BoulderLog) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" class=\"form-checkbox h-4 w-4\"></td><td class=\"px-1 py-2 text-center\"><input type=\"checkbox\" name=\"new_route\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" class=\"form-checkbox h-4 w-4\"></td><td class=\"px-1 py-2\"><input type=\"checkbox\" name=\"new_route\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
