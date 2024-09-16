@@ -33,4 +33,10 @@ func SetupRoutes(router *http.ServeMux, userService *services.UserService, logSe
 	router.HandleFunc("GET /log/confirm/", authMiddleware(logHandler.GetConfirmation))
 	router.HandleFunc("POST /log/submit/", authMiddleware(logHandler.SubmitLog))
 
+	router.HandleFunc("GET /log/history", authMiddleware(logHandler.GetLogHistory))
+	router.HandleFunc("GET /log/edit/", authMiddleware(logHandler.GetEditLogRow))
+	router.HandleFunc("POST /log/update/", authMiddleware(logHandler.UpdateLog))
+	router.HandleFunc("GET /log/cancel-edit/", authMiddleware(logHandler.CancelEdit))
+	router.HandleFunc("DELETE /log/delete/", authMiddleware(logHandler.DeleteLog))
+
 }

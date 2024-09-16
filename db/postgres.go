@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/twaananen/boulderlog/models"
+	"github.com/twaananen/boulderlog/utils"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -46,8 +47,12 @@ func (pdb *PostgresDatabase) CreateUser(user *models.User) error {
 	return pdb.db.Create(user).Error
 }
 
-func (pdb *PostgresDatabase) SaveBoulderLog(log *models.BoulderLog) error {
-	return pdb.db.Create(log).Error
+func (pdb *PostgresDatabase) SaveBoulderLog(log *models.BoulderLog) (*models.BoulderLog, error) {
+	if err := pdb.db.Create(log).Error; err != nil {
+		return nil, err
+	}
+	utils.LogInfo(fmt.Sprintf("Saved BoulderLog: %v", log))
+	return log, nil
 }
 
 func (pdb *PostgresDatabase) GetTodayGradeCounts(username string) (map[string]int, map[string]int, error) {
@@ -170,4 +175,25 @@ func (pdb *PostgresDatabase) GetBoulderLogsBetweenDates(username string, startDa
 	}
 
 	return logs, nil
+}
+
+func (pdb *PostgresDatabase) GetBoulderLogByID(username string, logID uint) (*models.BoulderLog, error) {
+	var log models.BoulderLog
+	result := pdb.db.Where("username = ? AND id = ?", username, logID).First(&log)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return &log, nil
+}
+
+func (pdb *PostgresDatabase) UpdateBoulderLog(log *models.BoulderLog) (*models.BoulderLog, error) {
+	if err := pdb.db.Save(log).Error; err != nil {
+		return nil, err
+	}
+	utils.LogInfo(fmt.Sprintf("Updated BoulderLog: %v", log))
+	return log, nil
+}
+
+func (pdb *PostgresDatabase) DeleteBoulderLog(username string, logID uint) error {
+	return pdb.db.Where("username = ? AND id = ?", username, logID).Delete(&models.BoulderLog{}).Error
 }

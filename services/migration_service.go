@@ -51,7 +51,7 @@ func (s *MigrationService) MigrateUserData(username string) (int, error) {
 		}
 		newLog.CreatedAt = csvLog.Date
 
-		if err := s.postgresDB.SaveBoulderLog(newLog); err != nil {
+		if _, err := s.postgresDB.SaveBoulderLog(newLog); err != nil {
 			utils.LogError(fmt.Sprintf("Failed to migrate log for user %s at date %s", username, csvLog.Date), err)
 			continue
 		}

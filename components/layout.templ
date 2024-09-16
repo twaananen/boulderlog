@@ -79,6 +79,9 @@ templ AuthStatusLoggedIn() {
 			<a href="/profile" hx-get="/profile" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="true" onclick="toggleMenu()" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
 				<i class="fas fa-user mr-2"></i>Profile
 			</a>
+			<a href="/log/history" hx-get="/log/history" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="true" onclick="toggleMenu()" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+				<i class="fas fa-history mr-2"></i>Log History
+			</a>
 			<button hx-post="/auth/logout" hx-target="#main-content" hx-swap="innerHTML" hx-push-url="/" onclick="toggleMenu()" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 w-full text-left">
 				<i class="fas fa-sign-out-alt mr-2"></i>Logout
 			</button>

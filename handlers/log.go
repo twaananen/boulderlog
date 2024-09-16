@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"slices"
 	"strconv"
 	"time"
 
@@ -110,7 +111,8 @@ func (h *LogHandler) SubmitLog(w http.ResponseWriter, r *http.Request) {
 		NewRoute:   newRoute,
 	}
 
-	if err := h.logService.SaveLog(log); err != nil {
+	_, err = h.logService.SaveLog(log)
+	if err != nil {
 		utils.LogError("Failed to save log", err)
 		http.Error(w, "Failed to save log", http.StatusInternalServerError)
 		return
@@ -138,4 +140,172 @@ func (h *LogHandler) SubmitLog(w http.ResponseWriter, r *http.Request) {
 		utils.LogError("Failed to render log summary", err)
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
 	}
+}
+
+func (h *LogHandler) GetLogHistory(w http.ResponseWriter, r *http.Request) {
+	isHtmxRequest := r.Header.Get("HX-Request") == "true"
+	username, err := h.userService.GetUsernameFromToken(r)
+	if err != nil {
+		http.Error(w, "User not authenticated", http.StatusUnauthorized)
+		return
+	}
+
+	logs, err := h.logService.GetBoulderLogs(username)
+	if err != nil {
+		utils.LogError("Failed to get boulder logs", err)
+		http.Error(w, "Failed to get boulder logs", http.StatusInternalServerError)
+		return
+	}
+
+	slices.Reverse(logs)
+
+	if isHtmxRequest {
+		err = components.LogHistory(logs).Render(r.Context(), w)
+	} else {
+		err = components.Layout("Log History", components.LogHistory(logs)).Render(r.Context(), w)
+	}
+	if err != nil {
+		utils.LogError("Failed to render log history", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
+}
+
+func (h *LogHandler) GetEditLogRow(w http.ResponseWriter, r *http.Request) {
+	username, err := h.userService.GetUsernameFromToken(r)
+	if err != nil {
+		http.Error(w, "User not authenticated", http.StatusUnauthorized)
+		return
+	}
+
+	logID, err := strconv.ParseUint(r.URL.Path[len("/log/edit/"):], 10, 64)
+	if err != nil {
+		http.Error(w, "Invalid log ID", http.StatusBadRequest)
+		return
+	}
+
+	log, err := h.logService.GetBoulderLogByID(username, uint(logID))
+	if err != nil {
+		utils.LogError("Failed to get boulder log", err)
+		http.Error(w, "Failed to get boulder log", http.StatusInternalServerError)
+		return
+	}
+
+	err = components.EditLogRow(*log).Render(r.Context(), w)
+	if err != nil {
+		utils.LogError("Failed to render edit log row", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
+}
+
+func (h *LogHandler) UpdateLog(w http.ResponseWriter, r *http.Request) {
+	username, err := h.userService.GetUsernameFromToken(r)
+	if err != nil {
+		http.Error(w, "User not authenticated", http.StatusUnauthorized)
+		return
+	}
+
+	logID, err := strconv.ParseUint(r.URL.Path[len("/log/update/"):], 10, 64)
+	if err != nil {
+		http.Error(w, "Invalid log ID", http.StatusBadRequest)
+		return
+	}
+
+	err = r.ParseForm()
+	if err != nil {
+		http.Error(w, "Failed to parse form data", http.StatusBadRequest)
+		return
+	}
+
+	grade := r.PostFormValue("grade")
+	difficulty, err := strconv.Atoi(r.PostFormValue("difficulty"))
+	if err != nil {
+		http.Error(w, "Invalid difficulty", http.StatusBadRequest)
+		return
+	}
+	flash := r.PostFormValue("flash") == "on"
+	newRoute := r.PostFormValue("new_route") == "on"
+
+	if difficulty > 4 {
+		flash = false
+		newRoute = false
+	}
+
+	if flash {
+		newRoute = true
+	}
+
+	log, err := h.logService.GetBoulderLogByID(username, uint(logID))
+	if err != nil {
+		utils.LogError("Failed to get boulder log", err)
+		http.Error(w, "Failed to get boulder log", http.StatusInternalServerError)
+		return
+	}
+
+	log.Grade = grade
+	log.Difficulty = difficulty
+	log.Flash = flash
+	log.NewRoute = newRoute
+
+	updatedLog, err := h.logService.UpdateBoulderLog(log)
+	if err != nil {
+		utils.LogError("Failed to update boulder log", err)
+		http.Error(w, "Failed to update boulder log", http.StatusInternalServerError)
+		return
+	}
+
+	err = components.LogRow(*updatedLog).Render(r.Context(), w)
+	if err != nil {
+		utils.LogError("Failed to render updated log row", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
+}
+
+func (h *LogHandler) CancelEdit(w http.ResponseWriter, r *http.Request) {
+	username, err := h.userService.GetUsernameFromToken(r)
+	if err != nil {
+		http.Error(w, "User not authenticated", http.StatusUnauthorized)
+		return
+	}
+
+	logID, err := strconv.ParseUint(r.URL.Path[len("/log/cancel-edit/"):], 10, 64)
+	if err != nil {
+		http.Error(w, "Invalid log ID", http.StatusBadRequest)
+		return
+	}
+
+	log, err := h.logService.GetBoulderLogByID(username, uint(logID))
+	if err != nil {
+		utils.LogError("Failed to get boulder log", err)
+		http.Error(w, "Failed to get boulder log", http.StatusInternalServerError)
+		return
+	}
+
+	err = components.LogRow(*log).Render(r.Context(), w)
+	if err != nil {
+		utils.LogError("Failed to render log row", err)
+		http.Error(w, "Internal server error", http.StatusInternalServerError)
+	}
+}
+
+func (h *LogHandler) DeleteLog(w http.ResponseWriter, r *http.Request) {
+	username, err := h.userService.GetUsernameFromToken(r)
+	if err != nil {
+		http.Error(w, "User not authenticated", http.StatusUnauthorized)
+		return
+	}
+
+	logID, err := strconv.ParseUint(r.URL.Path[len("/log/delete/"):], 10, 64)
+	if err != nil {
+		http.Error(w, "Invalid log ID", http.StatusBadRequest)
+		return
+	}
+
+	err = h.logService.DeleteBoulderLog(username, uint(logID))
+	if err != nil {
+		utils.LogError("Failed to delete boulder log", err)
+		http.Error(w, "Failed to delete boulder log", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

@@ -1,13 +1,11 @@
 package services
 
 import (
-	"fmt"
 	"sort"
 	"time"
 
 	"github.com/twaananen/boulderlog/db"
 	"github.com/twaananen/boulderlog/models"
-	"github.com/twaananen/boulderlog/utils"
 )
 
 type LogService struct {
@@ -20,11 +18,6 @@ func NewLogService(db db.Database) *LogService {
 		db:          db,
 		userService: NewUserService(db),
 	}
-}
-
-func (s *LogService) SaveLog(log *models.BoulderLog) error {
-	utils.LogInfo(fmt.Sprintf("Saving log: %+v", log))
-	return s.db.SaveBoulderLog(log)
 }
 
 func (s *LogService) GetTodayGradeCounts(userID string) (map[string]int, map[string]int, error) {
@@ -131,4 +124,24 @@ func (s *LogService) GetWeekBounds(date time.Time) (time.Time, time.Time) {
 	}
 	endDate := startDate.AddDate(0, 0, 6)
 	return startDate, endDate
+}
+
+func (s *LogService) SaveLog(log *models.BoulderLog) (*models.BoulderLog, error) {
+	return s.db.SaveBoulderLog(log)
+}
+
+func (s *LogService) GetBoulderLogByID(username string, logID uint) (*models.BoulderLog, error) {
+	return s.db.GetBoulderLogByID(username, logID)
+}
+
+func (s *LogService) UpdateBoulderLog(log *models.BoulderLog) (*models.BoulderLog, error) {
+	return s.db.UpdateBoulderLog(log)
+}
+
+func (s *LogService) DeleteBoulderLog(username string, logID uint) error {
+	return s.db.DeleteBoulderLog(username, logID)
+}
+
+func (s *LogService) GetBoulderLogs(username string) ([]models.BoulderLog, error) {
+	return s.db.GetBoulderLogs(username)
 }
