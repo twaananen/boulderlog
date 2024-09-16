@@ -107,7 +107,11 @@ templ GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType
                             },
                             grid: {
                                 display: false
-                            }
+                            },
+							ticks: {
+								maxRotation: 90,
+								minRotation: 0
+							}
                         }
                     },
                     plugins: {
