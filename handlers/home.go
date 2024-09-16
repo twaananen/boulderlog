@@ -24,7 +24,6 @@ func NewHomeHandler(userService *services.UserService, logService *services.LogS
 func (h *HomeHandler) Home(w http.ResponseWriter, r *http.Request) {
 	username, err := h.userService.GetUsernameFromToken(r)
 	if err != nil {
-		utils.LogError("Failed to get username from token", err)
 		username = ""
 	}
 
