@@ -97,15 +97,15 @@ func BoulderConfirmation(grade string, difficulty int) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var6 string
-			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/log/submit/?grade=%s&difficulty=%d&flash=true", url.QueryEscape(grade), difficulty))
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/log/submit/?grade=%s&difficulty=%d", url.QueryEscape(grade), difficulty))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/boulder_confirmation.templ`, Line: 30, Col: 114}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/boulder_confirmation.templ`, Line: 30, Col: 103}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"/\" class=\"bg-green-600 dark:bg-green-700 text-white py-2 px-4 rounded hover:bg-green-700 dark:hover:bg-green-600\">Flashed it</button> <button hx-post=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"/\" class=\"bg-green-600 dark:bg-green-700 text-white py-2 px-4 rounded hover:bg-green-700 dark:hover:bg-green-600\">Done it before</button> <button hx-post=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -123,15 +123,15 @@ func BoulderConfirmation(grade string, difficulty int) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var8 string
-			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/log/submit/?grade=%s&difficulty=%d", url.QueryEscape(grade), difficulty))
+			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/log/submit/?grade=%s&difficulty=%d&flash=true", url.QueryEscape(grade), difficulty))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/boulder_confirmation.templ`, Line: 48, Col: 103}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/boulder_confirmation.templ`, Line: 48, Col: 114}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"/\" class=\"bg-gray-500 dark:bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-600 dark:hover:bg-gray-500\">Done it already</button></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"/\" class=\"bg-yellow-500 dark:bg-yellow-600 text-white py-2 px-4 rounded hover:bg-yellow-600 dark:hover:bg-yellow-500\">Flashed it!</button></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -149,7 +149,7 @@ func BoulderConfirmation(grade string, difficulty int) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"/\" class=\"w-full bg-blue-600 dark:bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-700 dark:hover:bg-blue-600\">Yep</button>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#main-content\" hx-swap=\"innerHTML\" hx-push-url=\"/\" class=\"w-full bg-red-600 dark:bg-red-700 text-white py-2 px-4 rounded hover:bg-red-700 dark:hover:bg-red-600\">Yep, not today</button>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
