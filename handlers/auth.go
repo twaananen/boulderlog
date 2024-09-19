@@ -26,10 +26,13 @@ func NewAuthHandler(userService *services.UserService, logService *services.LogS
 
 func (h *AuthHandler) LoginPage(w http.ResponseWriter, r *http.Request) {
 	isHtmxRequest := r.Header.Get("HX-Request") == "true"
+	redirectURL := r.URL.Query().Get("redirect")
+
+	loginComponent := components.Login("", "", redirectURL)
 	if isHtmxRequest {
-		components.Login("", "").Render(r.Context(), w)
+		loginComponent.Render(r.Context(), w)
 	} else {
-		components.Layout("Login", components.Login("", "")).Render(r.Context(), w)
+		components.Layout("Login", loginComponent).Render(r.Context(), w)
 	}
 }
 
@@ -46,15 +49,15 @@ func (h *AuthHandler) AuthStatus(w http.ResponseWriter, r *http.Request) {
 func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
+	redirectURL := r.FormValue("redirect")
 
 	token, err := h.userService.AuthenticateUser(username, password)
 	if err != nil {
 		if err == models.ErrInvalidCredentials {
-			components.Login("Invalid username or password", username).Render(r.Context(), w)
+			components.Login("Invalid username or password", username, redirectURL).Render(r.Context(), w)
 		} else {
 			utils.LogError("Error during authentication", err)
-			http.Error(w, "Internal server error", http.StatusInternalServerError)
-			components.Login("Something went wrong, try again later", username).Render(r.Context(), w)
+			components.Login("Something went wrong, try again later", username, redirectURL).Render(r.Context(), w)
 		}
 		return
 	}
@@ -69,8 +72,11 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("HX-Trigger", "authStatusChanged")
 
-	// Call the HomeHandler to render the home page
-	h.homeHandler.HomeWithUserName(w, r, username)
+	if redirectURL != "" {
+		http.Redirect(w, r, redirectURL, http.StatusSeeOther)
+	} else {
+		h.homeHandler.HomeWithUserName(w, r, username)
+	}
 }
 
 func (h *AuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
