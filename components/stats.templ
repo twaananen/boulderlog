@@ -1,10 +1,18 @@
 package components
 
-templ Stats(gradeLabels []string, datasets map[string][]int, viewType string, dateStr string) {
+import "time"
+templ Stats(gradeLabels []string, datasets map[string][]int, difficultyLabels []string, difficultyData map[string][]struct{Time time.Time; Value int}, viewType string, dateStr string) {
 	<div class="container mx-auto py-2">
 		<h2 class="text-3xl font-bold mb-4">Your Bouldering Stats</h2>
-		@GradeCountsChart(gradeLabels, datasets, viewType, dateStr, true)
-		
-		// Add more charts here in the future
+		<div class="grid grid-cols-1 gap-8">
+			<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
+				<h3 class="text-xl font-semibold mb-4">Grade Distribution</h3>
+				@GradeCountsChart(gradeLabels, datasets, viewType, dateStr, true)
+			</div>
+			<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
+				<h3 class="text-xl font-semibold mb-4">Difficulty Progression</h3>
+				@DifficultyProgressionChart(difficultyLabels, difficultyData)
+			</div>
+		</div>
 	</div>
 }

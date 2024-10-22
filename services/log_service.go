@@ -3,6 +3,7 @@ package services
 import (
 	"sort"
 	"time"
+	"math"
 
 	"github.com/twaananen/boulderlog/db"
 	"github.com/twaananen/boulderlog/models"
@@ -31,26 +32,18 @@ func (s *LogService) GetTodayGradeCounts(userID string) (map[string]int, map[str
 	return counts, toppedCounts, nil
 }
 
-func (s *LogService) GetGradeCounts(username string, startDate, endDate *time.Time) ([]string, map[string][]int, error) {
-	var logs []models.BoulderLog
-	var err error
+func (s *LogService) GetBoulderLogsBetweenDates(username string, startDate, endDate time.Time) ([]models.BoulderLog, error) {
+	return s.db.GetBoulderLogsBetweenDates(username, startDate, endDate)
+}
 
-	if startDate == nil || endDate == nil {
-		logs, err = s.db.GetBoulderLogs(username)
-	} else {
-		logs, err = s.db.GetBoulderLogsBetweenDates(username, *startDate, *endDate)
-	}
-
-	if err != nil {
-		return nil, nil, err
-	}
-
+func (s *LogService) GetGradeCountsFromLogs(logs []models.BoulderLog) ([]string, map[string][]int, error) {
 	gradeCounts := make(map[string]map[string]int)
 	grades := make([]string, 0)
+	
 	for _, log := range logs {
 		if _, exists := gradeCounts[log.Grade]; !exists {
 			gradeCounts[log.Grade] = make(map[string]int)
-			grades = append(grades, log.Grade)
+				grades = append(grades, log.Grade)
 		}
 		if log.Difficulty >= 1 && log.Difficulty <= 4 {
 			gradeCounts[log.Grade]["Topped"]++
@@ -82,6 +75,23 @@ func (s *LogService) GetGradeCounts(username string, startDate, endDate *time.Ti
 	}
 
 	return grades, datasets, nil
+}
+
+func (s *LogService) GetGradeCounts(username string, startDate, endDate *time.Time) ([]string, map[string][]int, error) {
+	var logs []models.BoulderLog
+	var err error
+
+	if startDate == nil || endDate == nil {
+		logs, err = s.db.GetBoulderLogs(username)
+	} else {
+		logs, err = s.db.GetBoulderLogsBetweenDates(username, *startDate, *endDate)
+	}
+
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return s.GetGradeCountsFromLogs(logs)
 }
 
 func (s *LogService) GetProgressData(username string) ([]string, map[string][]int, error) {
@@ -144,4 +154,79 @@ func (s *LogService) DeleteBoulderLog(username string, logID uint) error {
 
 func (s *LogService) GetBoulderLogs(username string) ([]models.BoulderLog, error) {
 	return s.db.GetBoulderLogs(username)
+}
+
+func (s *LogService) GetDifficultyProgressionData(logs []models.BoulderLog) ([]string, map[string][]struct {
+	Time  time.Time
+	Value int
+}, error) {
+	if len(logs) == 0 {
+		return nil, nil, nil
+	}
+
+	// Track unique grades
+	gradeMap := make(map[string]bool)
+	
+	// Group logs by date and grade
+	dailyData := make(map[string]map[string]struct {
+		Sum   int
+		Count int
+	})
+
+	for _, log := range logs {
+		gradeMap[log.Grade] = true
+		
+		// Truncate time to get just the date
+		dateKey := log.CreatedAt.Truncate(24 * time.Hour)
+		dateStr := dateKey.Format("2006-01-02")
+
+		if _, exists := dailyData[dateStr]; !exists {
+			dailyData[dateStr] = make(map[string]struct {
+				Sum   int
+				Count int
+			})
+		}
+
+		dayGradeData := dailyData[dateStr][log.Grade]
+		dayGradeData.Sum += log.Difficulty
+		dayGradeData.Count++
+		dailyData[dateStr][log.Grade] = dayGradeData
+	}
+
+	// Convert grades to sorted slice
+	grades := make([]string, 0, len(gradeMap))
+	for grade := range gradeMap {
+		grades = append(grades, grade)
+	}
+	sort.Strings(grades)
+
+	// Create progression data with daily averages
+	progressionData := make(map[string][]struct {
+		Time  time.Time
+		Value int
+	})
+
+	for dateStr, gradeData := range dailyData {
+		date, _ := time.Parse("2006-01-02", dateStr)
+		
+		for grade, data := range gradeData {
+			avgDifficulty := int(math.Round(float64(data.Sum) / float64(data.Count)))
+			progressionData[grade] = append(progressionData[grade], struct {
+				Time  time.Time
+				Value int
+			}{
+				Time:  date,
+				Value: avgDifficulty,
+			})
+		}
+	}
+
+	// Sort data points by time for each grade
+	for grade := range progressionData {
+		sort.Slice(progressionData[grade], func(i, j int) bool {
+			return progressionData[grade][i].Time.Before(progressionData[grade][j].Time)
+		})
+	}
+
+	return grades, progressionData, nil
 }

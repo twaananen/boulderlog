@@ -25,15 +25,32 @@ func (h *StatsHandler) StatsPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	gradeLabels, datasets, err := h.logService.GetGradeCounts(username, nil, nil)
+	// Get all logs for the user
+	logs, err := h.logService.GetBoulderLogs(username)
+	if err != nil {
+		utils.LogError("Failed to get boulder logs", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	// Generate grade counts data
+	gradeLabels, datasets, err := h.logService.GetGradeCountsFromLogs(logs)
 	if err != nil {
 		utils.LogError("Failed to get grade counts", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
+	// Generate difficulty progression data
+	difficultyLabels, difficultyData, err := h.logService.GetDifficultyProgressionData(logs)
+	if err != nil {
+		utils.LogError("Failed to get difficulty progression data", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
 	isHtmxRequest := r.Header.Get("HX-Request") == "true"
-	content := components.Stats(gradeLabels, datasets, "all", time.Now().Format("2006-01-02"))
+	content := components.Stats(gradeLabels, datasets, difficultyLabels, difficultyData, "all", time.Now().Format("2006-01-02"))
 
 	if isHtmxRequest {
 		content.Render(r.Context(), w)
