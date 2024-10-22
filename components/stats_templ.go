@@ -12,7 +12,7 @@ import "time"
 
 func Stats(gradeLabels []string, datasets map[string][]int, difficultyLabels []string, difficultyData map[string][]struct {
 	Time  time.Time
-	Value int
+	Value float64
 }, viewType string, dateStr string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context

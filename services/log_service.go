@@ -3,7 +3,6 @@ package services
 import (
 	"sort"
 	"time"
-	"math"
 
 	"github.com/twaananen/boulderlog/db"
 	"github.com/twaananen/boulderlog/models"
@@ -158,16 +157,13 @@ func (s *LogService) GetBoulderLogs(username string) ([]models.BoulderLog, error
 
 func (s *LogService) GetDifficultyProgressionData(logs []models.BoulderLog) ([]string, map[string][]struct {
 	Time  time.Time
-	Value int
+	Value float64
 }, error) {
 	if len(logs) == 0 {
 		return nil, nil, nil
 	}
 
-	// Track unique grades
 	gradeMap := make(map[string]bool)
-	
-	// Group logs by date and grade
 	dailyData := make(map[string]map[string]struct {
 		Sum   int
 		Count int
@@ -193,27 +189,25 @@ func (s *LogService) GetDifficultyProgressionData(logs []models.BoulderLog) ([]s
 		dailyData[dateStr][log.Grade] = dayGradeData
 	}
 
-	// Convert grades to sorted slice
 	grades := make([]string, 0, len(gradeMap))
 	for grade := range gradeMap {
 		grades = append(grades, grade)
 	}
 	sort.Strings(grades)
 
-	// Create progression data with daily averages
 	progressionData := make(map[string][]struct {
 		Time  time.Time
-		Value int
+		Value float64
 	})
 
 	for dateStr, gradeData := range dailyData {
 		date, _ := time.Parse("2006-01-02", dateStr)
 		
 		for grade, data := range gradeData {
-			avgDifficulty := int(math.Round(float64(data.Sum) / float64(data.Count)))
+			avgDifficulty := float64(data.Sum) / float64(data.Count)
 			progressionData[grade] = append(progressionData[grade], struct {
 				Time  time.Time
-				Value int
+				Value float64
 			}{
 				Time:  date,
 				Value: avgDifficulty,
@@ -221,7 +215,6 @@ func (s *LogService) GetDifficultyProgressionData(logs []models.BoulderLog) ([]s
 		}
 	}
 
-	// Sort data points by time for each grade
 	for grade := range progressionData {
 		sort.Slice(progressionData[grade], func(i, j int) bool {
 			return progressionData[grade][i].Time.Before(progressionData[grade][j].Time)

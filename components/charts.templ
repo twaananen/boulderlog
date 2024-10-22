@@ -163,7 +163,7 @@ func getWeekNumber(dateStr string) string {
 
 // Add this new component to your existing charts.templ file
 
-templ DifficultyProgressionChart(grades []string, data map[string][]struct{Time time.Time; Value int}) {
+templ DifficultyProgressionChart(grades []string, data map[string][]struct{Time time.Time; Value float64}) {
 	<div id="difficulty-progression-chart" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
 		<div class="max-h-96 min-h-64">
 			<canvas id="difficultyProgressionCanvas" data-grades={ templ.JSONString(grades) } data-progression={ templ.JSONString(data) }></canvas>
@@ -222,10 +222,7 @@ templ DifficultyProgressionChart(grades []string, data map[string][]struct{Time 
 								}
 							},
 							title: {
-								display: true,
-								text: 'Date',
-								color: textColor,
-								padding: {top: 10}
+								display: false  // Removed the date label
 							},
 							ticks: {
 								color: textColor,
@@ -249,7 +246,8 @@ templ DifficultyProgressionChart(grades []string, data map[string][]struct{Time 
 								color: textColor,
 								stepSize: 1,
 								callback: function(value) {
-									return value;
+									// Format to one decimal place if it's not a whole number
+									return Number.isInteger(value) ? value : value.toFixed(1);
 								}
 							},
 							grid: {
@@ -270,7 +268,8 @@ templ DifficultyProgressionChart(grades []string, data map[string][]struct{Time 
 						tooltip: {
 							callbacks: {
 								label: function(context) {
-									return `${context.dataset.label}: ${context.parsed.y}`;
+									// Show one decimal place in tooltip
+									return `${context.dataset.label}: ${context.parsed.y.toFixed(1)}`;
 								}
 							}
 						}

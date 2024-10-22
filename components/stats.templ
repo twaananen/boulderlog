@@ -1,7 +1,7 @@
 package components
 
 import "time"
-templ Stats(gradeLabels []string, datasets map[string][]int, difficultyLabels []string, difficultyData map[string][]struct{Time time.Time; Value int}, viewType string, dateStr string) {
+templ Stats(gradeLabels []string, datasets map[string][]int, difficultyLabels []string, difficultyData map[string][]struct{Time time.Time; Value float64}, viewType string, dateStr string) {
 	<div class="container mx-auto py-2">
 		<h2 class="text-3xl font-bold mb-4">Your Bouldering Stats</h2>
 		<div class="grid grid-cols-1 gap-8">
