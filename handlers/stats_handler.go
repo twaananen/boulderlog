@@ -49,8 +49,11 @@ func (h *StatsHandler) StatsPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Get climbing statistics
+	stats := h.logService.GetClimbingStats(logs)
+
 	isHtmxRequest := r.Header.Get("HX-Request") == "true"
-	content := components.Stats(gradeLabels, datasets, difficultyLabels, difficultyData, "all", time.Now().Format("2006-01-02"))
+	content := components.Stats(gradeLabels, datasets, difficultyLabels, difficultyData, stats, "all", time.Now().Format("2006-01-02"))
 
 	if isHtmxRequest {
 		content.Render(r.Context(), w)

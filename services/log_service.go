@@ -223,3 +223,42 @@ func (s *LogService) GetDifficultyProgressionData(logs []models.BoulderLog) ([]s
 
 	return grades, progressionData, nil
 }
+
+// ClimbingStats holds the summary statistics for climbing activities
+type ClimbingStats struct {
+	ClimbingDays int
+	Flashed      int
+	New          int
+	Topped       int
+	Untopped     int
+}
+
+// GetClimbingStats calculates summary statistics from boulder logs
+func (s *LogService) GetClimbingStats(logs []models.BoulderLog) ClimbingStats {
+	stats := ClimbingStats{}
+	
+	// Use a map to count unique climbing days
+	climbingDays := make(map[string]bool)
+	
+	for _, log := range logs {
+		// Count unique days
+		dateStr := log.CreatedAt.Truncate(24 * time.Hour).Format("2006-01-02")
+		climbingDays[dateStr] = true
+		
+		// Count different types of climbs
+		if log.Flash {
+			stats.Flashed++
+		}
+		if log.NewRoute {
+			stats.New++
+		}
+		if log.Difficulty >= 1 && log.Difficulty <= 4 {
+			stats.Topped++
+		} else {
+			stats.Untopped++
+		}
+	}
+	
+	stats.ClimbingDays = len(climbingDays)
+	return stats
+}

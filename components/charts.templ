@@ -4,7 +4,7 @@ import "time"
 import "fmt"
 
 templ GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType string, dateStr string, showDateSelection bool) {
-    <div id="grade-counts-chart" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
+    <div id="grade-counts-chart" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg md:p-4 p-1">
         <div class="flex justify-between items-center mb-4">
             <span class="text-gray-800 dark:text-white font-bold">Boulder Counts</span>
 			if showDateSelection {
@@ -44,7 +44,7 @@ templ GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType
 				</div>
 			}
         </div>
-        <div class="max-h-96 min-h-64">
+        <div class="max-h-[400px] min-h-[300px]">
             <canvas id="gradeCountsChartCanvas" data-labels={ templ.JSONString(gradeLabels) } data-datasets={ templ.JSONString(datasets) }></canvas>
         </div>
     </div>
@@ -90,7 +90,9 @@ templ GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType
                                 color: isDarkMode ? '#fff' : '#333'
                             },
                             ticks: {
-                                color: isDarkMode ? '#fff' : '#333'
+                                color: isDarkMode ? '#fff' : '#333',
+                                stepSize: 1,
+                                precision: 0,
                             },
                             grid: {
                                 color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
@@ -164,8 +166,8 @@ func getWeekNumber(dateStr string) string {
 // Add this new component to your existing charts.templ file
 
 templ DifficultyProgressionChart(grades []string, data map[string][]struct{Time time.Time; Value float64}) {
-	<div id="difficulty-progression-chart" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg">
-		<div class="max-h-96 min-h-64">
+	<div id="difficulty-progression-chart" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg md:p-4 p-1">
+		<div class="max-h-[500px] min-h-[400px]">
 			<canvas id="difficultyProgressionCanvas" data-grades={ templ.JSONString(grades) } data-progression={ templ.JSONString(data) }></canvas>
 		</div>
 	</div>
@@ -222,9 +224,10 @@ templ DifficultyProgressionChart(grades []string, data map[string][]struct{Time 
 								}
 							},
 							title: {
-								display: false  // Removed the date label
+								display: false
 							},
 							ticks: {
+								stepSize: 1,
 								color: textColor,
 								maxRotation: 45,
 								minRotation: 45
@@ -235,16 +238,14 @@ templ DifficultyProgressionChart(grades []string, data map[string][]struct{Time 
 						},
 						y: {
 							title: {
-								display: true,
-								text: 'Perceived Difficulty',
-								color: textColor,
-								padding: {bottom: 10}
+								display: false
 							},
 							min: 1,
 							max: 8,
 							ticks: {
 								color: textColor,
 								stepSize: 1,
+								autoSkip: false,  // Prevent automatic skipping of ticks
 								callback: function(value) {
 									// Format to one decimal place if it's not a whole number
 									return Number.isInteger(value) ? value : value.toFixed(1);
