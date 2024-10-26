@@ -225,20 +225,21 @@ templ DifficultyProgressionChart(data map[string][]services.DifficultyDataPoint,
 
 			const datasets = grades.map((grade, index) => {
 				const values = progressionData[grade].map(point => point.Value);
-				const lastTwoValues = values.slice(-2);
+				const lastTwoValues = values.filter(v => v > 0).slice(-2); // Only consider non-zero values
 				const shouldHide = lastTwoValues.length === 2 && 
 					lastTwoValues.every(val => val === 1);
 
 				return {
 					label: grade,
-					data: progressionData[grade].map(point => point.Value),
+					data: progressionData[grade].map(point => point.Value > 0 ? point.Value : null), // Convert zeros to null
 					borderColor: `hsl(${(index * 360 / grades.length) % 360}, 70%, 50%)`,
 					backgroundColor: `hsla(${(index * 360 / grades.length) % 360}, 70%, 50%, 0.2)`,
 					tension: 0.3,
 					pointRadius: 4,
 					pointHoverRadius: 6,
 					borderWidth: 2,
-					hidden: shouldHide  // Set hidden based on the last two values
+					hidden: shouldHide,
+					spanGaps: true  // This will create gaps for null values
 				};
 			});
 
@@ -306,5 +307,6 @@ templ DifficultyProgressionChart(data map[string][]services.DifficultyDataPoint,
 		})();
 	</script>
 }
+
 
 

@@ -250,27 +250,35 @@ func (s *LogService) GetDifficultyProgressionData(logs []models.BoulderLog, peri
 		periodData[periodKey][log.Grade] = data
 	}
 
-	// Create final dataset
+	// Create final dataset with proper alignment
 	progressionData := make(map[string][]DifficultyDataPoint)
 	for _, grade := range grades {
-		progressionData[grade] = make([]DifficultyDataPoint, 0, len(periodOrder))
-	}
-
-	// Build ordered labels and data points
-	labels := make([]string, 0, len(periodOrder))
-	for _, periodKey := range periodOrder {
-		label := periodMap[periodKey]
-		labels = append(labels, label)
-
-		for _, grade := range grades {
+		// Initialize array with same length as labels for proper alignment
+		progressionData[grade] = make([]DifficultyDataPoint, len(periodOrder))
+		
+		// Fill in data points where they exist
+		for i, periodKey := range periodOrder {
+			label := periodMap[periodKey]
 			if data, exists := periodData[periodKey][grade]; exists && data.Count > 0 {
 				avgDifficulty := data.Sum / float64(data.Count)
-				progressionData[grade] = append(progressionData[grade], DifficultyDataPoint{
+				progressionData[grade][i] = DifficultyDataPoint{
 					Value: avgDifficulty,
 					Label: label,
-				})
+				}
+			} else {
+				// Create a null data point to maintain alignment
+				progressionData[grade][i] = DifficultyDataPoint{
+					Value: 0,  // This will be filtered out in the chart
+					Label: label,
+				}
 			}
 		}
+	}
+
+	// Extract labels in order
+	labels := make([]string, len(periodOrder))
+	for i, periodKey := range periodOrder {
+		labels[i] = periodMap[periodKey]
 	}
 
 	return progressionData, labels, nil
