@@ -2,6 +2,7 @@ package components
 
 import "time"
 import "fmt"
+import "github.com/twaananen/boulderlog/services"
 
 templ GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType string, dateStr string, showDateSelection bool) {
     <div id="grade-counts-chart" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg md:p-4 p-1">
@@ -163,36 +164,70 @@ func getWeekNumber(dateStr string) string {
     return fmt.Sprintf("%d", week)
 }
 
-templ DifficultyProgressionChart(grades []string, data map[string][]struct{Time time.Time; Value float64}) {
+templ DifficultyProgressionChart(data map[string][]services.DifficultyDataPoint, labels []string, currentPeriod string) {
 	<div id="difficulty-progression-chart" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg md:p-4 p-1">
-		<div class="max-h-[500px] min-h-[400px]">
-			<canvas id="difficultyProgressionCanvas" data-grades={ templ.JSONString(grades) } data-progression={ templ.JSONString(data) }></canvas>
+		<div class="flex justify-between items-center mb-4">
+			<span class="text-gray-800 dark:text-white font-bold">Difficulty Over Time</span>
+			<div class="grid md:grid-cols-4 grid-cols-2 gap-2">
+				<label class="inline-flex items-center">
+					<input type="radio" name="period" value="day" class="form-radio"
+						hx-get="/charts/difficulty-progression"
+						hx-target="#difficulty-progression-chart"
+						hx-swap="outerHTML"
+						hx-include="[name='period']"
+						checked?={ currentPeriod == "day" }/>
+					<span class="ml-2">Day</span>
+				</label>
+				<label class="inline-flex items-center">
+					<input type="radio" name="period" value="week" class="form-radio"
+						hx-get="/charts/difficulty-progression"
+						hx-target="#difficulty-progression-chart"
+						hx-swap="outerHTML"
+						hx-include="[name='period']"
+						checked?={ currentPeriod == "week" }/>
+					<span class="ml-2">Week</span>
+				</label>
+				<label class="inline-flex items-center">
+					<input type="radio" name="period" value="month" class="form-radio"
+						hx-get="/charts/difficulty-progression"
+						hx-target="#difficulty-progression-chart"
+						hx-swap="outerHTML"
+						hx-include="[name='period']"
+						checked?={ currentPeriod == "month" }/>
+					<span class="ml-2">Month</span>
+				</label>
+				<label class="inline-flex items-center">
+					<input type="radio" name="period" value="year" class="form-radio"
+						hx-get="/charts/difficulty-progression"
+						hx-target="#difficulty-progression-chart"
+						hx-swap="outerHTML"
+						hx-include="[name='period']"
+						checked?={ currentPeriod == "year" }/>
+					<span class="ml-2">Year</span>
+				</label>
+			</div>
+		</div>
+		<div class="h-[600px]">
+			<canvas id="difficultyProgressionCanvas" data-progression={ templ.JSONString(data) } data-labels={ templ.JSONString(labels) } data-period={ currentPeriod }></canvas>
 		</div>
 	</div>
 	<script>
 		(function() {
 			const canvas = document.getElementById('difficultyProgressionCanvas');
 			const ctx = canvas.getContext('2d');
-			const grades = JSON.parse(canvas.dataset.grades);
 			const progressionData = JSON.parse(canvas.dataset.progression);
+			const grades = Object.keys(progressionData);
+			const labels = JSON.parse(canvas.dataset.labels);
+			const period = canvas.dataset.period;
 
 			const isDarkMode = document.documentElement.classList.contains('dark');
 			const textColor = isDarkMode ? '#fff' : '#333';
 
-			// Generate colors for each grade
-			const colors = grades.map((_, index) => {
-				const hue = (index * 360 / grades.length) % 360;
-				return `hsl(${hue}, 70%, 50%)`;
-			});
-
 			const datasets = grades.map((grade, index) => ({
 				label: grade,
-				data: progressionData[grade].map(point => ({
-					x: new Date(point.Time),
-					y: point.Value
-				})),
-				borderColor: colors[index],
-				backgroundColor: colors[index] + '20',
+				data: progressionData[grade].map(point => point.Value),
+				borderColor: `hsl(${(index * 360 / grades.length) % 360}, 70%, 50%)`,
+				backgroundColor: `hsla(${(index * 360 / grades.length) % 360}, 70%, 50%, 0.2)`,
 				tension: 0.3,
 				pointRadius: 4,
 				pointHoverRadius: 6,
@@ -202,6 +237,7 @@ templ DifficultyProgressionChart(grades []string, data map[string][]struct{Time 
 			new Chart(ctx, {
 				type: 'line',
 				data: {
+					labels: labels,
 					datasets: datasets
 				},
 				options: {
@@ -214,44 +250,29 @@ templ DifficultyProgressionChart(grades []string, data map[string][]struct{Time 
 					},
 					scales: {
 						x: {
-							type: 'time',
-							time: {
-								unit: 'day',
-								displayFormats: {
-									day: 'dd.MM'
-								}
-							},
-							title: {
-								display: false
-							},
 							ticks: {
-								stepSize: 1,
 								color: textColor,
 								maxRotation: 45,
 								minRotation: 45
 							},
 							grid: {
 								color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-							}
+							},
 						},
 						y: {
-							title: {
-								display: false
-							},
 							min: 1,
 							max: 8,
 							ticks: {
 								color: textColor,
 								stepSize: 1,
-								autoSkip: false,  // Prevent automatic skipping of ticks
+								autoSkip: false,
 								callback: function(value) {
-									// Format to one decimal place if it's not a whole number
 									return Number.isInteger(value) ? value : value.toFixed(1);
 								}
 							},
 							grid: {
 								color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-							}
+							},
 						}
 					},
 					plugins: {
@@ -267,7 +288,6 @@ templ DifficultyProgressionChart(grades []string, data map[string][]struct{Time 
 						tooltip: {
 							callbacks: {
 								label: function(context) {
-									// Show one decimal place in tooltip
 									return `${context.dataset.label}: ${context.parsed.y.toFixed(1)}`;
 								}
 							}
@@ -278,3 +298,4 @@ templ DifficultyProgressionChart(grades []string, data map[string][]struct{Time 
 		})();
 	</script>
 }
+

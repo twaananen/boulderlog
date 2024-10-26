@@ -10,6 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "time"
 import "fmt"
+import "github.com/twaananen/boulderlog/services"
 
 func GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType string, dateStr string, showDateSelection bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -44,7 +45,7 @@ func GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType 
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs("/charts/grade-counts?view=all&date=" + dateStr)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 14, Col: 61}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 15, Col: 61}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -57,7 +58,7 @@ func GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType 
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs("/charts/grade-counts?view=weekly&date=" + getPreviousWeek(dateStr))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 20, Col: 82}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 21, Col: 82}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -70,7 +71,7 @@ func GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType 
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs("/charts/grade-counts?view=weekly&date=" + dateStr)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 30, Col: 65}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 31, Col: 65}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -83,7 +84,7 @@ func GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType 
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(getWeekNumber(dateStr))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 33, Col: 35}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 34, Col: 35}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -96,7 +97,7 @@ func GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType 
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs("/charts/grade-counts?view=weekly&date=" + getNextWeek(dateStr))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 36, Col: 78}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 37, Col: 78}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -114,7 +115,7 @@ func GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType 
 		var templ_7745c5c3_Var7 string
 		templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(templ.JSONString(gradeLabels))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 48, Col: 91}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 49, Col: 91}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
@@ -127,7 +128,7 @@ func GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType 
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(templ.JSONString(datasets))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 48, Col: 136}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 49, Col: 136}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -170,10 +171,7 @@ func getWeekNumber(dateStr string) string {
 	return fmt.Sprintf("%d", week)
 }
 
-func DifficultyProgressionChart(grades []string, data map[string][]struct {
-	Time  time.Time
-	Value float64
-}) templ.Component {
+func DifficultyProgressionChart(data map[string][]services.DifficultyDataPoint, labels []string, currentPeriod string) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -194,33 +192,86 @@ func DifficultyProgressionChart(grades []string, data map[string][]struct {
 			templ_7745c5c3_Var9 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"difficulty-progression-chart\" class=\"bg-white dark:bg-gray-800 rounded-lg shadow-lg md:p-4 p-1\"><div class=\"max-h-[500px] min-h-[400px]\"><canvas id=\"difficultyProgressionCanvas\" data-grades=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"difficulty-progression-chart\" class=\"bg-white dark:bg-gray-800 rounded-lg shadow-lg md:p-4 p-1\"><div class=\"flex justify-between items-center mb-4\"><span class=\"text-gray-800 dark:text-white font-bold\">Difficulty Over Time</span><div class=\"grid md:grid-cols-4 grid-cols-2 gap-2\"><label class=\"inline-flex items-center\"><input type=\"radio\" name=\"period\" value=\"day\" class=\"form-radio\" hx-get=\"/charts/difficulty-progression\" hx-target=\"#difficulty-progression-chart\" hx-swap=\"outerHTML\" hx-include=\"[name=&#39;period&#39;]\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if currentPeriod == "day" {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" checked")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("> <span class=\"ml-2\">Day</span></label> <label class=\"inline-flex items-center\"><input type=\"radio\" name=\"period\" value=\"week\" class=\"form-radio\" hx-get=\"/charts/difficulty-progression\" hx-target=\"#difficulty-progression-chart\" hx-swap=\"outerHTML\" hx-include=\"[name=&#39;period&#39;]\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if currentPeriod == "week" {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" checked")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("> <span class=\"ml-2\">Week</span></label> <label class=\"inline-flex items-center\"><input type=\"radio\" name=\"period\" value=\"month\" class=\"form-radio\" hx-get=\"/charts/difficulty-progression\" hx-target=\"#difficulty-progression-chart\" hx-swap=\"outerHTML\" hx-include=\"[name=&#39;period&#39;]\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if currentPeriod == "month" {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" checked")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("> <span class=\"ml-2\">Month</span></label> <label class=\"inline-flex items-center\"><input type=\"radio\" name=\"period\" value=\"year\" class=\"form-radio\" hx-get=\"/charts/difficulty-progression\" hx-target=\"#difficulty-progression-chart\" hx-swap=\"outerHTML\" hx-include=\"[name=&#39;period&#39;]\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if currentPeriod == "year" {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" checked")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("> <span class=\"ml-2\">Year</span></label></div></div><div class=\"h-[600px]\"><canvas id=\"difficultyProgressionCanvas\" data-progression=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var10 string
-		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(templ.JSONString(grades))
+		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(templ.JSONString(data))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 169, Col: 82}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 211, Col: 85}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" data-progression=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" data-labels=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var11 string
-		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(templ.JSONString(data))
+		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(templ.JSONString(labels))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 169, Col: 126}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 211, Col: 126}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"></canvas></div></div><script>\n\t\t(function() {\n\t\t\tconst canvas = document.getElementById('difficultyProgressionCanvas');\n\t\t\tconst ctx = canvas.getContext('2d');\n\t\t\tconst grades = JSON.parse(canvas.dataset.grades);\n\t\t\tconst progressionData = JSON.parse(canvas.dataset.progression);\n\n\t\t\tconst isDarkMode = document.documentElement.classList.contains('dark');\n\t\t\tconst textColor = isDarkMode ? '#fff' : '#333';\n\n\t\t\t// Generate colors for each grade\n\t\t\tconst colors = grades.map((_, index) => {\n\t\t\t\tconst hue = (index * 360 / grades.length) % 360;\n\t\t\t\treturn `hsl(${hue}, 70%, 50%)`;\n\t\t\t});\n\n\t\t\tconst datasets = grades.map((grade, index) => ({\n\t\t\t\tlabel: grade,\n\t\t\t\tdata: progressionData[grade].map(point => ({\n\t\t\t\t\tx: new Date(point.Time),\n\t\t\t\t\ty: point.Value\n\t\t\t\t})),\n\t\t\t\tborderColor: colors[index],\n\t\t\t\tbackgroundColor: colors[index] + '20',\n\t\t\t\ttension: 0.3,\n\t\t\t\tpointRadius: 4,\n\t\t\t\tpointHoverRadius: 6,\n\t\t\t\tborderWidth: 2\n\t\t\t}));\n\n\t\t\tnew Chart(ctx, {\n\t\t\t\ttype: 'line',\n\t\t\t\tdata: {\n\t\t\t\t\tdatasets: datasets\n\t\t\t\t},\n\t\t\t\toptions: {\n\t\t\t\t\tresponsive: true,\n\t\t\t\t\tmaintainAspectRatio: false,\n\t\t\t\t\tinteraction: {\n\t\t\t\t\t\tmode: 'nearest',\n\t\t\t\t\t\taxis: 'x',\n\t\t\t\t\t\tintersect: false\n\t\t\t\t\t},\n\t\t\t\t\tscales: {\n\t\t\t\t\t\tx: {\n\t\t\t\t\t\t\ttype: 'time',\n\t\t\t\t\t\t\ttime: {\n\t\t\t\t\t\t\t\tunit: 'day',\n\t\t\t\t\t\t\t\tdisplayFormats: {\n\t\t\t\t\t\t\t\t\tday: 'dd.MM'\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\ttitle: {\n\t\t\t\t\t\t\t\tdisplay: false\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\tticks: {\n\t\t\t\t\t\t\t\tstepSize: 1,\n\t\t\t\t\t\t\t\tcolor: textColor,\n\t\t\t\t\t\t\t\tmaxRotation: 45,\n\t\t\t\t\t\t\t\tminRotation: 45\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\tgrid: {\n\t\t\t\t\t\t\t\tcolor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\ty: {\n\t\t\t\t\t\t\ttitle: {\n\t\t\t\t\t\t\t\tdisplay: false\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\tmin: 1,\n\t\t\t\t\t\t\tmax: 8,\n\t\t\t\t\t\t\tticks: {\n\t\t\t\t\t\t\t\tcolor: textColor,\n\t\t\t\t\t\t\t\tstepSize: 1,\n\t\t\t\t\t\t\t\tautoSkip: false,  // Prevent automatic skipping of ticks\n\t\t\t\t\t\t\t\tcallback: function(value) {\n\t\t\t\t\t\t\t\t\t// Format to one decimal place if it's not a whole number\n\t\t\t\t\t\t\t\t\treturn Number.isInteger(value) ? value : value.toFixed(1);\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\tgrid: {\n\t\t\t\t\t\t\t\tcolor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\tplugins: {\n\t\t\t\t\t\tlegend: {\n\t\t\t\t\t\t\tposition: 'bottom',\n\t\t\t\t\t\t\tlabels: {\n\t\t\t\t\t\t\t\tcolor: textColor,\n\t\t\t\t\t\t\t\tpadding: 20,\n\t\t\t\t\t\t\t\tusePointStyle: true,\n\t\t\t\t\t\t\t\tpointStyle: 'circle'\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\ttooltip: {\n\t\t\t\t\t\t\tcallbacks: {\n\t\t\t\t\t\t\t\tlabel: function(context) {\n\t\t\t\t\t\t\t\t\t// Show one decimal place in tooltip\n\t\t\t\t\t\t\t\t\treturn `${context.dataset.label}: ${context.parsed.y.toFixed(1)}`;\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t})();\n\t</script>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" data-period=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var12 string
+		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(currentPeriod)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 211, Col: 156}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"></canvas></div></div><script>\n\t\t(function() {\n\t\t\tconst canvas = document.getElementById('difficultyProgressionCanvas');\n\t\t\tconst ctx = canvas.getContext('2d');\n\t\t\tconst progressionData = JSON.parse(canvas.dataset.progression);\n\t\t\tconst grades = Object.keys(progressionData);\n\t\t\tconst labels = JSON.parse(canvas.dataset.labels);\n\t\t\tconst period = canvas.dataset.period;\n\n\t\t\tconst isDarkMode = document.documentElement.classList.contains('dark');\n\t\t\tconst textColor = isDarkMode ? '#fff' : '#333';\n\n\t\t\tconst datasets = grades.map((grade, index) => ({\n\t\t\t\tlabel: grade,\n\t\t\t\tdata: progressionData[grade].map(point => point.Value),\n\t\t\t\tborderColor: `hsl(${(index * 360 / grades.length) % 360}, 70%, 50%)`,\n\t\t\t\tbackgroundColor: `hsla(${(index * 360 / grades.length) % 360}, 70%, 50%, 0.2)`,\n\t\t\t\ttension: 0.3,\n\t\t\t\tpointRadius: 4,\n\t\t\t\tpointHoverRadius: 6,\n\t\t\t\tborderWidth: 2\n\t\t\t}));\n\n\t\t\tnew Chart(ctx, {\n\t\t\t\ttype: 'line',\n\t\t\t\tdata: {\n\t\t\t\t\tlabels: labels,\n\t\t\t\t\tdatasets: datasets\n\t\t\t\t},\n\t\t\t\toptions: {\n\t\t\t\t\tresponsive: true,\n\t\t\t\t\tmaintainAspectRatio: false,\n\t\t\t\t\tinteraction: {\n\t\t\t\t\t\tmode: 'nearest',\n\t\t\t\t\t\taxis: 'x',\n\t\t\t\t\t\tintersect: false\n\t\t\t\t\t},\n\t\t\t\t\tscales: {\n\t\t\t\t\t\tx: {\n\t\t\t\t\t\t\tticks: {\n\t\t\t\t\t\t\t\tcolor: textColor,\n\t\t\t\t\t\t\t\tmaxRotation: 45,\n\t\t\t\t\t\t\t\tminRotation: 45\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\tgrid: {\n\t\t\t\t\t\t\t\tcolor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t},\n\t\t\t\t\t\ty: {\n\t\t\t\t\t\t\tmin: 1,\n\t\t\t\t\t\t\tmax: 8,\n\t\t\t\t\t\t\tticks: {\n\t\t\t\t\t\t\t\tcolor: textColor,\n\t\t\t\t\t\t\t\tstepSize: 1,\n\t\t\t\t\t\t\t\tautoSkip: false,\n\t\t\t\t\t\t\t\tcallback: function(value) {\n\t\t\t\t\t\t\t\t\treturn Number.isInteger(value) ? value : value.toFixed(1);\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\tgrid: {\n\t\t\t\t\t\t\t\tcolor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t}\n\t\t\t\t\t},\n\t\t\t\t\tplugins: {\n\t\t\t\t\t\tlegend: {\n\t\t\t\t\t\t\tposition: 'bottom',\n\t\t\t\t\t\t\tlabels: {\n\t\t\t\t\t\t\t\tcolor: textColor,\n\t\t\t\t\t\t\t\tpadding: 20,\n\t\t\t\t\t\t\t\tusePointStyle: true,\n\t\t\t\t\t\t\t\tpointStyle: 'circle'\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t},\n\t\t\t\t\t\ttooltip: {\n\t\t\t\t\t\t\tcallbacks: {\n\t\t\t\t\t\t\t\tlabel: function(context) {\n\t\t\t\t\t\t\t\t\treturn `${context.dataset.label}: ${context.parsed.y.toFixed(1)}`;\n\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t}\n\t\t\t\t\t\t}\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t});\n\t\t})();\n\t</script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

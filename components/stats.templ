@@ -1,6 +1,5 @@
 package components
 
-import "time"
 import "fmt"
 import "github.com/twaananen/boulderlog/services"
 
@@ -29,18 +28,18 @@ templ StatsSummary(stats services.ClimbingStats) {
 	</div>
 }
 
-templ Stats(gradeLabels []string, datasets map[string][]int, difficultyLabels []string, difficultyData map[string][]struct{Time time.Time; Value float64}, stats services.ClimbingStats, viewType string, dateStr string) {
+templ Stats(gradeLabels []string, datasets map[string][]int, difficultyData map[string][]services.DifficultyDataPoint, periodLabels []string, stats services.ClimbingStats, viewType string, dateStr string, period string) {
 	<div class="container mx-auto py-2">
 		<h2 class="text-3xl font-bold mb-4">Your Bouldering Stats</h2>
 		@StatsSummary(stats)
-		<div class="grid grid-cols-1 gap-6">
-			<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg md:p-4 p-1">
-				<h3 class="text-xl font-semibold m-4">Grade Distribution</h3>
+		<div class="grid grid-cols-1 gap-8">
+			<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
+				<h3 class="text-xl font-semibold mb-4">Grade Distribution</h3>
 				@GradeCountsChart(gradeLabels, datasets, viewType, dateStr, true)
 			</div>
-			<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg md:p-4 p-1">
-				<h3 class="text-xl font-semibold m-4">Difficulty Progression</h3>
-				@DifficultyProgressionChart(difficultyLabels, difficultyData)
+			<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
+				<h3 class="text-xl font-semibold mb-4">Difficulty Progression</h3>
+				@DifficultyProgressionChart(difficultyData, periodLabels, period)
 			</div>
 		</div>
 	</div>

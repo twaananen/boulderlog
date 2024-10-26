@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"sort"
 	"time"
 
@@ -156,109 +157,123 @@ func (s *LogService) GetBoulderLogs(username string) ([]models.BoulderLog, error
 }
 
 // GetDifficultyProgressionData processes boulder logs to generate difficulty progression data
-func (s *LogService) GetDifficultyProgressionData(logs []models.BoulderLog, period string) ([]string, map[string][]struct {
-    Time  time.Time
-    Value float64
-}, error) {
+type DifficultyDataPoint struct {
+	Value float64
+	Label string
+}
+
+func (s *LogService) GetDifficultyProgressionData(logs []models.BoulderLog, period string) (map[string][]DifficultyDataPoint, []string, error) {
 	if len(logs) == 0 {
 		return nil, nil, nil
 	}
 
-	// Default to weekly if period is not specified
 	if period == "" {
 		period = "week"
 	}
 
-	// Track unique grades
-	gradeMap := make(map[string]bool)
-	
-	// Group logs by time period and grade
-	periodData := make(map[string]map[string]struct {
-		Sum   int
-		Count int
+	// Sort logs by date to ensure consistent processing
+	sort.Slice(logs, func(i, j int) bool {
+		return logs[i].CreatedAt.Before(logs[j].CreatedAt)
 	})
 
+	// Track periods and their labels in order of appearance
+	periodMap := make(map[string]string)        // periodKey -> label
+	periodOrder := make([]string, 0)            // ordered periodKeys
+	gradeMap := make(map[string]bool)           // track unique grades
+
+	// First pass: collect all periods and grades
 	for _, log := range logs {
 		gradeMap[log.Grade] = true
 		
-		// Get the period key based on the specified period
-		var periodKey time.Time
+		var periodKey, label string
 		switch period {
 		case "day":
-			periodKey = log.CreatedAt.Truncate(24 * time.Hour)
+			periodKey = log.CreatedAt.Format("2006-01-02")
+			label = log.CreatedAt.Format("02.01")
 		case "week":
 			year, week := log.CreatedAt.ISOWeek()
-			// Get the Monday of the week
-			periodKey = time.Date(year, 1, 1, 0, 0, 0, 0, time.UTC).
-				AddDate(0, 0, (week-1)*7)
-			// Adjust to Monday if needed
-			for periodKey.Weekday() != time.Monday {
-				periodKey = periodKey.AddDate(0, 0, -1)
-			}
+			periodKey = fmt.Sprintf("%d-W%02d", year, week)
+			label = fmt.Sprintf("W%d", week)
 		case "month":
-			periodKey = time.Date(log.CreatedAt.Year(), log.CreatedAt.Month(), 1, 0, 0, 0, 0, time.UTC)
+			periodKey = log.CreatedAt.Format("2006-01")
+			label = log.CreatedAt.Format("Jan 06")
 		case "year":
-			periodKey = time.Date(log.CreatedAt.Year(), 1, 1, 0, 0, 0, 0, time.UTC)
-		default:
-			// Default to weekly if invalid period specified
-			year, week := log.CreatedAt.ISOWeek()
-			periodKey = time.Date(year, 1, 1, 0, 0, 0, 0, time.UTC).
-				AddDate(0, 0, (week-1)*7)
-			for periodKey.Weekday() != time.Monday {
-				periodKey = periodKey.AddDate(0, 0, -1)
-			}
+			periodKey = log.CreatedAt.Format("2006")
+			label = periodKey
 		}
 
-		periodStr := periodKey.Format("2006-01-02")
-		if _, exists := periodData[periodStr]; !exists {
-			periodData[periodStr] = make(map[string]struct {
-				Sum   int
-				Count int
-			})
+		if _, exists := periodMap[periodKey]; !exists {
+			periodMap[periodKey] = label
+			periodOrder = append(periodOrder, periodKey)
 		}
-
-		data := periodData[periodStr][log.Grade]
-		data.Sum += log.Difficulty
-		data.Count++
-		periodData[periodStr][log.Grade] = data
 	}
 
-	// Convert grades to sorted slice
+	// Create ordered slices
 	grades := make([]string, 0, len(gradeMap))
 	for grade := range gradeMap {
 		grades = append(grades, grade)
 	}
 	sort.Strings(grades)
 
-	// Create progression data with period averages
-	progressionData := make(map[string][]struct {
-		Time  time.Time
-		Value float64
+	// Create data accumulator
+	periodData := make(map[string]map[string]struct {
+		Sum   float64
+		Count int
 	})
 
-	for periodStr, gradeData := range periodData {
-		date, _ := time.Parse("2006-01-02", periodStr)
-		
-		for grade, data := range gradeData {
-			avgDifficulty := float64(data.Sum) / float64(data.Count)
-			progressionData[grade] = append(progressionData[grade], struct {
-				Time  time.Time
-				Value float64
-			}{
-				Time:  date,
-				Value: avgDifficulty,
-			})
-		}
-	}
-
-	// Sort data points by time for each grade
-	for grade := range progressionData {
-		sort.Slice(progressionData[grade], func(i, j int) bool {
-			return progressionData[grade][i].Time.Before(progressionData[grade][j].Time)
+	// Initialize all period-grade combinations
+	for _, periodKey := range periodOrder {
+		periodData[periodKey] = make(map[string]struct {
+			Sum   float64
+			Count int
 		})
 	}
 
-	return grades, progressionData, nil
+	// Second pass: accumulate data
+	for _, log := range logs {
+		var periodKey string
+		switch period {
+		case "day":
+			periodKey = log.CreatedAt.Format("2006-01-02")
+		case "week":
+			year, week := log.CreatedAt.ISOWeek()
+			periodKey = fmt.Sprintf("%d-W%02d", year, week)
+		case "month":
+			periodKey = log.CreatedAt.Format("2006-01")
+		case "year":
+			periodKey = log.CreatedAt.Format("2006")
+		}
+
+		data := periodData[periodKey][log.Grade]
+		data.Sum += float64(log.Difficulty)
+		data.Count++
+		periodData[periodKey][log.Grade] = data
+	}
+
+	// Create final dataset
+	progressionData := make(map[string][]DifficultyDataPoint)
+	for _, grade := range grades {
+		progressionData[grade] = make([]DifficultyDataPoint, 0, len(periodOrder))
+	}
+
+	// Build ordered labels and data points
+	labels := make([]string, 0, len(periodOrder))
+	for _, periodKey := range periodOrder {
+		label := periodMap[periodKey]
+		labels = append(labels, label)
+
+		for _, grade := range grades {
+			if data, exists := periodData[periodKey][grade]; exists && data.Count > 0 {
+				avgDifficulty := data.Sum / float64(data.Count)
+				progressionData[grade] = append(progressionData[grade], DifficultyDataPoint{
+					Value: avgDifficulty,
+					Label: label,
+				})
+			}
+		}
+	}
+
+	return progressionData, labels, nil
 }
 
 // ClimbingStats holds the summary statistics for climbing activities

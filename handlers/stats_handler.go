@@ -41,8 +41,14 @@ func (h *StatsHandler) StatsPage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Generate difficulty progression data
-	difficultyLabels, difficultyData, err := h.logService.GetDifficultyProgressionData(logs, "week") // or whatever period you want
+	// Get period from query parameter or default to week
+	period := r.URL.Query().Get("period")
+	if period == "" {
+		period = "week"
+	}
+
+	// Generate difficulty progression data with period
+	difficultyLabels, difficultyData, err := h.logService.GetDifficultyProgressionData(logs, period)
 	if err != nil {
 		utils.LogError("Failed to get difficulty progression data", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -53,7 +59,7 @@ func (h *StatsHandler) StatsPage(w http.ResponseWriter, r *http.Request) {
 	stats := h.logService.GetClimbingStats(logs)
 
 	isHtmxRequest := r.Header.Get("HX-Request") == "true"
-	content := components.Stats(gradeLabels, datasets, difficultyLabels, difficultyData, stats, "all", time.Now().Format("2006-01-02"))
+	content := components.Stats(gradeLabels, datasets, difficultyLabels, difficultyData, stats, "all", time.Now().Format("2006-01-02"), period)
 
 	if isHtmxRequest {
 		content.Render(r.Context(), w)
@@ -93,5 +99,36 @@ func (h *StatsHandler) GradeCountsChart(w http.ResponseWriter, r *http.Request) 
 	components.GradeCountsChart(gradeLabels, datasets, viewType, dateStr, true).Render(r.Context(), w)
 }
 
+func (h *StatsHandler) DifficultyProgressionChart(w http.ResponseWriter, r *http.Request) {
+	username, err := h.userService.GetUsernameFromToken(r)
+	if err != nil {
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	period := r.URL.Query().Get("period")
+	if period == "" {
+		period = "week"
+	}
+
+	logs, err := h.logService.GetBoulderLogs(username)
+	if err != nil {
+		utils.LogError("Failed to get boulder logs", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	difficultyData, periodLabels, err := h.logService.GetDifficultyProgressionData(logs, period)
+	if err != nil {
+		utils.LogError("Failed to get difficulty progression data", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	// Pass the period to the component
+	components.DifficultyProgressionChart(difficultyData, periodLabels, period).Render(r.Context(), w)
+}
+
 // Add more stats-related methods here as needed
+
 

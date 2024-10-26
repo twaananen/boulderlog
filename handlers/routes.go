@@ -27,6 +27,7 @@ func SetupRoutes(router *http.ServeMux, userService *services.UserService, logSe
 
 	router.HandleFunc("GET /stats", authMiddleware(statsHandler.StatsPage))
 	router.HandleFunc("GET /charts/grade-counts", authMiddleware(statsHandler.GradeCountsChart))
+	router.HandleFunc("GET /charts/difficulty-progression", statsHandler.DifficultyProgressionChart)
 
 	router.HandleFunc("GET /log/grade", authMiddleware(logHandler.GetGradeSelection))
 	router.HandleFunc("GET /log/difficulty/", authMiddleware(logHandler.GetPerceivedDifficulty))

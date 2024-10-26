@@ -2,7 +2,7 @@ package services
 
 import (
 	"testing"
-
+	"time"
 	"github.com/stretchr/testify/assert"
 	"github.com/twaananen/boulderlog/models"
 )
@@ -12,11 +12,11 @@ func TestSaveLog(t *testing.T) {
 	logService := NewLogService(mockDB)
 
 	log := &models.BoulderLog{
-		Username:   "testuser",
-		Grade:      "V5",
-		Difficulty: 3,
-		Flash:      true,
-		NewRoute:   false,
+			Username:   "testuser",
+			Grade:      "V5",
+			Difficulty: 3,
+			Flash:      true,
+			NewRoute:   false,
 	}
 
 	// Test case 1: Successful log save
@@ -142,3 +142,70 @@ func TestGetGradeCounts(t *testing.T) {
 
 // 	mockDB.AssertExpectations(t)
 // }
+
+func TestGetDifficultyProgressionData(t *testing.T) {
+	// Create test logs spanning multiple periods
+	now := time.Now()
+	logs := []models.BoulderLog{
+		{
+			Grade:      "6A",
+			Difficulty: 3,
+			CreatedAt:  now,
+		},
+		{
+			Grade:      "6A",
+			Difficulty: 4,
+			CreatedAt:  now,
+		},
+		{
+			Grade:      "6B",
+			Difficulty: 2,
+			CreatedAt:  now,
+		},
+		{
+			Grade:      "6A",
+			Difficulty: 2,
+			CreatedAt:  now.AddDate(0, 0, -7), // Previous week
+		},
+		{
+			Grade:      "6B",
+			Difficulty: 3,
+			CreatedAt:  now.AddDate(0, 0, -7),
+		},
+	}
+
+	service := &LogService{}
+
+	t.Run("Weekly averages", func(t *testing.T) {
+		data, labels, err := service.GetDifficultyProgressionData(logs, "week")
+		assert.NoError(t, err)
+		assert.Len(t, labels, 2) // Should have 2 weeks
+
+		// Check 6A grade averages
+		assert.Len(t, data["6A"], 2)
+		assert.InDelta(t, 2.0, data["6A"][0].Value, 0.01) // First week: 2
+		assert.InDelta(t, 3.5, data["6A"][1].Value, 0.01) // Second week: (3+4)/2
+
+		// Check 6B grade averages
+		assert.Len(t, data["6B"], 2)
+		assert.InDelta(t, 3.0, data["6B"][0].Value, 0.01) // First week: 3
+		assert.InDelta(t, 2.0, data["6B"][1].Value, 0.01) // Second week: 2
+	})
+
+	t.Run("Daily averages", func(t *testing.T) {
+		data, labels, err := service.GetDifficultyProgressionData(logs, "day")
+		assert.NoError(t, err)
+		assert.Len(t, labels, 2) // Should have 2 days
+
+		// Verify averages for each day
+		assert.Len(t, data["6A"], 2)
+		assert.Len(t, data["6B"], 2)
+	})
+
+	t.Run("Empty logs", func(t *testing.T) {
+		data, labels, err := service.GetDifficultyProgressionData([]models.BoulderLog{}, "week")
+		assert.NoError(t, err)
+		assert.Nil(t, data)
+		assert.Nil(t, labels)
+	})
+}
