@@ -223,16 +223,24 @@ templ DifficultyProgressionChart(data map[string][]services.DifficultyDataPoint,
 			const isDarkMode = document.documentElement.classList.contains('dark');
 			const textColor = isDarkMode ? '#fff' : '#333';
 
-			const datasets = grades.map((grade, index) => ({
-				label: grade,
-				data: progressionData[grade].map(point => point.Value),
-				borderColor: `hsl(${(index * 360 / grades.length) % 360}, 70%, 50%)`,
-				backgroundColor: `hsla(${(index * 360 / grades.length) % 360}, 70%, 50%, 0.2)`,
-				tension: 0.3,
-				pointRadius: 4,
-				pointHoverRadius: 6,
-				borderWidth: 2
-			}));
+			const datasets = grades.map((grade, index) => {
+				const values = progressionData[grade].map(point => point.Value);
+				const lastTwoValues = values.slice(-2);
+				const shouldHide = lastTwoValues.length === 2 && 
+					lastTwoValues.every(val => val === 1);
+
+				return {
+					label: grade,
+					data: progressionData[grade].map(point => point.Value),
+					borderColor: `hsl(${(index * 360 / grades.length) % 360}, 70%, 50%)`,
+					backgroundColor: `hsla(${(index * 360 / grades.length) % 360}, 70%, 50%, 0.2)`,
+					tension: 0.3,
+					pointRadius: 4,
+					pointHoverRadius: 6,
+					borderWidth: 2,
+					hidden: shouldHide  // Set hidden based on the last two values
+				};
+			});
 
 			new Chart(ctx, {
 				type: 'line',
@@ -298,4 +306,5 @@ templ DifficultyProgressionChart(data map[string][]services.DifficultyDataPoint,
 		})();
 	</script>
 }
+
 
