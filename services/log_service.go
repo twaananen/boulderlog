@@ -155,16 +155,25 @@ func (s *LogService) GetBoulderLogs(username string) ([]models.BoulderLog, error
 	return s.db.GetBoulderLogs(username)
 }
 
-func (s *LogService) GetDifficultyProgressionData(logs []models.BoulderLog) ([]string, map[string][]struct {
-	Time  time.Time
-	Value float64
+// GetDifficultyProgressionData processes boulder logs to generate difficulty progression data
+func (s *LogService) GetDifficultyProgressionData(logs []models.BoulderLog, period string) ([]string, map[string][]struct {
+    Time  time.Time
+    Value float64
 }, error) {
 	if len(logs) == 0 {
 		return nil, nil, nil
 	}
 
+	// Default to weekly if period is not specified
+	if period == "" {
+		period = "week"
+	}
+
+	// Track unique grades
 	gradeMap := make(map[string]bool)
-	dailyData := make(map[string]map[string]struct {
+	
+	// Group logs by time period and grade
+	periodData := make(map[string]map[string]struct {
 		Sum   int
 		Count int
 	})
@@ -172,36 +181,63 @@ func (s *LogService) GetDifficultyProgressionData(logs []models.BoulderLog) ([]s
 	for _, log := range logs {
 		gradeMap[log.Grade] = true
 		
-		// Truncate time to get just the date
-		dateKey := log.CreatedAt.Truncate(24 * time.Hour)
-		dateStr := dateKey.Format("2006-01-02")
+		// Get the period key based on the specified period
+		var periodKey time.Time
+		switch period {
+		case "day":
+			periodKey = log.CreatedAt.Truncate(24 * time.Hour)
+		case "week":
+			year, week := log.CreatedAt.ISOWeek()
+			// Get the Monday of the week
+			periodKey = time.Date(year, 1, 1, 0, 0, 0, 0, time.UTC).
+				AddDate(0, 0, (week-1)*7)
+			// Adjust to Monday if needed
+			for periodKey.Weekday() != time.Monday {
+				periodKey = periodKey.AddDate(0, 0, -1)
+			}
+		case "month":
+			periodKey = time.Date(log.CreatedAt.Year(), log.CreatedAt.Month(), 1, 0, 0, 0, 0, time.UTC)
+		case "year":
+			periodKey = time.Date(log.CreatedAt.Year(), 1, 1, 0, 0, 0, 0, time.UTC)
+		default:
+			// Default to weekly if invalid period specified
+			year, week := log.CreatedAt.ISOWeek()
+			periodKey = time.Date(year, 1, 1, 0, 0, 0, 0, time.UTC).
+				AddDate(0, 0, (week-1)*7)
+			for periodKey.Weekday() != time.Monday {
+				periodKey = periodKey.AddDate(0, 0, -1)
+			}
+		}
 
-		if _, exists := dailyData[dateStr]; !exists {
-			dailyData[dateStr] = make(map[string]struct {
+		periodStr := periodKey.Format("2006-01-02")
+		if _, exists := periodData[periodStr]; !exists {
+			periodData[periodStr] = make(map[string]struct {
 				Sum   int
 				Count int
 			})
 		}
 
-		dayGradeData := dailyData[dateStr][log.Grade]
-		dayGradeData.Sum += log.Difficulty
-		dayGradeData.Count++
-		dailyData[dateStr][log.Grade] = dayGradeData
+		data := periodData[periodStr][log.Grade]
+		data.Sum += log.Difficulty
+		data.Count++
+		periodData[periodStr][log.Grade] = data
 	}
 
+	// Convert grades to sorted slice
 	grades := make([]string, 0, len(gradeMap))
 	for grade := range gradeMap {
 		grades = append(grades, grade)
 	}
 	sort.Strings(grades)
 
+	// Create progression data with period averages
 	progressionData := make(map[string][]struct {
 		Time  time.Time
 		Value float64
 	})
 
-	for dateStr, gradeData := range dailyData {
-		date, _ := time.Parse("2006-01-02", dateStr)
+	for periodStr, gradeData := range periodData {
+		date, _ := time.Parse("2006-01-02", periodStr)
 		
 		for grade, data := range gradeData {
 			avgDifficulty := float64(data.Sum) / float64(data.Count)
@@ -215,6 +251,7 @@ func (s *LogService) GetDifficultyProgressionData(logs []models.BoulderLog) ([]s
 		}
 	}
 
+	// Sort data points by time for each grade
 	for grade := range progressionData {
 		sort.Slice(progressionData[grade], func(i, j int) bool {
 			return progressionData[grade][i].Time.Before(progressionData[grade][j].Time)

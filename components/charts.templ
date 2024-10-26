@@ -163,8 +163,6 @@ func getWeekNumber(dateStr string) string {
     return fmt.Sprintf("%d", week)
 }
 
-// Add this new component to your existing charts.templ file
-
 templ DifficultyProgressionChart(grades []string, data map[string][]struct{Time time.Time; Value float64}) {
 	<div id="difficulty-progression-chart" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg md:p-4 p-1">
 		<div class="max-h-[500px] min-h-[400px]">

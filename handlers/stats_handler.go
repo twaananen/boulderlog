@@ -42,7 +42,7 @@ func (h *StatsHandler) StatsPage(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Generate difficulty progression data
-	difficultyLabels, difficultyData, err := h.logService.GetDifficultyProgressionData(logs)
+	difficultyLabels, difficultyData, err := h.logService.GetDifficultyProgressionData(logs, "week") // or whatever period you want
 	if err != nil {
 		utils.LogError("Failed to get difficulty progression data", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -94,3 +94,4 @@ func (h *StatsHandler) GradeCountsChart(w http.ResponseWriter, r *http.Request) 
 }
 
 // Add more stats-related methods here as needed
+

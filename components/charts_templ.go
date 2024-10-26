@@ -170,7 +170,6 @@ func getWeekNumber(dateStr string) string {
 	return fmt.Sprintf("%d", week)
 }
 
-// Add this new component to your existing charts.templ file
 func DifficultyProgressionChart(grades []string, data map[string][]struct {
 	Time  time.Time
 	Value float64
@@ -202,7 +201,7 @@ func DifficultyProgressionChart(grades []string, data map[string][]struct {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(templ.JSONString(grades))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 171, Col: 82}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 169, Col: 82}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
@@ -215,7 +214,7 @@ func DifficultyProgressionChart(grades []string, data map[string][]struct {
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(templ.JSONString(data))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 171, Col: 126}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 169, Col: 126}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
