@@ -59,7 +59,7 @@ func (s *UserService) AuthenticateUser(username, password string) (string, error
 	// Generate JWT token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"username": username,
-		"exp":      time.Now().Add(24 * time.Hour).Unix(),
+		"exp":      time.Now().Add(14 * 24 * time.Hour).Unix(),
 	})
 
 	tokenString, err := token.SignedString(utils.JWTSecret)
@@ -124,4 +124,33 @@ func (s *UserService) CreateUser(username, password string) error {
 	}
 
 	return s.db.CreateUser(user)
+}
+
+func (s *UserService) RefreshToken(r *http.Request, w http.ResponseWriter) error {
+	username, err := s.GetUsernameFromToken(r)
+	if err != nil {
+		return err
+	}
+
+	// Generate new token with refreshed expiration
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"username": username,
+		"exp":      time.Now().Add(14 * 24 * time.Hour).Unix(),
+	})
+
+	tokenString, err := token.SignedString(utils.JWTSecret)
+	if err != nil {
+		return err
+	}
+
+	// Set the new cookie
+	http.SetCookie(w, &http.Cookie{
+		Name:     "token",
+		Value:    tokenString,
+		Expires:  time.Now().Add(14 * 24 * time.Hour),
+		HttpOnly: true,
+		Path:     "/",
+	})
+
+	return nil
 }

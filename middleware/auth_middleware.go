@@ -5,6 +5,7 @@ import (
 	"net/url"
 
 	"github.com/twaananen/boulderlog/services"
+	"github.com/twaananen/boulderlog/utils"
 )
 
 func AuthMiddleware(userService *services.UserService) func(http.HandlerFunc) http.HandlerFunc {
@@ -17,6 +18,15 @@ func AuthMiddleware(userService *services.UserService) func(http.HandlerFunc) ht
 				http.Redirect(w, r, loginURL, http.StatusSeeOther)
 				return
 			}
+
+			// Refresh the token
+			err = userService.RefreshToken(r, w)
+			if err != nil {
+				// Log the error but don't fail the request
+				// The user is still authenticated
+				utils.LogError("Error refreshing token", err)
+			}
+
 			next.ServeHTTP(w, r)
 		}
 	}
