@@ -82,7 +82,25 @@ func (s *UserService) IsUserLoggedIn(r *http.Request) bool {
 		return utils.JWTSecret, nil
 	})
 
-	return err == nil && token.Valid
+	if err != nil || !token.Valid {
+		return false
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return false
+	}
+
+	exp, ok := claims["exp"].(float64)
+	if !ok {
+		return false
+	}
+
+	if time.Now().Unix() > int64(exp) {
+		return false
+	}
+
+	return true
 }
 
 func (s *UserService) GetUsernameFromToken(r *http.Request) (string, error) {
@@ -95,13 +113,26 @@ func (s *UserService) GetUsernameFromToken(r *http.Request) (string, error) {
 		return utils.JWTSecret, nil
 	})
 
-	if err != nil || !token.Valid {
-		return "", err
+	if err != nil {
+		return "", fmt.Errorf("invalid token: %w", err)
+	}
+
+	if !token.Valid {
+		return "", fmt.Errorf("token is not valid")
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
 		return "", fmt.Errorf("invalid token claims")
+	}
+
+	exp, ok := claims["exp"].(float64)
+	if !ok {
+		return "", fmt.Errorf("invalid expiration claim")
+	}
+
+	if time.Now().Unix() > int64(exp) {
+		return "", fmt.Errorf("token has expired")
 	}
 
 	username, ok := claims["username"].(string)
@@ -150,6 +181,8 @@ func (s *UserService) RefreshToken(r *http.Request, w http.ResponseWriter) error
 		Expires:  time.Now().Add(14 * 24 * time.Hour),
 		HttpOnly: true,
 		Path:     "/",
+		SameSite: http.SameSiteLaxMode,
+		Secure:   true,
 	})
 
 	return nil

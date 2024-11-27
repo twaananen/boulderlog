@@ -68,6 +68,8 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		Expires:  time.Now().Add(14 * 24 * time.Hour),
 		HttpOnly: true,
 		Path:     "/",
+		SameSite: http.SameSiteLaxMode,
+		Secure:   true,
 	})
 
 	w.Header().Set("HX-Trigger", "authStatusChanged")
@@ -87,6 +89,8 @@ func (h *AuthHandler) Logout(w http.ResponseWriter, r *http.Request) {
 		Path:     "/",
 		Expires:  time.Now().Add(-1 * time.Hour),
 		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+		Secure:   true,
 	})
 
 	w.Header().Set("HX-Trigger", "authStatusChanged")
