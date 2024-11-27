@@ -3,10 +3,11 @@
 {
 	"name": "Go",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/go:1-1.22-bookworm",
+	"image": "mcr.microsoft.com/devcontainers/go:1-1.23-bookworm",
 	"features": {
 		"ghcr.io/r3dpoint/devcontainer-features/tailwindcss-standalone-cli:1": {}
 	},
+	// Configure tool-specific properties.
 	"customizations": {
 		"vscode": {
 			"extensions": [
@@ -23,11 +24,8 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "go install github.com/air-verse/air@latest && go install github.com/a-h/templ/cmd/templ@latest"
-
-	// Configure tool-specific properties.
-	// "customizations": {},
+	"postCreateCommand": "go install github.com/air-verse/air@latest && go install github.com/a-h/templ/cmd/templ@latest",
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+	"remoteUser": "root"
 }
