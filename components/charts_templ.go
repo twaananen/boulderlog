@@ -108,7 +108,7 @@ func GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType 
 				return templ_7745c5c3_Err
 			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><div class=\"max-h-[400px] min-h-[300px]\"><canvas id=\"gradeCountsChartCanvas\" data-labels=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div><div class=\"h-[300px] md:h-[400px] w-full\"><canvas id=\"gradeCountsChartCanvas\" data-labels=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -134,7 +134,7 @@ func GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType 
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"></canvas></div></div><script>\n        (function() {\n            const canvas = document.getElementById('gradeCountsChartCanvas');\n            const ctx = canvas.getContext('2d');\n            const labels = JSON.parse(canvas.dataset.labels);\n            const datasets = JSON.parse(canvas.dataset.datasets);\n\n            const isDarkMode = document.documentElement.classList.contains('dark');\n\n            const colors = {\n                Topped: { light: 'rgba(54, 162, 235, 0.8)', dark: 'rgba(54, 162, 235, 0.5)' },\n                Untopped: { light: 'rgba(255, 99, 132, 0.8)', dark: 'rgba(255, 99, 132, 0.5)' },\n                Flashed: { light: 'rgba(255, 165, 0, 0.8)', dark: 'rgba(255, 165, 0, 0.5)' },\n                New: { light: 'rgba(76, 175, 80, 0.8)', dark: 'rgba(76, 175, 80, 0.5)' }\n            };\n\n            const chartDatasets = Object.keys(datasets).map(key => ({\n                label: key,\n                data: datasets[key],\n                backgroundColor: isDarkMode ? colors[key].dark : colors[key].light,\n                borderColor: isDarkMode ? colors[key].dark.replace('0.5', '1') : colors[key].light.replace('0.8', '1'),\n                borderWidth: 1\n            }));\n\n            new Chart(ctx, {\n                type: 'bar',    \n                data: {\n                    labels: labels,\n                    datasets: chartDatasets\n                },\n                options: {\n                    responsive: true,\n                    maintainAspectRatio: false,\n                    scales: {\n                        y: {\n                            beginAtZero: true,\n                            title: {\n                                display: false,\n                                text: 'Count',\n                                color: isDarkMode ? '#fff' : '#333'\n                            },\n                            ticks: {\n                                color: isDarkMode ? '#fff' : '#333',\n                                stepSize: 1,\n                                precision: 0,\n                            },\n                            grid: {\n                                color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'\n                            }\n                        },\n                        x: {\n                            title: {\n                                display: false,\n                                text: 'Grade',\n                                color: isDarkMode ? '#fff' : '#333'\n                            },\n                            ticks: {\n                                color: isDarkMode ? '#fff' : '#333'\n                            },\n                            grid: {\n                                display: false\n                            },\n\t\t\t\t\t\t\tticks: {\n\t\t\t\t\t\t\t\tmaxRotation: 90,\n\t\t\t\t\t\t\t\tminRotation: 0\n\t\t\t\t\t\t\t}\n                        }\n                    },\n                    plugins: {\n                        legend: {\n                            display: true,\n\t\t\t\t\t\t\tlabels: {\n\t\t\t\t\t\t\t\tcolor: isDarkMode ? '#fff' : '#333'\n\t\t\t\t\t\t\t},\n\t\t\t\t\t\t\tposition: 'bottom'\n                        },\n                        title: {\n                            display: false\n                        }\n                    }\n                }\n            });\n        })();\n    </script>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"></canvas></div></div><script>\n        (function() {\n            const canvas = document.getElementById('gradeCountsChartCanvas');\n            const ctx = canvas.getContext('2d');\n            const labels = JSON.parse(canvas.dataset.labels);\n            const datasets = JSON.parse(canvas.dataset.datasets);\n\n            const isDarkMode = document.documentElement.classList.contains('dark');\n\n            const colors = {\n                Topped: { light: 'rgba(54, 162, 235, 0.8)', dark: 'rgba(54, 162, 235, 0.5)' },\n                Untopped: { light: 'rgba(255, 99, 132, 0.8)', dark: 'rgba(255, 99, 132, 0.5)' },\n                Flashed: { light: 'rgba(255, 165, 0, 0.8)', dark: 'rgba(255, 165, 0, 0.5)' },\n                New: { light: 'rgba(76, 175, 80, 0.8)', dark: 'rgba(76, 175, 80, 0.5)' }\n            };\n\n            const chartDatasets = Object.keys(datasets).map(key => ({\n                label: key,\n                data: datasets[key],\n                backgroundColor: isDarkMode ? colors[key].dark : colors[key].light,\n                borderColor: isDarkMode ? colors[key].dark.replace('0.5', '1') : colors[key].light.replace('0.8', '1'),\n                borderWidth: 1\n            }));\n\n            new Chart(ctx, {\n                type: 'bar',    \n                data: {\n                    labels: labels,\n                    datasets: chartDatasets\n                },\n                options: {\n                    responsive: true,\n                    maintainAspectRatio: false,\n                    scales: {\n                        y: {\n                            beginAtZero: true,\n                            title: {\n                                display: false,\n                                text: 'Count',\n                                color: isDarkMode ? '#fff' : '#333'\n                            },\n                            ticks: {\n                                color: isDarkMode ? '#fff' : '#333',\n                                stepSize: 1,\n                                precision: 0,\n                            },\n                            grid: {\n                                color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'\n                            }\n                        },\n                        x: {\n                            title: {\n                                display: false,\n                                text: 'Grade',\n                                color: isDarkMode ? '#fff' : '#333'\n                            },\n                            ticks: {\n                                color: isDarkMode ? '#fff' : '#333',\n                                maxRotation: 90,\n                                minRotation: 0\n                            },\n                            grid: {\n                                display: false\n                            }\n                        }\n                    },\n                    plugins: {\n                        legend: {\n                            display: true,\n                            labels: {\n                                color: isDarkMode ? '#fff' : '#333'\n                            },\n                            position: 'bottom'\n                        },\n                        title: {\n                            display: false\n                        }\n                    }\n                }\n            });\n        })();\n    </script>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -232,14 +232,14 @@ func DifficultyProgressionChart(data map[string][]services.DifficultyDataPoint, 
 				return templ_7745c5c3_Err
 			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("> <span class=\"ml-2\">Year</span></label></div></div><div class=\"h-[600px]\"><canvas id=\"difficultyProgressionCanvas\" data-progression=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("> <span class=\"ml-2\">Year</span></label></div></div><div class=\"h-[400px] md:h-[500px] w-full\"><canvas id=\"difficultyProgressionCanvas\" data-progression=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(templ.JSONString(data))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 211, Col: 85}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 209, Col: 85}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
@@ -252,7 +252,7 @@ func DifficultyProgressionChart(data map[string][]services.DifficultyDataPoint, 
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(templ.JSONString(labels))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 211, Col: 126}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 209, Col: 126}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
@@ -265,7 +265,7 @@ func DifficultyProgressionChart(data map[string][]services.DifficultyDataPoint, 
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(currentPeriod)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 211, Col: 156}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `components/charts.templ`, Line: 209, Col: 156}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {

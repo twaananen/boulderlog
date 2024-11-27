@@ -45,7 +45,7 @@ templ GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType
 				</div>
 			}
         </div>
-        <div class="max-h-[400px] min-h-[300px]">
+        <div class="h-[300px] md:h-[400px] w-full">
             <canvas id="gradeCountsChartCanvas" data-labels={ templ.JSONString(gradeLabels) } data-datasets={ templ.JSONString(datasets) }></canvas>
         </div>
     </div>
@@ -106,24 +106,22 @@ templ GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType
                                 color: isDarkMode ? '#fff' : '#333'
                             },
                             ticks: {
-                                color: isDarkMode ? '#fff' : '#333'
+                                color: isDarkMode ? '#fff' : '#333',
+                                maxRotation: 90,
+                                minRotation: 0
                             },
                             grid: {
                                 display: false
-                            },
-							ticks: {
-								maxRotation: 90,
-								minRotation: 0
-							}
+                            }
                         }
                     },
                     plugins: {
                         legend: {
                             display: true,
-							labels: {
-								color: isDarkMode ? '#fff' : '#333'
-							},
-							position: 'bottom'
+                            labels: {
+                                color: isDarkMode ? '#fff' : '#333'
+                            },
+                            position: 'bottom'
                         },
                         title: {
                             display: false
@@ -207,7 +205,7 @@ templ DifficultyProgressionChart(data map[string][]services.DifficultyDataPoint,
 				</label>
 			</div>
 		</div>
-		<div class="h-[600px]">
+		<div class="h-[400px] md:h-[500px] w-full">
 			<canvas id="difficultyProgressionCanvas" data-progression={ templ.JSONString(data) } data-labels={ templ.JSONString(labels) } data-period={ currentPeriod }></canvas>
 		</div>
 	</div>
