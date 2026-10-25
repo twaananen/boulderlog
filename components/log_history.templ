@@ -67,7 +67,7 @@ templ EditLogRow(log models.BoulderLog) {
 		<td class="px-1 py-2 text-sm">{ log.CreatedAt.Format("2006-01-02 15:04") }</td>
 		<td class="px-1 py-2">
 			<select name="grade" class="w-full p-1 text-sm border rounded dark:bg-gray-800 dark:text-white">
-				for _, grade := range []string{"4", "4+", "5", "5+", "6A", "6A+", "6B", "6B+", "6C", "6C+", "7A", "7A+", "7B", "7B+", "7C", "7C+", "8A", "8A+", "8B", "8B+", "8C"} {
+				for _, grade := range models.BoulderGrades {
 					<option value={ grade } selected?={ grade == log.Grade }>{ grade }</option>
 				}
 			</select>
