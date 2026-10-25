@@ -5,8 +5,8 @@ import "fmt"
 import "github.com/twaananen/boulderlog/services"
 
 templ GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType string, dateStr string, showDateSelection bool) {
-    <div id="grade-counts-chart" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg md:p-4 p-1">
-        <div class="flex justify-between items-center mb-4">
+    <div id="grade-counts-chart" class="min-w-0 bg-white dark:bg-gray-800 rounded-lg shadow-lg md:p-4 p-1">
+        <div class="flex flex-wrap justify-between items-center gap-2 mb-4">
             <span class="text-gray-800 dark:text-white font-bold">Boulder Counts</span>
 			if showDateSelection {
 				<div class="flex space-x-2">
@@ -45,92 +45,14 @@ templ GradeCountsChart(gradeLabels []string, datasets map[string][]int, viewType
 				</div>
 			}
         </div>
-        <div class="h-[300px] md:h-[400px] w-full">
-            <canvas id="gradeCountsChartCanvas" data-labels={ templ.JSONString(gradeLabels) } data-datasets={ templ.JSONString(datasets) }></canvas>
-        </div>
+        if len(gradeLabels) == 0 {
+            <p role="status" class="py-8 text-center text-gray-600 dark:text-gray-400">No climbs logged for this period.</p>
+        } else {
+            <div class="relative min-w-0 h-[300px] md:h-[400px] w-full">
+                <canvas id="gradeCountsChartCanvas" data-chart="counts" role="img" aria-label="Boulder counts by grade" data-labels={ templ.JSONString(gradeLabels) } data-datasets={ templ.JSONString(datasets) }></canvas>
+            </div>
+        }
     </div>
-    <script>
-        (function() {
-            const canvas = document.getElementById('gradeCountsChartCanvas');
-            const ctx = canvas.getContext('2d');
-            const labels = JSON.parse(canvas.dataset.labels);
-            const datasets = JSON.parse(canvas.dataset.datasets);
-
-            const isDarkMode = document.documentElement.classList.contains('dark');
-
-            const colors = {
-                Topped: { light: 'rgba(54, 162, 235, 0.8)', dark: 'rgba(54, 162, 235, 0.5)' },
-                Untopped: { light: 'rgba(255, 99, 132, 0.8)', dark: 'rgba(255, 99, 132, 0.5)' },
-                Flashed: { light: 'rgba(255, 165, 0, 0.8)', dark: 'rgba(255, 165, 0, 0.5)' },
-                New: { light: 'rgba(76, 175, 80, 0.8)', dark: 'rgba(76, 175, 80, 0.5)' }
-            };
-
-            const chartDatasets = Object.keys(datasets).map(key => ({
-                label: key,
-                data: datasets[key],
-                backgroundColor: isDarkMode ? colors[key].dark : colors[key].light,
-                borderColor: isDarkMode ? colors[key].dark.replace('0.5', '1') : colors[key].light.replace('0.8', '1'),
-                borderWidth: 1
-            }));
-
-            new Chart(ctx, {
-                type: 'bar',    
-                data: {
-                    labels: labels,
-                    datasets: chartDatasets
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: false,
-                                text: 'Count',
-                                color: isDarkMode ? '#fff' : '#333'
-                            },
-                            ticks: {
-                                color: isDarkMode ? '#fff' : '#333',
-                                stepSize: 1,
-                                precision: 0,
-                            },
-                            grid: {
-                                color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: false,
-                                text: 'Grade',
-                                color: isDarkMode ? '#fff' : '#333'
-                            },
-                            ticks: {
-                                color: isDarkMode ? '#fff' : '#333',
-                                maxRotation: 90,
-                                minRotation: 0
-                            },
-                            grid: {
-                                display: false
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: true,
-                            labels: {
-                                color: isDarkMode ? '#fff' : '#333'
-                            },
-                            position: 'bottom'
-                        },
-                        title: {
-                            display: false
-                        }
-                    }
-                }
-            });
-        })();
-    </script>
 }
 
 func getPreviousWeek(dateStr string) string {
@@ -163,8 +85,8 @@ func getWeekNumber(dateStr string) string {
 }
 
 templ DifficultyProgressionChart(data map[string][]services.DifficultyDataPoint, labels []string, currentPeriod string) {
-	<div id="difficulty-progression-chart" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg md:p-4 p-1">
-		<div class="flex justify-between items-center mb-4">
+	<div id="difficulty-progression-chart" class="min-w-0 bg-white dark:bg-gray-800 rounded-lg shadow-lg md:p-4 p-1">
+		<div class="flex flex-wrap justify-between items-center gap-2 mb-4">
 			<span class="text-gray-800 dark:text-white font-bold">Difficulty Over Time</span>
 			<div class="grid md:grid-cols-4 grid-cols-2 gap-2">
 				<label class="inline-flex items-center">
@@ -205,105 +127,14 @@ templ DifficultyProgressionChart(data map[string][]services.DifficultyDataPoint,
 				</label>
 			</div>
 		</div>
-		<div class="h-[400px] md:h-[500px] w-full">
-			<canvas id="difficultyProgressionCanvas" data-progression={ templ.JSONString(data) } data-labels={ templ.JSONString(labels) } data-period={ currentPeriod }></canvas>
-		</div>
+		if len(data) == 0 || len(labels) == 0 {
+            <p role="status" class="py-8 text-center text-gray-600 dark:text-gray-400">No climbs logged for this period.</p>
+        } else {
+            <div class="relative min-w-0 h-[400px] md:h-[500px] w-full">
+                <canvas id="difficultyProgressionCanvas" data-chart="progression" role="img" aria-label="Perceived difficulty over time by grade" data-progression={ templ.JSONString(data) } data-labels={ templ.JSONString(labels) }></canvas>
+            </div>
+        }
 	</div>
-	<script>
-		(function() {
-			const canvas = document.getElementById('difficultyProgressionCanvas');
-			const ctx = canvas.getContext('2d');
-			const progressionData = JSON.parse(canvas.dataset.progression);
-			const grades = Object.keys(progressionData);
-			const labels = JSON.parse(canvas.dataset.labels);
-			const period = canvas.dataset.period;
-
-			const isDarkMode = document.documentElement.classList.contains('dark');
-			const textColor = isDarkMode ? '#fff' : '#333';
-
-			const datasets = grades.map((grade, index) => {
-				const values = progressionData[grade].map(point => point.Value);
-				const lastTwoValues = values.filter(v => v > 0).slice(-2); // Only consider non-zero values
-				const shouldHide = lastTwoValues.length === 2 && 
-					lastTwoValues.every(val => val === 1);
-
-				return {
-					label: grade,
-					data: progressionData[grade].map(point => point.Value > 0 ? point.Value : null), // Convert zeros to null
-					borderColor: `hsl(${(index * 360 / grades.length) % 360}, 70%, 50%)`,
-					backgroundColor: `hsla(${(index * 360 / grades.length) % 360}, 70%, 50%, 0.2)`,
-					tension: 0.3,
-					pointRadius: 4,
-					pointHoverRadius: 6,
-					borderWidth: 2,
-					hidden: shouldHide,
-					spanGaps: true  // This will create gaps for null values
-				};
-			});
-
-			new Chart(ctx, {
-				type: 'line',
-				data: {
-					labels: labels,
-					datasets: datasets
-				},
-				options: {
-					responsive: true,
-					maintainAspectRatio: false,
-					interaction: {
-						mode: 'nearest',
-						axis: 'x',
-						intersect: false
-					},
-					scales: {
-						x: {
-							ticks: {
-								color: textColor,
-								maxRotation: 45,
-								minRotation: 45
-							},
-							grid: {
-								color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-							},
-						},
-						y: {
-							min: 1,
-							max: 8,
-							ticks: {
-								color: textColor,
-								stepSize: 1,
-								autoSkip: false,
-								callback: function(value) {
-									return Number.isInteger(value) ? value : value.toFixed(1);
-								}
-							},
-							grid: {
-								color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-							},
-						}
-					},
-					plugins: {
-						legend: {
-							position: 'bottom',
-							labels: {
-								color: textColor,
-								padding: 20,
-								usePointStyle: true,
-								pointStyle: 'circle'
-							}
-						},
-						tooltip: {
-							callbacks: {
-								label: function(context) {
-									return `${context.dataset.label}: ${context.parsed.y.toFixed(1)}`;
-								}
-							}
-						}
-					}
-				}
-			});
-		})();
-	</script>
 }
 
 

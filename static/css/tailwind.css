@@ -777,6 +777,10 @@ video {
   width: 2rem;
 }
 
+.min-w-0 {
+  min-width: 0;
+}
+
 .w-full {
   width: 100%;
 }
@@ -825,6 +829,10 @@ video {
 
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
 }
 
 .flex-col {

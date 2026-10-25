@@ -13,13 +13,13 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 # Install templ
-RUN go install github.com/a-h/templ/cmd/templ@latest
+RUN go install github.com/a-h/templ/cmd/templ@v0.2.793
 
 # Copy the source code
 COPY . .
 
 # Install Tailwind CSS
-RUN npm install -g tailwindcss
+RUN npm install -g tailwindcss@3.4.17
 
 # Generate Tailwind CSS
 RUN tailwindcss -i ./static/css/input.css -o ./static/css/tailwind.css --minify

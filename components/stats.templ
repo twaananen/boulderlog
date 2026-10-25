@@ -33,11 +33,11 @@ templ Stats(gradeLabels []string, datasets map[string][]int, difficultyData map[
 		<h2 class="text-3xl font-bold mb-4">Your Bouldering Stats</h2>
 		@StatsSummary(stats)
 		<div class="grid grid-cols-1 gap-8">
-			<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
+			<div class="min-w-0 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
 				<h3 class="text-xl font-semibold mb-4">Grade Distribution</h3>
 				@GradeCountsChart(gradeLabels, datasets, viewType, dateStr, true)
 			</div>
-			<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
+			<div class="min-w-0 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4">
 				<h3 class="text-xl font-semibold mb-4">Difficulty Progression</h3>
 				@DifficultyProgressionChart(difficultyData, periodLabels, period)
 			</div>
