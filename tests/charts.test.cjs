@@ -3,7 +3,7 @@ const { readFileSync } = require('node:fs');
 const { test } = require('node:test');
 const vm = require('node:vm');
 
-function fixture() {
+function fixture(reducedMotion = false) {
     const listeners = new Map();
     const instances = new Map();
     let dark = false;
@@ -30,7 +30,8 @@ function fixture() {
             this.destroy = () => instances.delete(canvas);
         }
     }
-    vm.runInNewContext(readFileSync(`${__dirname}/../static/js/charts.js`, 'utf8'), { document, Chart });
+    const window = { matchMedia: () => ({ matches: reducedMotion }) };
+    vm.runInNewContext(readFileSync(`${__dirname}/../static/js/charts.js`, 'utf8'), { document, Chart, window });
     return {
         document, instances, counts, progression,
         emit: (name, detail) => listeners.get(name)?.({ detail }),
@@ -38,7 +39,7 @@ function fixture() {
     };
 }
 
-test('charts initialize after settling, once per canvas, without animation', () => {
+test('charts initialize after settling, once per canvas, with bounded staggered animations', () => {
     const f = fixture();
     assert.equal(f.instances.size, 0);
     f.emit('htmx:afterSwap');
@@ -47,6 +48,20 @@ test('charts initialize after settling, once per canvas, without animation', () 
     f.emit('DOMContentLoaded');
     f.emit('htmx:afterSettle');
     assert.equal(f.instances.size, 2);
+    for (const chart of f.instances.values()) {
+        const animation = chart.config.options.animation;
+        assert.ok(animation.duration > 0 && animation.duration <= 700);
+        assert.equal(animation.delay({ type: 'data', mode: 'default', dataIndex: 0 }), 0);
+        assert.ok(animation.delay({ type: 'data', mode: 'default', dataIndex: 1 }) > 0);
+        assert.equal(animation.delay({ type: 'data', mode: 'default', dataIndex: 10000 }), 175);
+        assert.equal(animation.delay({ type: 'chart' }), 0);
+        assert.equal(animation.delay({ type: 'data', mode: 'resize', dataIndex: 3 }), 0);
+    }
+});
+
+test('reduced-motion preferences disable drawing animations', () => {
+    const f = fixture(true);
+    f.emit('DOMContentLoaded');
     for (const chart of f.instances.values()) assert.equal(chart.config.options.animation, false);
 });
 

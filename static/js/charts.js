@@ -1,4 +1,6 @@
 (() => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
     function gradeCounts(canvas) {
         const labels = JSON.parse(canvas.dataset.labels) ?? [];
         const datasets = JSON.parse(canvas.dataset.datasets) ?? {};
@@ -25,7 +27,12 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                animation: false,
+                animation: reducedMotion.matches ? false : {
+                    duration: 650,
+                    easing: 'easeOutBounce',
+                    delay: context => context.type === 'data' && context.mode === 'default'
+                        ? Math.min(context.dataIndex * 35, 175) : 0
+                },
                 scales: {
                     y: {
                         beginAtZero: true,
@@ -88,7 +95,12 @@
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                animation: false,
+                animation: reducedMotion.matches ? false : {
+                    duration: 700,
+                    easing: 'easeOutBack',
+                    delay: context => context.type === 'data' && context.mode === 'default'
+                        ? Math.min(context.dataIndex * 35, 175) : 0
+                },
                 interaction: { mode: 'nearest', axis: 'x', intersect: false },
                 scales: {
                     x: {
