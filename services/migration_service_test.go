@@ -26,7 +26,7 @@ func TestMigrateUserData(t *testing.T) {
 	mockCSVDB.On("GetBoulderLogs", username).Return(csvLogs, nil).Once()
 	mockPostgresDB.On("GetBoulderLogByUsernameAndDate", username, csvLogs[0].Date).Return(nil, nil).Once()
 	mockPostgresDB.On("GetBoulderLogByUsernameAndDate", username, csvLogs[1].Date).Return(nil, nil).Once()
-	mockPostgresDB.On("SaveBoulderLog", mock.AnythingOfType("*models.BoulderLog")).Return(nil).Twice()
+	mockPostgresDB.On("SaveBoulderLog", mock.AnythingOfType("*models.BoulderLog")).Return(nil, nil).Twice()
 
 	count, err := migrationService.MigrateUserData(username)
 	assert.NoError(t, err)
@@ -36,7 +36,7 @@ func TestMigrateUserData(t *testing.T) {
 	mockCSVDB.On("GetBoulderLogs", username).Return(csvLogs, nil).Once()
 	mockPostgresDB.On("GetBoulderLogByUsernameAndDate", username, csvLogs[0].Date).Return(&models.BoulderLog{}, nil).Once()
 	mockPostgresDB.On("GetBoulderLogByUsernameAndDate", username, csvLogs[1].Date).Return(nil, nil).Once()
-	mockPostgresDB.On("SaveBoulderLog", mock.AnythingOfType("*models.BoulderLog")).Return(nil).Once()
+	mockPostgresDB.On("SaveBoulderLog", mock.AnythingOfType("*models.BoulderLog")).Return(nil, nil).Once()
 
 	count, err = migrationService.MigrateUserData(username)
 	assert.NoError(t, err)
@@ -53,8 +53,8 @@ func TestMigrateUserData(t *testing.T) {
 	mockCSVDB.On("GetBoulderLogs", username).Return(csvLogs, nil).Once()
 	mockPostgresDB.On("GetBoulderLogByUsernameAndDate", username, csvLogs[0].Date).Return(nil, nil).Once()
 	mockPostgresDB.On("GetBoulderLogByUsernameAndDate", username, csvLogs[1].Date).Return(nil, nil).Once()
-	mockPostgresDB.On("SaveBoulderLog", mock.AnythingOfType("*models.BoulderLog")).Return(assert.AnError).Once()
-	mockPostgresDB.On("SaveBoulderLog", mock.AnythingOfType("*models.BoulderLog")).Return(assert.AnError).Once()
+	mockPostgresDB.On("SaveBoulderLog", mock.AnythingOfType("*models.BoulderLog")).Return(nil, assert.AnError).Once()
+	mockPostgresDB.On("SaveBoulderLog", mock.AnythingOfType("*models.BoulderLog")).Return(nil, assert.AnError).Once()
 
 	count, err = migrationService.MigrateUserData(username)
 	assert.NoError(t, err)

@@ -90,6 +90,12 @@ func (h *LogHandler) SubmitLog(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid difficulty", http.StatusBadRequest)
 		return
 	}
+	gradeIndex := models.GradeIndex(grade)
+	if gradeIndex < 0 || difficulty < 1 || difficulty > 8 {
+		http.Error(w, "Invalid grade or difficulty", http.StatusBadRequest)
+		return
+	}
+	grade = models.BoulderGrades[gradeIndex]
 
 	flash := r.URL.Query().Get("flash") == "true"
 	newRoute := r.URL.Query().Get("new_route") == "true"
@@ -111,6 +117,7 @@ func (h *LogHandler) SubmitLog(w http.ResponseWriter, r *http.Request) {
 		NewRoute:   newRoute,
 	}
 
+	message := h.logService.GetLogResponse(log)
 	_, err = h.logService.SaveLog(log)
 	if err != nil {
 		utils.LogError("Failed to save log", err)
@@ -128,7 +135,7 @@ func (h *LogHandler) SubmitLog(w http.ResponseWriter, r *http.Request) {
 	}
 
 	isHtmxRequest := r.Header.Get("HX-Request") == "true"
-	content := components.LogSummary(true, difficulty, grades, datasets)
+	content := components.LogSummary(message, difficulty, grades, datasets)
 
 	if isHtmxRequest {
 		err = content.Render(r.Context(), w)
@@ -222,6 +229,12 @@ func (h *LogHandler) UpdateLog(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid difficulty", http.StatusBadRequest)
 		return
 	}
+	gradeIndex := models.GradeIndex(grade)
+	if gradeIndex < 0 || difficulty < 1 || difficulty > 8 {
+		http.Error(w, "Invalid grade or difficulty", http.StatusBadRequest)
+		return
+	}
+	grade = models.BoulderGrades[gradeIndex]
 	flash := r.PostFormValue("flash") == "on"
 	newRoute := r.PostFormValue("new_route") == "on"
 

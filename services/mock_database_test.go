@@ -25,9 +25,12 @@ func (m *MockDatabase) CreateUser(user *models.User) error {
 	return args.Error(0)
 }
 
-func (m *MockDatabase) SaveBoulderLog(log *models.BoulderLog) error {
+func (m *MockDatabase) SaveBoulderLog(log *models.BoulderLog) (*models.BoulderLog, error) {
 	args := m.Called(log)
-	return args.Error(0)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*models.BoulderLog), args.Error(1)
 }
 
 func (m *MockDatabase) GetTodayGradeCounts(username string) (map[string]int, map[string]int, error) {
@@ -37,7 +40,30 @@ func (m *MockDatabase) GetTodayGradeCounts(username string) (map[string]int, map
 
 func (m *MockDatabase) GetBoulderLogs(username string) ([]models.BoulderLog, error) {
 	args := m.Called(username)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
 	return args.Get(0).([]models.BoulderLog), args.Error(1)
+}
+
+func (m *MockDatabase) GetBoulderLogByID(username string, id uint) (*models.BoulderLog, error) {
+	args := m.Called(username, id)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*models.BoulderLog), args.Error(1)
+}
+
+func (m *MockDatabase) UpdateBoulderLog(log *models.BoulderLog) (*models.BoulderLog, error) {
+	args := m.Called(log)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
+	return args.Get(0).(*models.BoulderLog), args.Error(1)
+}
+
+func (m *MockDatabase) DeleteBoulderLog(username string, id uint) error {
+	return m.Called(username, id).Error(0)
 }
 
 func (m *MockDatabase) GetBoulderLogByUsernameAndDate(username string, date time.Time) (*models.BoulderLog, error) {

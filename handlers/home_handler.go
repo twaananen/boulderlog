@@ -36,9 +36,9 @@ func (h *HomeHandler) HomeWithUserName(w http.ResponseWriter, r *http.Request, u
 	var err error
 	if username == "" {
 		if isHtmxRequest {
-			err = components.Home(false, false, -1, nil, nil).Render(r.Context(), w)
+			err = components.Home(false, nil, nil).Render(r.Context(), w)
 		} else {
-			err = components.Layout("Home", components.Home(false, false, -1, nil, nil)).Render(r.Context(), w)
+			err = components.Layout("Home", components.Home(false, nil, nil)).Render(r.Context(), w)
 		}
 		if err != nil {
 			utils.LogError("Failed to render home page", err)
@@ -55,7 +55,7 @@ func (h *HomeHandler) HomeWithUserName(w http.ResponseWriter, r *http.Request, u
 		return
 	}
 
-	content := components.Home(true, false, -1, grades, datasets)
+	content := components.Home(true, grades, datasets)
 	if isHtmxRequest {
 		err = content.Render(r.Context(), w)
 	} else {

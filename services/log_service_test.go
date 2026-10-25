@@ -1,10 +1,11 @@
 package services
 
 import (
-	"testing"
-	"time"
 	"github.com/stretchr/testify/assert"
 	"github.com/twaananen/boulderlog/models"
+	"gorm.io/gorm"
+	"testing"
+	"time"
 )
 
 func TestSaveLog(t *testing.T) {
@@ -12,23 +13,24 @@ func TestSaveLog(t *testing.T) {
 	logService := NewLogService(mockDB)
 
 	log := &models.BoulderLog{
-			Username:   "testuser",
-			Grade:      "V5",
-			Difficulty: 3,
-			Flash:      true,
-			NewRoute:   false,
+		Username:   "testuser",
+		Grade:      "V5",
+		Difficulty: 3,
+		Flash:      true,
+		NewRoute:   false,
 	}
 
 	// Test case 1: Successful log save
-	mockDB.On("SaveBoulderLog", log).Return(nil).Once()
+	mockDB.On("SaveBoulderLog", log).Return(log, nil).Once()
 
-	err := logService.SaveLog(log)
+	saved, err := logService.SaveLog(log)
 	assert.NoError(t, err)
+	assert.Same(t, log, saved)
 
 	// Test case 2: Database error
-	mockDB.On("SaveBoulderLog", log).Return(assert.AnError).Once()
+	mockDB.On("SaveBoulderLog", log).Return(nil, assert.AnError).Once()
 
-	err = logService.SaveLog(log)
+	_, err = logService.SaveLog(log)
 	assert.Error(t, err)
 
 	mockDB.AssertExpectations(t)
@@ -78,7 +80,10 @@ func TestGetGradeCounts(t *testing.T) {
 
 	// Test case 1: Successful retrieval
 	grades := []string{"V1", "V2", "V3"}
-	counts := []int{2, 1, 1} // V1: 2, V2: 1, V3: 1
+	counts := map[string][]int{
+		"Topped": {0, 0, 0}, "Untopped": {2, 1, 1},
+		"Flashed": {0, 0, 0}, "New": {0, 0, 0},
+	}
 
 	g, c, err := logService.GetGradeCounts(username, nil, nil)
 	assert.NoError(t, err)
@@ -150,27 +155,27 @@ func TestGetDifficultyProgressionData(t *testing.T) {
 		{
 			Grade:      "6A",
 			Difficulty: 3,
-			CreatedAt:  now,
+			Model:      gorm.Model{CreatedAt: now},
 		},
 		{
 			Grade:      "6A",
 			Difficulty: 4,
-			CreatedAt:  now,
+			Model:      gorm.Model{CreatedAt: now},
 		},
 		{
 			Grade:      "6B",
 			Difficulty: 2,
-			CreatedAt:  now,
+			Model:      gorm.Model{CreatedAt: now},
 		},
 		{
 			Grade:      "6A",
 			Difficulty: 2,
-			CreatedAt:  now.AddDate(0, 0, -7), // Previous week
+			Model:      gorm.Model{CreatedAt: now.AddDate(0, 0, -7)},
 		},
 		{
 			Grade:      "6B",
 			Difficulty: 3,
-			CreatedAt:  now.AddDate(0, 0, -7),
+			Model:      gorm.Model{CreatedAt: now.AddDate(0, 0, -7)},
 		},
 	}
 
