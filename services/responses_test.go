@@ -19,8 +19,8 @@ func TestResponseTier(t *testing.T) {
 		grade string
 		band  int
 	}{
-		{"7B", 0}, {"7A+", 0}, {"7A", 0},
-		{"6C+", 1}, {"6C", 1}, {"6B+", 2}, {"6B", 2}, {"4", 2},
+		{"7B", 0}, {"7A+", 0}, {"7A", 0}, {"6C+", 0},
+		{"6C", 1}, {"6B+", 1}, {"6B", 1}, {"6A+", 2}, {"6A", 2}, {"4", 2},
 	} {
 		for difficulty := 1; difficulty <= 8; difficulty++ {
 			outcome := 0
@@ -56,7 +56,7 @@ func TestGetLogResponseBaseline(t *testing.T) {
 		{name: "invalid history", history: []models.BoulderLog{{Username: "alice", Grade: "V12", Difficulty: 1}, {Username: "alice", Grade: "8C", Difficulty: 0}}, grade: "4", difficulty: 8, tier: "pep_talk"},
 		{name: "other user", history: []models.BoulderLog{{Username: "bob", Grade: "8C", Difficulty: 1}}, grade: "4", difficulty: 8, tier: "pep_talk"},
 		{name: "deleted top", history: []models.BoulderLog{{Username: "alice", Grade: "8C", Difficulty: 1, Model: gorm.Model{DeletedAt: gorm.DeletedAt{Time: time.Now(), Valid: true}}}}, grade: "4", difficulty: 8, tier: "pep_talk"},
-		{name: "normalised top", history: []models.BoulderLog{{Username: "alice", Grade: " 7a+ ", Difficulty: 4}}, grade: "6B+", difficulty: 5, tier: "full_roast"},
+		{name: "normalised top", history: []models.BoulderLog{{Username: "alice", Grade: " 7a+ ", Difficulty: 4}}, grade: "6A+", difficulty: 5, tier: "full_roast"},
 		{name: "new high", history: []models.BoulderLog{{Username: "alice", Grade: "4", Difficulty: 1}}, grade: "8C", difficulty: 4, tier: "victory"},
 		{name: "above best failure", history: []models.BoulderLog{{Username: "alice", Grade: "4", Difficulty: 1}}, grade: "8C", difficulty: 8, tier: "pep_talk"},
 	} {
@@ -73,11 +73,11 @@ func TestGetLogResponseBaseline(t *testing.T) {
 func TestResponseBaselineUsesCurrentHistory(t *testing.T) {
 	database := new(MockDatabase)
 	service := NewLogService(database)
-	log := &models.BoulderLog{Username: "alice", Grade: "6B+", Difficulty: 5}
+	log := &models.BoulderLog{Username: "alice", Grade: "6A+", Difficulty: 5}
 	database.On("GetBoulderLogs", "alice").Return([]models.BoulderLog{{Username: "alice", Grade: "7A+", Difficulty: 1}}, nil).Once()
 	assert.Contains(t, responseMessages["full_roast"], service.GetLogResponse(log))
 	// The previous high was edited or deleted; no cached best may survive it.
-	database.On("GetBoulderLogs", "alice").Return([]models.BoulderLog{{Username: "alice", Grade: "6B+", Difficulty: 1}}, nil).Once()
+	database.On("GetBoulderLogs", "alice").Return([]models.BoulderLog{{Username: "alice", Grade: "6A+", Difficulty: 1}}, nil).Once()
 	assert.Contains(t, responseMessages["pep_talk"], service.GetLogResponse(log))
 	database.AssertExpectations(t)
 }

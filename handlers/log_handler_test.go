@@ -72,9 +72,9 @@ func TestSubmitLogResponses(t *testing.T) {
 			difficulty int
 			tier       string
 		}{
-			{"7A", 1, "victory"}, {"6C", 4, "mildly_impressed"}, {"6B+", 2, "unimpressed"},
-			{"7A", 8, "pep_talk"}, {"6C+", 7, "light_roast"}, {"6B+", 5, "full_roast"},
-			{"6B", 8, "full_roast"}, {"7B", 4, "victory"}, {"7B", 8, "pep_talk"},
+			{"6C+", 1, "victory"}, {"6C", 4, "mildly_impressed"}, {"6A+", 2, "unimpressed"},
+			{"6C+", 8, "pep_talk"}, {"6B", 7, "light_roast"}, {"6A+", 5, "full_roast"},
+			{"6A", 8, "full_roast"}, {"7B", 4, "victory"}, {"7B", 8, "pep_talk"},
 		} {
 			t.Run(tc.tier+"/"+tc.grade+"/htmx="+strconv.FormatBool(htmx), func(t *testing.T) {
 				database := &logTestDatabase{logs: []models.BoulderLog{{Username: "alice", Grade: "7A+", Difficulty: 1}}}
