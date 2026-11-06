@@ -43,28 +43,32 @@ Known limit: an all-time best can overestimate current ability after a long brea
 | `learning_persistence` | 10 | Practice, experiments, experience and progress |
 | `mythology` | 20 | Greek, Norse, Egyptian, Chinese, Japanese and West African figures |
 | `middle_earth` | 20 | Tolkien characters, places and journeys |
-| `fantasy_magic` | 10 | Conan, Harry Potter, Merlin, Discworld and Howl |
+| `fantasy_magic` | 10 | Conan, Harry Potter, Merlin, Discworld and Howl's Moving Castle |
 | `fantasy_worlds` | 20 | Witcher, Game of Thrones, Elder Scrolls, Zelda and God of War |
 | `superheroes` | 10 | Marvel, DC and Masters of the Universe |
 | `science_fiction` | 10 | Star Wars, Matrix, Mass Effect, Halo, Alien and Star Trek |
 | `gaming` | 20 | Assassin's Creed, Minecraft, Mario, Sonic, Souls / Elden Ring, Hollow Knight, Doom, Red Dead Redemption, Baldur's Gate 3, Disco Elysium and Hades |
-| `anime` | 20 | Attack on Titan, Dragon Ball, Naruto, One Piece, One-Punch Man, Fullmetal Alchemist, Death Note and existing anime tropes |
+| `anime` | 20 | Attack on Titan, Dragon Ball, Naruto, One Piece, One-Punch Man, JoJo, Death Note, My Hero Academia and anime tropes |
 | `portal_science` | 10 | Portal, GLaDOS, Wheatley, Companion Cube, Cave Johnson, Chell and puzzle science |
 
-Every line was rewritten in November 2026 to keep each reference in its own world and voice. The full-roast pool is the harshest, with some profanity. Humour should have a specific image or situation rather than just replacing one name in a stock sentence. The bank is grouped by theme for editorial review; theme keys are not an extra user-facing choice.
+Every line was rewritten again in November 2026 to be funny first: invented in-character quotes, riffs on famous lines, short punchlines and absurd escalation. Each of the 1,020 lines was graded individually by a separate reviewer model on funniness and theme fit and rewritten until it scored at least 8/10 on both. The full-roast pool is the harshest, with the most profanity; light roasts allow a little. Humour should have a specific image or situation rather than just replacing one name in a stock sentence. The bank is grouped by theme for editorial review; theme keys are not an extra user-facing choice.
 
 ### Recurring characters
 
-The preview has a character comparison view. Its curated roster contains **106 named characters or figures**, each with at least one line in all six tiers within their theme. This is editorial coverage, not a new application preference or a requirement to repeat the same character to a user.
+The preview has a character comparison view. Its roster contains **38 named characters or figures**, each with at least one line in all six tiers within their theme. Many other characters appear in fewer tiers; the comparison view shows "—" for any tier without a line. This is editorial coverage, not a new application preference or a requirement to repeat the same character to a user.
 
 Examples of complete coverage:
 
-- **Middle-earth:** Gandalf, Frodo, Smaug, Samwise, Gollum, Legolas, Gimli, Aragorn, Boromir, Pippin, Merry, Elrond, Galadriel, Saruman, Treebeard, Balrog, Sauron and Bilbo.
-- **The Witcher and other fantasy worlds:** Geralt, Yennefer, Ciri, Dandelion, Roach, Vesemir, Triss, Tyrion, Arya, Jon Snow, Tormund, Dragonborn, Paarthurnax, Lydia, Link, Zelda, Ganondorf, Kratos and Atreus.
-- **Attack on Titan and other anime:** Levi, Mikasa, Eren, Armin, Hange, Erwin, Goku, Vegeta, Naruto, Kakashi, Luffy, Zoro, Saitama, Edward Elric and Ryuk.
-- **Gaming:** Ezio, Altair, Mario, Luigi, Sonic, Solaire, Malenia, Siegward, Hornet, Doom Slayer, Arthur Morgan, Astarion, Karlach, Kim Kitsuragi and Zagreus.
-- **Mythology:** Thor, Athena, Loki, Zeus, Sisyphus, Odin, Anubis, Sun Wukong, Amaterasu, Anansi, Poseidon, Hermes, Hades, Icarus, Hercules, Artemis and Fenrir.
-- The remaining comparison characters come from fantasy magic, superheroes, science fiction and Portal. The roster is embedded in the standalone preview and checked against the actual bank.
+- **Mythology:** Thor, Loki, Zeus, Sisyphus, Odin and Hercules.
+- **Middle-earth:** Gandalf, Gollum, Gimli, Aragorn and Bilbo.
+- **Fantasy magic:** Conan, Hermione, Ron and Granny Weatherwax.
+- **Fantasy worlds:** Geralt, Kratos, Dandelion, Tormund, Atreus and Mimir.
+- **Superheroes:** Deadpool, Captain America, Tony, He-Man and Skeletor.
+- **Science fiction:** Han.
+- **Gaming:** Mario and Kim Kitsuragi.
+- **Anime:** Levi, Hange, Goku, Vegeta, Kakashi and Gai.
+- **Portal:** GLaDOS, Wheatley and Cave Johnson.
+- The roster is embedded in the standalone preview and checked against the actual bank.
 
 ### Tone
 
@@ -72,7 +76,7 @@ Examples of complete coverage:
 - Pep talks acknowledge the challenge without assuming the user nearly topped. They work for all four unsuccessful difficulty ratings.
 - Mild approval is noticeably warmer than indifference. Unimpressed lines acknowledge completion without treating it as failure or mocking the decision to warm up.
 - Light roast is sharp, playful teasing. Full roast should be much harsher: exaggerated humiliation, ruined reputations, absurd comparisons and occasional profanity. Both target this attempt, the claimed climbing credentials and the gap to the recorded best, not appearance, identity or personal worth.
-- Stay in the reference's world and in character. Gandalf talks like Gandalf (riddles, wizard timing, "you shall not pass"), GLaDOS gives passive-aggressive test results, Kim Kitsuragi writes one word in his notebook. Invented in-voice lines and riffs on famous quotes are welcome; long verbatim quotes are not.
+- Stay in the reference's world and in character. Gandalf talks like Gandalf (riddles, wizard timing, "you shall not pass"), GLaDOS gives passive-aggressive test results, Kim Kitsuragi writes one word in his notebook. Invented quotes are encouraged: put new in-voice lines in characters' mouths, riff on their famous lines and land an unexpected punchline. Long verbatim quotes are not. Keep the lore right; a joke that contradicts the source reads as a mistake.
 - Never put stock app praise in a character's mouth: no "X approves!", "X would be proud!", "What a send!" or "nice boulder". A line needs a specific image or twist from that world mapped onto the climb, not a name swapped into a generic sentence.
 - Keep lines short, readable and enjoyable without knowing the reference well. Deadpan beats shouting; use few exclamation marks. No advice to ignore pain, skip rest or take unsafe risks.
 
@@ -102,11 +106,11 @@ History scans are the smallest use of the existing API. If per-user history size
 - A user's highest failed grade must not become their baseline; another user's top must not influence it. Ignore deleted and invalid historical records.
 - Test no history, only failures, all-invalid history, first top, a new high, baseline lookup failure and save failure. Missing baseline yields no roast; a failed save yields no success response.
 - After editing/deleting the previous highest top, the next log uses the remaining best. Editing itself produces no response.
-- Assert the bank has exactly the six expected tiers, 170 lines per tier, all 12 themes, 20 lines per rich theme and 10 per other theme, no empty lines or duplicate messages, and no message over 180 characters. Check all 106 comparison characters appear in all six tiers in their own theme. Check actual message selection returns a member of its chosen tier, without flaky distribution assertions.
+- Assert the bank has exactly the six expected tiers, 170 lines per tier, all 12 themes, 20 lines per rich theme and 10 per other theme, no empty lines or duplicate messages, and no message over 180 characters. Check all 38 comparison characters appear in all six tiers in their own theme. Check actual message selection returns a member of its chosen tier, without flaky distribution assertions.
 - Render one message from each tier and verify text escaping and the normal home state. Exercise the HTMX post-log flow and direct-page rendering.
 
 ## Validation
 
-The feature is integrated into the log submission flow. Automated service, handler and rendering tests cover the tier boundaries, baseline filtering and failure fallback, validation, save ordering, both HTMX and full-page responses, and text escaping. The catalogue has count, uniqueness and length checks. The preview also verifies all 106 recurring characters across six tiers.
+The feature is integrated into the log submission flow. Automated service, handler and rendering tests cover the tier boundaries, baseline filtering and failure fallback, validation, save ordering, both HTMX and full-page responses, and text escaping. The catalogue has count, uniqueness and length checks. The preview also verifies all 38 roster characters across six tiers.
 
 Run the Go suite with `go test -race . ./components ./db ./handlers ./middleware ./models ./services ./utils`, then run `node --test tests/charts.test.cjs`. Use explicit package paths because local development database files under `data/postgres` may prevent recursive `./...` package discovery.
