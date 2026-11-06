@@ -12,11 +12,11 @@ Use this explicit order, never string sorting or whole-number subtraction. Let `
 
 | Grade relative to previous best top | Topped: difficulty 1–4 | Not topped: difficulty 5–8 |
 | --- | --- | --- |
-| Above best, at best, or 1 step below (`gap <= 1`) | `victory`: enthusiastic celebration | `pep_talk`: encouragement for a real challenge |
-| 2–3 steps below (`2 <= gap <= 3`) | `mildly_impressed`: a modest nod of approval | `light_roast`: sharp, playful teasing |
-| 4 or more steps below (`gap >= 4`) | `unimpressed`: dry acknowledgement of an easy-for-you send | `full_roast`: a much harsher roast of the attempt |
+| Above best, at best, or 1–2 steps below (`gap <= 2`) | `victory`: enthusiastic celebration | `pep_talk`: encouragement for a real challenge |
+| 3–5 steps below (`3 <= gap <= 5`) | `mildly_impressed`: a modest nod of approval | `light_roast`: sharp, playful teasing |
+| 6 or more steps below (`gap >= 6`) | `unimpressed`: dry acknowledgement of an easy-for-you send | `full_roast`: a much harsher roast of the attempt |
 
-For a previous best of **7A+**: 7A and higher use victory / pep talk; 6C and 6C+ use mildly impressed / light roast; **6B+ and lower use unimpressed / full roast**. In particular, failing 6B+ is four picker steps below 7A+ and failing 6B is five: both get a full roast. A failed attempt above the best is always a pep talk.
+For a previous best of **7A+**: 6C+ and higher use victory / pep talk; 6B through 6C use mildly impressed / light roast; **6A+ and lower use unimpressed / full roast**. In particular, failing 6A+ is six picker steps below 7A+ and failing 6A is seven: both get a full roast. A failed attempt above the best is always a pep talk.
 
 ## Baseline and edge cases
 
@@ -51,7 +51,7 @@ Known limit: an all-time best can overestimate current ability after a long brea
 | `anime` | 20 | Attack on Titan, Dragon Ball, Naruto, One Piece, One-Punch Man, Fullmetal Alchemist, Death Note and existing anime tropes |
 | `portal_science` | 10 | Portal, GLaDOS, Wheatley, Companion Cube, Cave Johnson, Chell and puzzle science |
 
-Existing themes and suitable existing lines are retained or adapted. The old full-roast draft supplies the sharper baseline for light roast; the new full-roast pool is substantially harsher, with some profanity. Humour should have a specific image or situation rather than just replacing one name in a stock sentence. The bank is grouped by theme for editorial review; theme keys are not an extra user-facing choice.
+Every line was rewritten in November 2026 to keep each reference in its own world and voice. The full-roast pool is the harshest, with some profanity. Humour should have a specific image or situation rather than just replacing one name in a stock sentence. The bank is grouped by theme for editorial review; theme keys are not an extra user-facing choice.
 
 ### Recurring characters
 
@@ -71,8 +71,10 @@ Examples of complete coverage:
 - Victory should feel earned, without claiming a personal best, flash, session streak or particular move that the selector has not verified.
 - Pep talks acknowledge the challenge without assuming the user nearly topped. They work for all four unsuccessful difficulty ratings.
 - Mild approval is noticeably warmer than indifference. Unimpressed lines acknowledge completion without treating it as failure or mocking the decision to warm up.
-- Light roast can be as pointed as the previous full-roast draft. Full roast should be much harsher: exaggerated humiliation, ruined reputations, absurd comparisons and occasional profanity. Both target this attempt, the claimed climbing credentials and the gap to the recorded best, not appearance, identity or personal worth.
-- Keep lines short, readable and useful without having to recognize the reference. Do not impersonate a character with a fabricated quotation. No advice to ignore pain, skip rest or take unsafe risks.
+- Light roast is sharp, playful teasing. Full roast should be much harsher: exaggerated humiliation, ruined reputations, absurd comparisons and occasional profanity. Both target this attempt, the claimed climbing credentials and the gap to the recorded best, not appearance, identity or personal worth.
+- Stay in the reference's world and in character. Gandalf talks like Gandalf (riddles, wizard timing, "you shall not pass"), GLaDOS gives passive-aggressive test results, Kim Kitsuragi writes one word in his notebook. Invented in-voice lines and riffs on famous quotes are welcome; long verbatim quotes are not.
+- Never put stock app praise in a character's mouth: no "X approves!", "X would be proud!", "What a send!" or "nice boulder". A line needs a specific image or twist from that world mapped onto the climb, not a name swapped into a generic sentence.
+- Keep lines short, readable and enjoyable without knowing the reference well. Deadpan beats shouting; use few exclamation marks. No advice to ignore pain, skip rest or take unsafe risks.
 
 ## Selection and application changes
 
@@ -94,7 +96,7 @@ History scans are the smallest use of the existing API. If per-user history size
 
 ## Acceptance checks for implementation
 
-- At a 7A+ best, test gaps `-1, 0, 1, 2, 3, 4, 5, 6` against both outcomes: exactly the tiers in the table. Explicitly verify failed 6B+ and 6B both produce full roast, failed 6C and 6C+ produce light roast, and failed 7A produces pep talk.
+- At a 7A+ best, test gaps `-1, 0, 1, 2, 3, 4, 5, 6` against both outcomes: exactly the tiers in the table. Explicitly verify failed 6A+ and 6A both produce full roast, failed 6B and 6C produce light roast, and failed 6C+ produces pep talk.
 - Test grade boundaries `5+ → 6A` and `6C+ → 7A`, and the low/high ends `4` and `8C`. A plus or letter change is one picker step.
 - Test all difficulty values 1–8: 1–4 are tops, 5–8 are unsuccessful. Reject 0, 9, malformed or unsupported new grades before saving.
 - A user's highest failed grade must not become their baseline; another user's top must not influence it. Ignore deleted and invalid historical records.

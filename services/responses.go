@@ -45,9 +45,9 @@ func responseTier(best, current, difficulty int) string {
 	}
 	if best >= 0 && current >= 0 {
 		gap := best - current
-		if gap >= 4 {
+		if gap >= 6 {
 			band = 2
-		} else if gap >= 2 {
+		} else if gap >= 3 {
 			band = 1
 		}
 	}
